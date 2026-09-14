@@ -24,8 +24,8 @@ export default function HomePage() {
             <span>西洋書法工作室</span>
           </h1>
           <p className="hero__lead">
-            專職西洋書法教學與商業字跡。從 Copperplate、Spencerian 到 Italic 與
-            Blackletter，以可複製的練習路徑，寫出有節奏的一手字。
+            專職西洋書法教學與商業字跡。從 Copperplate、Spencerian、Flourishing
+            到 Italic 與 Blackletter，以可複製的練習路徑，寫出有節奏的一手字。
           </p>
           <div className="cta-row">
             <Link className="btn btn--primary" href="/resources">
@@ -55,10 +55,11 @@ export default function HomePage() {
         <div className="section__head">
           <p className="section__eyebrow">Scripts</p>
           <h2 className="section__title" id="styles-title">
-            六種值得先認識的西洋書法
+            七種值得先認識的西洋書法
           </h2>
           <p className="section__text">
-            每種字體都有自己的工具、節奏與氣質。先看整體，再選一種深入練。
+            每種字體與畫風都有自己的工具、節奏與氣質。先看整體，再選一種深入練——含
+            Offhand 花飾線。
           </p>
         </div>
 

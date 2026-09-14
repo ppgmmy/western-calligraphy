@@ -37,11 +37,12 @@ export const atelierManifesto = {
 export const atelierCredentials = [
   {
     title: "教學主線",
-    detail: "Italic · Copperplate · Spencerian，依工具與節奏分開進程，避免混練造成壞習慣。",
+    detail:
+      "Italic · Copperplate · Spencerian · Flourishing，依工具與節奏分開進程，避免混練造成壞習慣。",
   },
   {
     title: "練習系統",
-    detail: "三條進程、字母家族、難度分冊，支援本機進度與完整練習本下載。",
+    detail: "四條進程、字母家族、難度分冊與花飾線，支援本機進度與完整練習本下載。",
   },
   {
     title: "受託書寫",
@@ -109,7 +110,7 @@ export const studioServices: StudioService[] = [
     title: "小型工作坊",
     titleEn: "Studio Workshop",
     summary:
-      "半日或全日工作坊，主題可選 Italic 入門、Copperplate 橢圓、或短句書寫體驗。",
+      "半日或全日工作坊，主題可選 Italic 入門、Copperplate 橢圓、Offhand 花飾，或短句書寫體驗。",
     includes: ["工具借用說明", "示範臨摹", "練習紙套裝", "作品拍照"],
     note: "依場地檔期安排",
   },

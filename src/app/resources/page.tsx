@@ -20,7 +20,7 @@ import {
 export const metadata: Metadata = {
   title: "練習本",
   description:
-    "斜體主線與銅板／斯賓塞尖筆平行進程；詞語與短句分易／中／難；可下載 A4 PDF。",
+    "斜體主線、銅板／斯賓塞尖筆與花飾／Offhand 平行進程；詞語與短句分易／中／難；可下載 A4 PDF。",
 };
 
 export default function ResourcesPage() {
@@ -37,7 +37,7 @@ export default function ResourcesPage() {
             西洋書法練習本
           </h1>
           <p className="section__text">
-            三條路線可並行：斜體字主線、銅板體尖筆線、斯賓塞體尖筆線。
+            四條路線可並行：斜體字主線、銅板體尖筆線、斯賓塞體尖筆線、花飾／Offhand 線。
             第 3／4 級詞語與短句已分易／中／難；支援本機進度、列印檢查清單，以及完整練習本打包下載。
           </p>
         </div>
@@ -66,10 +66,11 @@ export default function ResourcesPage() {
         <div className="section__head">
           <p className="section__eyebrow">Practice Tracks</p>
           <h2 className="section__title" id="tracks-title">
-            三條練習路線
+            四條練習路線
           </h2>
           <p className="section__text">
-            斜體走闊尖筆；銅板與斯賓塞走尖筆。可專心一條，也可一週穿插尖筆熱身。
+            斜體走闊尖筆；銅板、斯賓塞與花飾走尖筆。可專心一條，也可一週穿插尖筆與
+            Offhand 熱身。
           </p>
         </div>
 

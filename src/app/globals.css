@@ -363,6 +363,9 @@ a {
 .style-item:nth-child(6) {
   animation-delay: 0.4s;
 }
+.style-item:nth-child(7) {
+  animation-delay: 0.48s;
+}
 
 .style-item__sample {
   margin: 0 0 0.85rem;
@@ -372,8 +375,24 @@ a {
 }
 
 .style-item__sample--copperplate,
-.style-item__sample--spencerian {
+.style-item__sample--spencerian,
+.style-item__sample--flourishing {
   font-family: var(--font-script), cursive;
+}
+
+.style-item__sample--flourishing {
+  letter-spacing: 0.04em;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    transparent 42%,
+    rgba(154, 134, 88, 0.22) 42%,
+    rgba(154, 134, 88, 0.22) 58%,
+    transparent 58%
+  );
+  background-size: 100% 0.12em;
+  background-position: 0 88%;
+  background-repeat: no-repeat;
 }
 
 .style-item__sample--italic,
@@ -1153,7 +1172,7 @@ a {
 
 .track-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.5rem;
   max-width: 72rem;
 }

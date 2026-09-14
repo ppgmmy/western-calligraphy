@@ -1073,6 +1073,634 @@ function SentencesSheet({ sheet }: SheetProps) {
   );
 }
 
+type FlourishTone = "ink" | "ghost" | "blank";
+
+function flourishTone(row: number): FlourishTone {
+  if (row < 2) return "ink";
+  if (row < 4) return "ghost";
+  return "blank";
+}
+
+function flourishStroke(tone: FlourishTone) {
+  switch (tone) {
+    case "ink":
+      return { color: INK, width: 1.35, dash: undefined as string | undefined };
+    case "ghost":
+      return { color: GHOST, width: 1.2, dash: undefined as string | undefined };
+    case "blank":
+      return { color: RULE_SOFT, width: 1, dash: "2 4" };
+    default: {
+      const _exhaustive: never = tone;
+      return _exhaustive;
+    }
+  }
+}
+
+/** Offhand 橢圓：多方向、多比例，建立手臂運筆 */
+function FlourishOvalsSheet({ sheet }: SheetProps) {
+  const left = MARGIN;
+  const right = PAGE_W - MARGIN;
+  const top = 118;
+  const rows = 7;
+  const cols = 5;
+  const rowH = 128;
+  const colW = (right - left) / cols;
+  const rotations = [-28, -12, 0, 18, 32];
+  const ratios: Array<[number, number]> = [
+    [22, 36],
+    [28, 28],
+    [34, 22],
+    [20, 40],
+    [30, 26],
+  ];
+
+  return (
+    <SheetFrame sheet={sheet}>
+      <text
+        x={left}
+        y={112}
+        fill="#5b6570"
+        fontFamily="'Noto Serif TC', serif"
+        fontSize="11"
+      >
+        Offhand 橢圓｜深色範例 → 淺灰描紅 → 虛線空白自寫｜用前臂帶動
+      </text>
+      {Array.from({ length: rows }).map((_, row) => {
+        const cy = top + row * rowH + 52;
+        const tone = flourishTone(row);
+        const stroke = flourishStroke(tone);
+        return (
+          <g key={`fov-row-${row}`}>
+            <line
+              x1={left}
+              y1={cy + 42}
+              x2={right}
+              y2={cy + 42}
+              stroke="#e2e6ea"
+              strokeWidth="0.7"
+            />
+            {Array.from({ length: cols }).map((__, col) => {
+              const cx = left + col * colW + colW / 2;
+              const [rx, ry] = ratios[(row + col) % ratios.length];
+              const rot = rotations[col];
+              return (
+                <ellipse
+                  key={`fov-${row}-${col}`}
+                  cx={cx}
+                  cy={cy}
+                  rx={rx}
+                  ry={ry}
+                  fill="none"
+                  stroke={stroke.color}
+                  strokeWidth={stroke.width}
+                  strokeDasharray={stroke.dash}
+                  transform={`rotate(${rot} ${cx} ${cy})`}
+                />
+              );
+            })}
+          </g>
+        );
+      })}
+      <text
+        x={left}
+        y={PAGE_H - 48}
+        fill="#5b6570"
+        fontFamily="'Noto Serif TC', serif"
+        fontSize="12"
+      >
+        每個橢圓想像落在隱形軌跡上；方向可變，結構不變。
+      </text>
+    </SheetFrame>
+  );
+}
+
+/** C／S 曲線：花飾進出筆最常用形 */
+function FlourishCurvesSheet({ sheet }: SheetProps) {
+  const left = MARGIN;
+  const right = PAGE_W - MARGIN;
+  const top = 120;
+  const rows = 6;
+  const rowH = 145;
+
+  const cPath = (cx: number, cy: number) =>
+    `M ${cx + 28} ${cy - 34} C ${cx - 8} ${cy - 42}, ${cx - 36} ${cy - 8}, ${cx - 28} ${cy + 18} C ${cx - 22} ${cy + 36}, ${cx + 6} ${cy + 40}, ${cx + 26} ${cy + 22}`;
+  const sPath = (cx: number, cy: number) =>
+    `M ${cx - 30} ${cy - 36} C ${cx + 18} ${cy - 44}, ${cx + 22} ${cy - 4}, ${cx} ${cy} C ${cx - 24} ${cy + 6}, ${cx - 20} ${cy + 42}, ${cx + 30} ${cy + 34}`;
+
+  return (
+    <SheetFrame sheet={sheet}>
+      <text
+        x={left}
+        y={112}
+        fill="#5b6570"
+        fontFamily="'Noto Serif TC', serif"
+        fontSize="11"
+      >
+        左欄 C 曲線｜右欄 S 曲線｜轉折減壓，交叉近 90°
+      </text>
+      {Array.from({ length: rows }).map((_, row) => {
+        const cy = top + row * rowH + 58;
+        const tone = flourishTone(row);
+        const stroke = flourishStroke(tone);
+        const cX = left + (right - left) * 0.28;
+        const sX = left + (right - left) * 0.72;
+        return (
+          <g key={`fcurve-${row}`}>
+            <line
+              x1={left}
+              y1={cy + 48}
+              x2={right}
+              y2={cy + 48}
+              stroke="#e2e6ea"
+              strokeWidth="0.7"
+            />
+            <path
+              d={cPath(cX, cy)}
+              fill="none"
+              stroke={stroke.color}
+              strokeWidth={stroke.width}
+              strokeLinecap="round"
+              strokeDasharray={stroke.dash}
+            />
+            <path
+              d={sPath(sX, cy)}
+              fill="none"
+              stroke={stroke.color}
+              strokeWidth={stroke.width}
+              strokeLinecap="round"
+              strokeDasharray={stroke.dash}
+            />
+            {tone === "ink" ? (
+              <>
+                <text
+                  x={cX}
+                  y={cy + 58}
+                  fill={BRASS}
+                  fontFamily="Georgia, serif"
+                  fontSize="10"
+                  textAnchor="middle"
+                >
+                  C
+                </text>
+                <text
+                  x={sX}
+                  y={cy + 58}
+                  fill={BRASS}
+                  fontFamily="Georgia, serif"
+                  fontSize="10"
+                  textAnchor="middle"
+                >
+                  S
+                </text>
+              </>
+            ) : null}
+          </g>
+        );
+      })}
+      <text
+        x={left}
+        y={PAGE_H - 48}
+        fill="#5b6570"
+        fontFamily="'Noto Serif TC', serif"
+        fontSize="12"
+      >
+        C 是半橢圓；S 由兩橢圓相接。粗畫不相交。
+      </text>
+    </SheetFrame>
+  );
+}
+
+/** 8 字環：offhand 連續轉向 */
+function FlourishFigureEightSheet({ sheet }: SheetProps) {
+  const left = MARGIN;
+  const right = PAGE_W - MARGIN;
+  const top = 118;
+  const rows = 5;
+  const cols = 3;
+  const rowH = 170;
+  const colW = (right - left) / cols;
+
+  const eightPath = (cx: number, cy: number, scale = 1) => {
+    const s = scale;
+    return `M ${cx} ${cy} C ${cx + 38 * s} ${cy - 8 * s}, ${cx + 36 * s} ${cy - 52 * s}, ${cx} ${cy - 48 * s} C ${cx - 36 * s} ${cy - 44 * s}, ${cx - 38 * s} ${cy - 4 * s}, ${cx} ${cy} C ${cx + 38 * s} ${cy + 8 * s}, ${cx + 36 * s} ${cy + 52 * s}, ${cx} ${cy + 48 * s} C ${cx - 36 * s} ${cy + 44 * s}, ${cx - 38 * s} ${cy + 4 * s}, ${cx} ${cy}`;
+  };
+
+  return (
+    <SheetFrame sheet={sheet}>
+      <text
+        x={left}
+        y={112}
+        fill="#5b6570"
+        fontFamily="'Noto Serif TC', serif"
+        fontSize="11"
+      >
+        Figure-eight｜一筆連成；上下環對稱優先於華麗
+      </text>
+      {Array.from({ length: rows }).map((_, row) => {
+        const cy = top + row * rowH + 70;
+        const tone = flourishTone(row);
+        const stroke = flourishStroke(tone);
+        return (
+          <g key={`feight-row-${row}`}>
+            {Array.from({ length: cols }).map((__, col) => {
+              const cx = left + col * colW + colW / 2;
+              const scale = 0.85 + (col % 3) * 0.08;
+              return (
+                <path
+                  key={`feight-${row}-${col}`}
+                  d={eightPath(cx, cy, scale)}
+                  fill="none"
+                  stroke={stroke.color}
+                  strokeWidth={stroke.width}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeDasharray={stroke.dash}
+                />
+              );
+            })}
+          </g>
+        );
+      })}
+      <text
+        x={left}
+        y={PAGE_H - 48}
+        fill="#5b6570"
+        fontFamily="'Noto Serif TC', serif"
+        fontSize="12"
+      >
+        交叉點保持乾淨；速度慢於你以為需要的速度。
+      </text>
+    </SheetFrame>
+  );
+}
+
+/** Cartouche：對稱框飾骨架 */
+function FlourishCartoucheSheet({ sheet }: SheetProps) {
+  const left = MARGIN;
+  const frames = [
+    { y: 130, tone: "ink" as FlourishTone, label: "範例骨架" },
+    { y: 430, tone: "ghost" as FlourishTone, label: "描紅" },
+    { y: 730, tone: "blank" as FlourishTone, label: "自寫" },
+  ];
+
+  const cartouchePath = (cx: number, cy: number, w: number, h: number) => {
+    const hw = w / 2;
+    const hh = h / 2;
+    return [
+      `M ${cx - hw * 0.15} ${cy - hh}`,
+      `C ${cx - hw * 0.7} ${cy - hh}, ${cx - hw} ${cy - hh * 0.45}, ${cx - hw} ${cy}`,
+      `C ${cx - hw} ${cy + hh * 0.45}, ${cx - hw * 0.7} ${cy + hh}, ${cx - hw * 0.15} ${cy + hh}`,
+      `C ${cx - hw * 0.05} ${cy + hh * 0.55}, ${cx + hw * 0.05} ${cy + hh * 0.55}, ${cx + hw * 0.15} ${cy + hh}`,
+      `C ${cx + hw * 0.7} ${cy + hh}, ${cx + hw} ${cy + hh * 0.45}, ${cx + hw} ${cy}`,
+      `C ${cx + hw} ${cy - hh * 0.45}, ${cx + hw * 0.7} ${cy - hh}, ${cx + hw * 0.15} ${cy - hh}`,
+      `C ${cx + hw * 0.05} ${cy - hh * 0.55}, ${cx - hw * 0.05} ${cy - hh * 0.55}, ${cx - hw * 0.15} ${cy - hh}`,
+      "Z",
+    ].join(" ");
+  };
+
+  const sideScroll = (cx: number, cy: number, side: 1 | -1) => {
+    const s = side;
+    return `M ${cx + s * 118} ${cy - 20} C ${cx + s * 168} ${cy - 55}, ${cx + s * 175} ${cy + 10}, ${cx + s * 145} ${cy + 35} C ${cx + s * 120} ${cy + 52}, ${cx + s * 105} ${cy + 18}, ${cx + s * 118} ${cy - 8}`;
+  };
+
+  return (
+    <SheetFrame sheet={sheet}>
+      <text
+        x={left}
+        y={112}
+        fill="#5b6570"
+        fontFamily="'Noto Serif TC', serif"
+        fontSize="11"
+      >
+        Cartouche｜中軸對稱；內框留給文字，外圈卷曲由大到小
+      </text>
+      {frames.map((frame) => {
+        const cx = PAGE_W / 2;
+        const cy = frame.y + 110;
+        const stroke = flourishStroke(frame.tone);
+        return (
+          <g key={`cartouche-${frame.y}`}>
+            <text
+              x={left}
+              y={frame.y + 8}
+              fill={BRASS}
+              fontFamily="Georgia, serif"
+              fontSize="10"
+              letterSpacing="1.5"
+            >
+              {frame.label.toUpperCase()}
+            </text>
+            <line
+              x1={cx}
+              y1={frame.y + 24}
+              x2={cx}
+              y2={frame.y + 210}
+              stroke="#e8ebe6"
+              strokeWidth="0.8"
+              strokeDasharray="3 5"
+            />
+            <path
+              d={cartouchePath(cx, cy, 220, 120)}
+              fill="none"
+              stroke={stroke.color}
+              strokeWidth={stroke.width}
+              strokeDasharray={stroke.dash}
+            />
+            <path
+              d={sideScroll(cx, cy, -1)}
+              fill="none"
+              stroke={stroke.color}
+              strokeWidth={stroke.width * 0.9}
+              strokeLinecap="round"
+              strokeDasharray={stroke.dash}
+            />
+            <path
+              d={sideScroll(cx, cy, 1)}
+              fill="none"
+              stroke={stroke.color}
+              strokeWidth={stroke.width * 0.9}
+              strokeLinecap="round"
+              strokeDasharray={stroke.dash}
+            />
+            <path
+              d={`M ${cx - 40} ${cy - 78} C ${cx - 10} ${cy - 110}, ${cx + 10} ${cy - 110}, ${cx + 40} ${cy - 78}`}
+              fill="none"
+              stroke={stroke.color}
+              strokeWidth={stroke.width * 0.85}
+              strokeDasharray={stroke.dash}
+            />
+            <path
+              d={`M ${cx - 40} ${cy + 78} C ${cx - 10} ${cy + 110}, ${cx + 10} ${cy + 110}, ${cx + 40} ${cy + 78}`}
+              fill="none"
+              stroke={stroke.color}
+              strokeWidth={stroke.width * 0.85}
+              strokeDasharray={stroke.dash}
+            />
+            {frame.tone !== "blank" ? (
+              <text
+                x={cx}
+                y={cy + 6}
+                fill={frame.tone === "ink" ? TEAL : GHOST}
+                fontFamily="var(--font-script), Georgia, cursive"
+                fontSize="22"
+                textAnchor="middle"
+              >
+                Name
+              </text>
+            ) : (
+              <rect
+                x={cx - 70}
+                y={cy - 18}
+                width={140}
+                height={28}
+                fill="none"
+                stroke={RULE_SOFT}
+                strokeWidth="0.8"
+                strokeDasharray="3 4"
+              />
+            )}
+          </g>
+        );
+      })}
+      <text
+        x={left}
+        y={PAGE_H - 48}
+        fill="#5b6570"
+        fontFamily="'Noto Serif TC', serif"
+        fontSize="12"
+      >
+        先骨架、後細節；花飾不要壓字。
+      </text>
+    </SheetFrame>
+  );
+}
+
+/** 大寫 + 升部／字尾花飾 */
+function FlourishCapitalsSheet({ sheet }: SheetProps) {
+  const letters = sheet.letters ?? ["B", "H", "L", "P", "R", "T", "Y"];
+  const left = MARGIN;
+  const right = PAGE_W - MARGIN;
+  const top = 120;
+  const rowH = 120;
+
+  const flourishFor = (letter: string, cx: number, base: number, tone: FlourishTone) => {
+    const stroke = flourishStroke(tone);
+    const common = {
+      fill: "none" as const,
+      stroke: stroke.color,
+      strokeWidth: stroke.width * 0.95,
+      strokeLinecap: "round" as const,
+      strokeDasharray: stroke.dash,
+    };
+    switch (letter) {
+      case "B":
+      case "P":
+      case "R":
+        return (
+          <path
+            {...common}
+            d={`M ${cx + 18} ${base - 42} C ${cx + 55} ${base - 70}, ${cx + 78} ${base - 20}, ${cx + 48} ${base + 8} C ${cx + 28} ${base + 28}, ${cx + 70} ${base + 36}, ${cx + 92} ${base + 12}`}
+          />
+        );
+      case "H":
+      case "T":
+        return (
+          <path
+            {...common}
+            d={`M ${cx - 8} ${base - 48} C ${cx - 50} ${base - 78}, ${cx - 70} ${base - 30}, ${cx - 42} ${base} C ${cx - 20} ${base + 22}, ${cx - 60} ${base + 40}, ${cx - 88} ${base + 18}`}
+          />
+        );
+      case "L":
+        return (
+          <path
+            {...common}
+            d={`M ${cx + 22} ${base} C ${cx + 70} ${base + 8}, ${cx + 90} ${base - 28}, ${cx + 58} ${base - 48} C ${cx + 30} ${base - 62}, ${cx + 95} ${base - 70}, ${cx + 110} ${base - 40}`}
+          />
+        );
+      case "Y":
+        return (
+          <path
+            {...common}
+            d={`M ${cx + 10} ${base - 8} C ${cx + 48} ${base + 30}, ${cx + 20} ${base + 55}, ${cx - 10} ${base + 42} C ${cx - 40} ${base + 28}, ${cx - 25} ${base + 70}, ${cx + 15} ${base + 62}`}
+          />
+        );
+      default:
+        return (
+          <path
+            {...common}
+            d={`M ${cx + 20} ${base - 36} C ${cx + 60} ${base - 60}, ${cx + 80} ${base - 10}, ${cx + 50} ${base + 16}`}
+          />
+        );
+    }
+  };
+
+  return (
+    <SheetFrame sheet={sheet} showLegend>
+      <text
+        x={left}
+        y={118}
+        fill="#5b6570"
+        fontFamily="'Noto Serif TC', serif"
+        fontSize="11"
+      >
+        先寫可讀大寫，再加橢圓花飾｜花飾大於字母通常更耐看
+      </text>
+      {letters.map((letter, index) => {
+        const y = top + index * rowH;
+        if (y + rowH > PAGE_H - 56) return null;
+        const bandH = 44;
+        const baseY = y + bandH * 0.78;
+        return (
+          <g key={`fcap-${letter}`}>
+            <RuledBand y={y} height={bandH} left={left} right={right} clipId={`fc1-${index}`} />
+            <text
+              x={left + 16}
+              y={baseY}
+              fill={INK}
+              fontFamily="var(--font-script), Georgia, cursive"
+              fontSize="36"
+            >
+              {letter}
+            </text>
+            {flourishFor(letter, left + 48, baseY, "ink")}
+            <text
+              x={left + 220}
+              y={baseY}
+              fill={GHOST}
+              fontFamily="var(--font-script), Georgia, cursive"
+              fontSize="36"
+            >
+              {letter}
+            </text>
+            {flourishFor(letter, left + 252, baseY, "ghost")}
+            <RuledBand
+              y={y + bandH + 8}
+              height={bandH}
+              left={left}
+              right={right}
+              clipId={`fc2-${index}`}
+            />
+          </g>
+        );
+      })}
+      <text
+        x={left}
+        y={PAGE_H - 48}
+        fill="#5b6570"
+        fontFamily="'Noto Serif TC', serif"
+        fontSize="12"
+      >
+        粗畫不相交；交叉接近直角；可讀優先。
+      </text>
+    </SheetFrame>
+  );
+}
+
+/** 詞首／詞尾花飾詞語 */
+function FlourishWordsSheet({ sheet }: SheetProps) {
+  const words = sheet.content ?? ["Love", "Grace", "Beauty"];
+  const left = MARGIN;
+  const right = PAGE_W - MARGIN;
+  const top = 122;
+  const rowH = 140;
+
+  const entryFlourish = (x: number, y: number, tone: FlourishTone) => {
+    const stroke = flourishStroke(tone);
+    return (
+      <path
+        d={`M ${x - 70} ${y + 8} C ${x - 40} ${y + 36}, ${x - 55} ${y - 28}, ${x - 8} ${y - 6}`}
+        fill="none"
+        stroke={stroke.color}
+        strokeWidth={stroke.width}
+        strokeLinecap="round"
+        strokeDasharray={stroke.dash}
+      />
+    );
+  };
+
+  const exitFlourish = (x: number, y: number, tone: FlourishTone) => {
+    const stroke = flourishStroke(tone);
+    return (
+      <path
+        d={`M ${x + 8} ${y - 4} C ${x + 55} ${y - 30}, ${x + 70} ${y + 20}, ${x + 110} ${y - 8} C ${x + 135} ${y - 24}, ${x + 125} ${y + 28}, ${x + 95} ${y + 22}`}
+        fill="none"
+        stroke={stroke.color}
+        strokeWidth={stroke.width}
+        strokeLinecap="round"
+        strokeDasharray={stroke.dash}
+      />
+    );
+  };
+
+  return (
+    <SheetFrame sheet={sheet} showLegend>
+      <text
+        x={left}
+        y={118}
+        fill="#5b6570"
+        fontFamily="'Noto Serif TC', serif"
+        fontSize="11"
+      >
+        一詞一主花飾｜通常只在詞首或詞尾加一處
+      </text>
+      {words.map((word, index) => {
+        const y = top + index * rowH;
+        if (y + rowH > PAGE_H - 56) return null;
+        const bandH = 40;
+        const baseY = y + bandH * 0.72;
+        const wordWidth = Math.min(200, 28 * word.length + 40);
+        return (
+          <g key={`fword-${word}`}>
+            <RuledBand y={y} height={bandH} left={left} right={right} clipId={`fw1-${index}`} />
+            {entryFlourish(left + 90, baseY, "ink")}
+            <text
+              x={left + 90}
+              y={baseY}
+              fill={INK}
+              fontFamily="var(--font-script), Georgia, cursive"
+              fontSize="28"
+            >
+              {word}
+            </text>
+            {exitFlourish(left + 90 + wordWidth, baseY, "ink")}
+            <RuledBand
+              y={y + bandH + 10}
+              height={bandH}
+              left={left}
+              right={right}
+              clipId={`fw2-${index}`}
+            />
+            {entryFlourish(left + 90, y + bandH + 10 + bandH * 0.72, "ghost")}
+            <text
+              x={left + 90}
+              y={y + bandH + 10 + bandH * 0.72}
+              fill={GHOST}
+              fontFamily="var(--font-script), Georgia, cursive"
+              fontSize="28"
+            >
+              {word}
+            </text>
+            {exitFlourish(
+              left + 90 + wordWidth,
+              y + bandH + 10 + bandH * 0.72,
+              "ghost",
+            )}
+          </g>
+        );
+      })}
+      <text
+        x={left}
+        y={PAGE_H - 48}
+        fill="#5b6570"
+        fontFamily="'Noto Serif TC', serif"
+        fontSize="12"
+      >
+        整詞完成後退後審視：主花飾與留白是否平衡。
+      </text>
+    </SheetFrame>
+  );
+}
+
 export function PracticeSheetArt({ sheet }: SheetProps) {
   switch (sheet.kind) {
     case "slant-guidelines":
@@ -1097,6 +1725,18 @@ export function PracticeSheetArt({ sheet }: SheetProps) {
       return <WordsSheet sheet={sheet} />;
     case "sentences":
       return <SentencesSheet sheet={sheet} />;
+    case "flourish-ovals":
+      return <FlourishOvalsSheet sheet={sheet} />;
+    case "flourish-curves":
+      return <FlourishCurvesSheet sheet={sheet} />;
+    case "flourish-figure-eight":
+      return <FlourishFigureEightSheet sheet={sheet} />;
+    case "flourish-cartouche":
+      return <FlourishCartoucheSheet sheet={sheet} />;
+    case "flourish-capitals":
+      return <FlourishCapitalsSheet sheet={sheet} />;
+    case "flourish-words":
+      return <FlourishWordsSheet sheet={sheet} />;
     default: {
       const _exhaustive: never = sheet.kind;
       return _exhaustive;

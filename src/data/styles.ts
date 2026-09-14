@@ -76,6 +76,17 @@ export const calligraphyStyles: CalligraphyStyle[] = [
     traits: ["圓潤", "大寫為主", "古卷氣息"],
     tip: "放慢速度，讓曲線飽滿，避免把字母壓得太扁。",
   },
+  {
+    id: "flourishing",
+    nameZh: "花飾書法",
+    nameEn: "Flourishing / Offhand",
+    era: "19–20 世紀尖筆傳統",
+    sample: "Offhand",
+    summary:
+      "以橢圓、C／S 曲線與十字交叉為骨的裝飾筆法。可獨立成畫（offhand），也可為大寫與詞語加花飾，氣質華美而講究紀律。",
+    traits: ["橢圓結構", "90° 交叉", "粗細不互交"],
+    tip: "先練橢圓與 C／S，再進入 8 字環與 cartouche；花飾永遠服從可讀性。",
+  },
 ];
 
 export const practiceSteps = [
@@ -85,11 +96,13 @@ export const practiceSteps = [
   },
   {
     title: "熟悉工具",
-    detail: "尖筆練 Copperplate／Spencerian；寬尖筆練 Italic／Gothic／Foundational。",
+    detail:
+      "尖筆練 Copperplate／Spencerian／Flourishing；寬尖筆練 Italic／Gothic／Foundational。",
   },
   {
     title: "基本筆畫",
-    detail: "每天 10–15 分鐘只練直線、橢圓、上斜與下斜，不要急著寫整句。",
+    detail:
+      "每天 10–15 分鐘只練直線、橢圓、上斜與下斜；花飾線則加練 C／S 與 8 字環。",
   },
   {
     title: "字母家族",

@@ -108,7 +108,7 @@ function drawCover(pdf: jsPDF) {
   pdf.text("Warm-up → Families → Words → Sentences", pageW / 2, 150, {
     align: "center",
   });
-  pdf.text("Italic · Copperplate · Spencerian", pageW / 2, 160, {
+  pdf.text("Italic · Copperplate · Spencerian · Flourishing", pageW / 2, 160, {
     align: "center",
   });
   pdf.setFontSize(10);
@@ -140,7 +140,7 @@ function drawGuidePage(pdf: jsPDF) {
     "5. Mark sheets completed in the website progress tracker.",
     "",
     "Suggested session: 15–20 minutes, one family or one difficulty sheet.",
-    "Pointed-pen tracks (Copperplate / Spencerian) can run in parallel.",
+    "Pointed-pen tracks (Copperplate / Spencerian / Flourishing) can run in parallel.",
   ];
 
   let y = 48;

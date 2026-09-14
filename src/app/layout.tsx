@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     template: "%s｜Scriptoria",
   },
   description:
-    "Scriptoria 西洋書法專職工作室：教學、受託書寫與可列印練習系統。涵蓋 Copperplate、Spencerian、Italic 與 Blackletter。",
+    "Scriptoria 西洋書法專職工作室：教學、受託書寫與可列印練習系統。涵蓋 Copperplate、Spencerian、Flourishing、Italic 與 Blackletter。",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

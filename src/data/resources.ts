@@ -9,7 +9,13 @@ export type PracticeSheetKind =
   | "alphabet-lower"
   | "alphabet-family"
   | "words"
-  | "sentences";
+  | "sentences"
+  | "flourish-ovals"
+  | "flourish-curves"
+  | "flourish-figure-eight"
+  | "flourish-cartouche"
+  | "flourish-capitals"
+  | "flourish-words";
 
 export type PracticeSheetStyleId =
   | "copperplate"
@@ -17,13 +23,15 @@ export type PracticeSheetStyleId =
   | "italic"
   | "foundational"
   | "gothic"
-  | "general";
+  | "general"
+  | "flourishing";
 
 /** 練習路線：斜體主線，或尖筆銅板／斯賓塞平行進程 */
 export type PracticeTrackId =
   | "italic"
   | "copperplate"
   | "spencerian"
+  | "flourishing"
   | "shared";
 
 /** 詞語／句子難度 */
@@ -146,6 +154,21 @@ export const practiceTracks: Array<{
       "spencerian-basic-strokes",
       "spencerian-minuscule-core",
       "spencerian-words-easy",
+    ],
+  },
+  {
+    id: "flourishing",
+    titleZh: "花飾／Offhand 線",
+    titleEn: "Flourishing Path",
+    summary: "尖筆花飾：橢圓 → C／S 曲線 → 8 字環 → Cartouche → 花飾大寫 → 花飾詞語。",
+    tools: "尖筆、墨水",
+    sheetSlugs: [
+      "flourish-ovals",
+      "flourish-cs-curves",
+      "flourish-figure-eight",
+      "flourish-cartouche",
+      "flourish-capitals",
+      "flourish-words",
     ],
   },
 ];
@@ -811,6 +834,124 @@ export const practiceSheets: PracticeSheet[] = [
     ],
   },
 
+  // —— Flourishing / Offhand path ——
+  {
+    slug: "flourish-ovals",
+    titleZh: "花飾橢圓訓練",
+    titleEn: "Flourish Ovals",
+    styleId: "flourishing",
+    kind: "flourish-ovals",
+    stage: 0,
+    summary: "花飾的骨幹是橢圓：多方向、多大小反覆練習，建立手臂運筆。",
+    level: "熱身",
+    tools: "尖筆、墨水",
+    uses: ["橢圓紀律", "手臂運筆", "花飾熱身"],
+    guidance: [
+      "用前臂或整臂帶動，不要只靠手指。",
+      "每個橢圓都想像落在隱形橢圓軌跡上。",
+      "先鉛筆慢練，再上墨。",
+    ],
+    sheetTip: "橢圓是花飾的骨架；方向可變，結構不變。",
+    track: "flourishing",
+  },
+  {
+    slug: "flourish-cs-curves",
+    titleZh: "C／S 曲線花飾",
+    titleEn: "C & S Flourish Curves",
+    styleId: "flourishing",
+    kind: "flourish-curves",
+    stage: 0,
+    summary: "C 是半橢圓，S 由兩橢圓相接而成；這是進出筆花飾最常用的形。",
+    level: "熱身",
+    tools: "尖筆、墨水",
+    uses: ["進出筆", "曲線節奏", "交叉前準備"],
+    guidance: [
+      "C 曲線保持開口方向穩定。",
+      "S 曲線在轉折處減壓，避免兩段粗畫相撞。",
+      "交叉時盡量接近 90°。",
+    ],
+    sheetTip: "C／S 皆源於橢圓；交叉近直角、粗畫不互交。",
+    track: "flourishing",
+  },
+  {
+    slug: "flourish-figure-eight",
+    titleZh: "8 字環與無限曲線",
+    titleEn: "Figure-Eight Flourishes",
+    styleId: "flourishing",
+    kind: "flourish-figure-eight",
+    stage: 1,
+    summary: "8 字環訓練連續轉向與節奏；是 offhand flourishing 的核心動作。",
+    level: "第 1 級",
+    tools: "尖筆、墨水",
+    uses: ["連續轉向", "節奏", "Offhand 基礎"],
+    guidance: [
+      "上下兩環大小盡量對稱。",
+      "交叉點保持乾淨，一筆完成再停。",
+      "速度慢於你以為需要的速度。",
+    ],
+    sheetTip: "一筆連成 8 字；對稱優先於華麗。",
+    track: "flourishing",
+  },
+  {
+    slug: "flourish-cartouche",
+    titleZh: "Cartouche 框飾骨架",
+    titleEn: "Cartouche Framework",
+    styleId: "flourishing",
+    kind: "flourish-cartouche",
+    stage: 2,
+    summary: "以淚滴形與對稱卷曲組成畫框骨架，可包圍名字或短詞。",
+    level: "第 2 級",
+    tools: "尖筆、墨水",
+    uses: ["對稱構圖", "名字框飾", "作品裝飾"],
+    guidance: [
+      "先定中軸對稱線，再左右鏡像。",
+      "內框留給文字，花飾不要壓字。",
+      "外圈卷曲由大到小收束。",
+    ],
+    sheetTip: "先骨架、後細節；文字區保持乾淨。",
+    track: "flourishing",
+  },
+  {
+    slug: "flourish-capitals",
+    titleZh: "花飾大寫練習",
+    titleEn: "Flourished Capitals",
+    styleId: "flourishing",
+    kind: "flourish-capitals",
+    stage: 3,
+    summary: "在可讀的大寫骨架上，為升部、橫筆與字尾加橢圓花飾。",
+    level: "第 3 級",
+    tools: "尖筆、墨水",
+    uses: ["大寫花飾", "升部延伸", "橫筆裝飾"],
+    guidance: [
+      "先寫清楚字母，再加花飾。",
+      "花飾大於字母通常更耐看。",
+      "粗畫不相交；交叉接近直角。",
+    ],
+    sheetTip: "可讀優先；花飾是延伸，不是淹沒。",
+    letters: ["B", "H", "L", "P", "R", "T", "Y"],
+    track: "flourishing",
+  },
+  {
+    slug: "flourish-words",
+    titleZh: "花飾詞語練習",
+    titleEn: "Flourished Words",
+    styleId: "flourishing",
+    kind: "flourish-words",
+    stage: 4,
+    summary: "為詞首、詞尾與升部加花飾，練習整詞節奏與留白。",
+    level: "第 4 級",
+    tools: "尖筆、墨水",
+    uses: ["詞首詞尾", "整詞節奏", "作品應用"],
+    guidance: [
+      "先寫詞，再決定何處加花。",
+      "通常在詞首、詞尾或升部加一處即可。",
+      "整詞完成後退後審視平衡。",
+    ],
+    sheetTip: "一詞一主花飾；其餘留白。",
+    content: ["Love", "Grace", "Beauty", "Script", "Flourish", "Amore"],
+    track: "flourishing",
+  },
+
 ];
 
 export function getPracticeSheet(slug: string): PracticeSheet | undefined {
@@ -835,6 +976,8 @@ export function getStyleLabel(styleId: PracticeSheetStyleId): string {
       return "哥德體";
     case "general":
       return "通用";
+    case "flourishing":
+      return "花飾書法";
     default: {
       const _exhaustive: never = styleId;
       return _exhaustive;
@@ -854,7 +997,7 @@ export function getTodaysPractice(date = new Date()) {
     {
       focus: "熱身與筆壓",
       reason: "適合放慢節奏，先把線條感覺找回來。",
-      sheetSlugs: ["copperplate-ovals", "italic-rules"],
+      sheetSlugs: ["copperplate-ovals", "flourish-ovals"],
     },
     {
       focus: "大寫直筆家族",
@@ -885,12 +1028,12 @@ export function getTodaysPractice(date = new Date()) {
     {
       focus: "單字組合",
       reason: "把字母串成字，檢查字距與節奏。",
-      sheetSlugs: ["italic-words-easy", "copperplate-basic-strokes"],
+      sheetSlugs: ["italic-words-easy", "flourish-cs-curves"],
     },
     {
-      focus: "短句與尖筆複習",
-      reason: "用短句收束，並點綴尖筆路線熱身。",
-      sheetSlugs: ["italic-sentences-easy", "spencerian-compound-curves"],
+      focus: "短句與花飾複習",
+      reason: "用短句收束，並點綴 Offhand 8 字環熱身。",
+      sheetSlugs: ["italic-sentences-easy", "flourish-figure-eight"],
     },
   ] as const;
 
