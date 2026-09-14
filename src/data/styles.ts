@@ -48,7 +48,7 @@ export const calligraphyStyles: CalligraphyStyle[] = [
     nameZh: "哥德體",
     nameEn: "Gothic / Blackletter",
     era: "中世紀歐洲",
-    sample: "Textura",
+    sample: "Fraktur",
     summary:
       "垂直筆畫密實、稜角分明，帶有中世紀手抄本的莊嚴感。",
     traits: ["垂直骨架", "密排字距", "儀式感強"],
