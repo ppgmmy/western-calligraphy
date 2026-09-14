@@ -10,10 +10,60 @@ type SheetProps = {
   sheet: PracticeSheet;
 };
 
+const INK = "#1c232b";
+const GHOST = "#c8d0d8";
+const RULE = "#9eb4c6";
+const RULE_SOFT = "#c5d3de";
+const TEAL = "#245c54";
+const BRASS = "#9a8658";
+
+function pageLabel(sheet: PracticeSheet) {
+  return `PAGE ${String(sheet.stage + 1).padStart(2, "0")}`;
+}
+
+function GuidelineLegend({
+  x,
+  y,
+  withSlant = true,
+}: {
+  x: number;
+  y: number;
+  withSlant?: boolean;
+}) {
+  const items = [
+    { label: "Ascender 上升線", color: RULE_SOFT },
+    { label: "x-Height 字身高度", color: RULE },
+    { label: "Baseline 基線", color: "#4a5560" },
+    { label: "Descender 下降線", color: RULE_SOFT },
+    ...(withSlant ? [{ label: "55° Slant 傾斜線", color: RULE }] : []),
+  ];
+
+  return (
+    <g transform={`translate(${x} ${y})`}>
+      {items.map((item, index) => (
+        <g key={item.label} transform={`translate(${index * 138} 0)`}>
+          <circle cx={4} cy={-3} r={3} fill={item.color} />
+          <text
+            x={12}
+            y={0}
+            fill="#5b6570"
+            fontFamily="Georgia, 'Times New Roman', serif"
+            fontSize="9"
+            letterSpacing="0.4"
+          >
+            {item.label}
+          </text>
+        </g>
+      ))}
+    </g>
+  );
+}
+
 function SheetFrame({
   sheet,
   children,
-}: SheetProps & { children: ReactNode }) {
+  showLegend = false,
+}: SheetProps & { children: ReactNode; showLegend?: boolean }) {
   return (
     <svg
       className="practice-sheet-svg"
@@ -23,69 +73,80 @@ function SheetFrame({
       aria-label={`${sheet.titleZh} 練習紙`}
       xmlns="http://www.w3.org/2000/svg"
     >
-      <rect width={PAGE_W} height={PAGE_H} fill="#f7f5f1" />
+      <rect width={PAGE_W} height={PAGE_H} fill="#fbfaf7" />
       <text
         x={MARGIN}
-        y={36}
-        fill="#245c54"
-        fontFamily="Georgia, 'Times New Roman', serif"
-        fontSize="18"
-        letterSpacing="1.5"
+        y={42}
+        fill={INK}
+        fontFamily="var(--font-script), 'Segoe Script', cursive"
+        fontSize="34"
       >
         Scriptoria
       </text>
       <text
         x={PAGE_W - MARGIN}
-        y={36}
-        fill="#3a4450"
+        y={28}
+        fill={BRASS}
         fontFamily="Georgia, 'Times New Roman', serif"
-        fontSize="13"
+        fontSize="10"
+        letterSpacing="2"
+        textAnchor="end"
+      >
+        {pageLabel(sheet)}
+      </text>
+      <text
+        x={PAGE_W - MARGIN}
+        y={44}
+        fill="#5b6570"
+        fontFamily="Georgia, 'Times New Roman', serif"
+        fontSize="11"
         textAnchor="end"
       >
         {sheet.titleEn}
       </text>
       <text
         x={MARGIN}
-        y={58}
-        fill="#1a1f24"
+        y={68}
+        fill={TEAL}
         fontFamily="'Noto Serif TC', 'Songti TC', serif"
-        fontSize="22"
+        fontSize="18"
       >
         {sheet.titleZh}
       </text>
       <text
         x={MARGIN}
-        y={78}
+        y={86}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="12"
+        fontSize="11"
       >
         {sheet.sheetTip}
       </text>
       <line
         x1={MARGIN}
-        y1={88}
+        y1={94}
         x2={PAGE_W - MARGIN}
-        y2={88}
-        stroke="#9a8658"
-        strokeWidth="1"
+        y2={94}
+        stroke={BRASS}
+        strokeWidth="0.8"
       />
+      {showLegend ? <GuidelineLegend x={MARGIN} y={108} /> : null}
       {children}
       <text
         x={MARGIN}
         y={PAGE_H - 22}
         fill="#6b7280"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="11"
+        fontSize="10"
       >
-        列印建議：A4｜實際大小｜關閉頁首頁尾｜單面
+        列印：A4｜實際大小｜關閉頁首頁尾｜單面｜深色範字＋淺灰描紅＋空白自寫
       </text>
       <text
         x={PAGE_W - MARGIN}
         y={PAGE_H - 22}
         fill="#6b7280"
         fontFamily="Georgia, serif"
-        fontSize="11"
+        fontSize="10"
         textAnchor="end"
       >
         western-calligraphy.vercel.app
@@ -95,7 +156,7 @@ function SheetFrame({
 }
 
 function SlantGuidelines({ sheet }: SheetProps) {
-  const top = 104;
+  const top = 124;
   const bottom = PAGE_H - 48;
   const left = MARGIN;
   const right = PAGE_W - MARGIN;
@@ -118,7 +179,7 @@ function SlantGuidelines({ sheet }: SheetProps) {
   }
 
   return (
-    <SheetFrame sheet={sheet}>
+    <SheetFrame sheet={sheet} showLegend>
       <clipPath id="sheet-clip">
         <rect x={left} y={top} width={right - left} height={bottom - top} />
       </clipPath>
@@ -429,50 +490,132 @@ function RuledBand({
   height,
   left,
   right,
+  withSlant = true,
+  clipId,
 }: {
   y: number;
   height: number;
   left: number;
   right: number;
+  withSlant?: boolean;
+  clipId?: string;
 }) {
+  const asc = y + 2;
   const xTop = y + height * 0.28;
   const base = y + height * 0.72;
+  const desc = y + height - 2;
+  const id = clipId ?? `band-${Math.round(y)}-${Math.round(left)}`;
+  const slantRad = (55 * Math.PI) / 180;
+  const slantLines: Array<{ x1: number; y1: number; x2: number; y2: number }> =
+    [];
+  if (withSlant) {
+    const step = 22;
+    for (let i = -8; i < 36; i += 1) {
+      const x0 = left + i * step;
+      const dx = (desc - asc) / Math.tan(slantRad);
+      slantLines.push({ x1: x0, y1: asc, x2: x0 + dx, y2: desc });
+    }
+  }
+
   return (
     <g>
+      <defs>
+        <clipPath id={id}>
+          <rect x={left} y={asc} width={right - left} height={desc - asc} />
+        </clipPath>
+      </defs>
+      {withSlant ? (
+        <g clipPath={`url(#${id})`} stroke={RULE_SOFT} strokeWidth="0.55">
+          {slantLines.map((line, index) => (
+            <line
+              key={`s-${id}-${index}`}
+              x1={line.x1}
+              y1={line.y1}
+              x2={line.x2}
+              y2={line.y2}
+            />
+          ))}
+        </g>
+      ) : null}
       <line
         x1={left}
-        y1={y}
+        y1={asc}
         x2={right}
-        y2={y}
-        stroke="#d0d6de"
-        strokeWidth="0.7"
-        strokeDasharray="2 3"
+        y2={asc}
+        stroke={RULE_SOFT}
+        strokeWidth="0.8"
       />
       <line
         x1={left}
         y1={xTop}
         x2={right}
         y2={xTop}
-        stroke="#a8b4c0"
-        strokeWidth="0.8"
+        stroke={RULE}
+        strokeWidth="0.9"
       />
       <line
         x1={left}
         y1={base}
         x2={right}
         y2={base}
-        stroke="#3a4450"
-        strokeWidth="1.1"
+        stroke="#4a5560"
+        strokeWidth="1.15"
       />
       <line
         x1={left}
-        y1={y + height}
+        y1={desc}
         x2={right}
-        y2={y + height}
-        stroke="#d0d6de"
-        strokeWidth="0.7"
-        strokeDasharray="2 3"
+        y2={desc}
+        stroke={RULE_SOFT}
+        strokeWidth="0.8"
       />
+    </g>
+  );
+}
+
+function TraceRow({
+  exemplar,
+  y,
+  height,
+  left,
+  right,
+  ghostCount = 4,
+  fontSize = 30,
+}: {
+  exemplar: string;
+  y: number;
+  height: number;
+  left: number;
+  right: number;
+  ghostCount?: number;
+  fontSize?: number;
+}) {
+  const baseY = y + height * 0.72;
+  const gap = Math.min(56, Math.max(36, (right - left - 24) / (ghostCount + 2)));
+  return (
+    <g>
+      <RuledBand y={y} height={height} left={left} right={right} clipId={`tr-${y}-${left}`} />
+      <text
+        x={left + 10}
+        y={baseY}
+        fill={INK}
+        fontFamily="var(--font-script), Georgia, cursive"
+        fontSize={fontSize}
+      >
+        {exemplar}
+      </text>
+      {Array.from({ length: ghostCount }).map((_, index) => (
+        <text
+          key={`ghost-${exemplar}-${index}`}
+          x={left + 10 + gap * (index + 1)}
+          y={baseY}
+          fill={GHOST}
+          fontFamily="var(--font-script), Georgia, cursive"
+          fontSize={fontSize}
+        >
+          {exemplar}
+        </text>
+      ))}
     </g>
   );
 }
@@ -483,66 +626,43 @@ function AlphabetSheet({
 }: SheetProps & { letters: string[] }) {
   const left = MARGIN;
   const right = PAGE_W - MARGIN;
-  const top = 108;
-  const rowH = 70;
-  const cols = 4;
-  const colW = (right - left) / cols;
-
-  const rows: string[][] = [];
-  for (let i = 0; i < letters.length; i += cols) {
-    rows.push(letters.slice(i, i + cols));
-  }
+  const top = 128;
+  const cols = 2;
+  const colGap = 18;
+  const colW = (right - left - colGap) / cols;
+  const rowH = 58;
+  const mid = Math.ceil(letters.length / 2);
+  const columns = [letters.slice(0, mid), letters.slice(mid)];
 
   return (
-    <SheetFrame sheet={sheet}>
+    <SheetFrame sheet={sheet} showLegend>
       <text
         x={left}
-        y={102}
+        y={118}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
         fontSize="11"
       >
-        每格：左＝範字｜中＝淡字描寫｜右＝空白自寫
+        每行：深色範字 → 淺灰描紅 → 右側空白自寫（對齊基線與 55° 斜度）
       </text>
-      {rows.map((rowLetters, rowIndex) => {
-        const y = top + rowIndex * rowH;
+      {columns.map((colLetters, colIndex) => {
+        const x0 = left + colIndex * (colW + colGap);
         return (
-          <g key={`alpha-row-${rowIndex}`}>
-            <RuledBand y={y} height={rowH - 10} left={left} right={right} />
-            {rowLetters.map((letter, colIndex) => {
-              const x = left + colIndex * colW;
-              const baseY = y + (rowH - 10) * 0.72;
+          <g key={`col-${colIndex}`}>
+            {colLetters.map((letter, rowIndex) => {
+              const y = top + rowIndex * rowH;
+              if (y + rowH > PAGE_H - 56) return null;
               return (
-                <g key={`cell-${letter}`}>
-                  <text
-                    x={x + 18}
-                    y={baseY}
-                    fill="#1a1f24"
-                    fontFamily="Georgia, 'Times New Roman', serif"
-                    fontSize="34"
-                    fontStyle="italic"
-                  >
-                    {letter}
-                  </text>
-                  <text
-                    x={x + colW * 0.38}
-                    y={baseY}
-                    fill="#b7c0cb"
-                    fontFamily="Georgia, 'Times New Roman', serif"
-                    fontSize="34"
-                    fontStyle="italic"
-                  >
-                    {letter}
-                  </text>
-                  <line
-                    x1={x + colW - 8}
-                    y1={y + 4}
-                    x2={x + colW - 8}
-                    y2={y + rowH - 14}
-                    stroke="#e2e6eb"
-                    strokeWidth="1"
-                  />
-                </g>
+                <TraceRow
+                  key={`alpha-${letter}`}
+                  exemplar={letter}
+                  y={y}
+                  height={rowH - 8}
+                  left={x0}
+                  right={x0 + colW}
+                  ghostCount={3}
+                  fontSize={28}
+                />
               );
             })}
           </g>
@@ -555,11 +675,12 @@ function AlphabetSheet({
         fontFamily="'Noto Serif TC', serif"
         fontSize="12"
       >
-        建議：一次練 4–6 字；寫完用鉛筆圈出最好的 3 個，明天先抄它們。
+        建議一次練半欄；描紅求形準，空白格求自己寫得像範字。
       </text>
     </SheetFrame>
   );
 }
+
 
 function strokeToPath(strokes: StrokePath[], size: number): string[] {
   return strokes.map((stroke) => {
@@ -656,21 +777,21 @@ function FamilyAlphabetSheet({ sheet }: SheetProps) {
   const letters = sheet.letters ?? [];
   const left = MARGIN;
   const right = PAGE_W - MARGIN;
-  const top = 108;
+  const top = 122;
   const usable = PAGE_H - 56 - top;
-  const rowH = Math.min(88, Math.max(64, Math.floor(usable / Math.max(letters.length, 1))));
-  const guideSize = Math.min(54, rowH - 10);
+  const rowH = Math.min(92, Math.max(68, Math.floor(usable / Math.max(letters.length, 1))));
+  const guideSize = Math.min(56, rowH - 14);
 
   return (
-    <SheetFrame sheet={sheet}>
+    <SheetFrame sheet={sheet} showLegend>
       <text
         x={left}
-        y={102}
+        y={118}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
         fontSize="11"
       >
-        左＝筆畫方向（圓點起筆、箭頭收筆）｜中左範字｜中右描寫｜右＝空白自寫
+        左＝筆畫方向｜其後深色範字＋淺灰描紅＋右側空白自寫
       </text>
       {letters.map((letter, index) => {
         const y = top + index * rowH;
@@ -678,11 +799,17 @@ function FamilyAlphabetSheet({ sheet }: SheetProps) {
         const bandH = rowH - 10;
         const baseY = y + bandH * 0.72;
         const practiceLeft = left + guideSize + 14;
-        const colW = (right - practiceLeft) / 3;
+        const gap = Math.min(58, Math.max(40, (right - practiceLeft - 20) / 6));
 
         return (
           <g key={`family-${letter}`}>
-            <RuledBand y={y} height={bandH} left={practiceLeft} right={right} />
+            <RuledBand
+              y={y}
+              height={bandH}
+              left={practiceLeft}
+              right={right}
+              clipId={`fam-${letter}`}
+            />
             <StrokeGuideGlyph
               letter={letter}
               x={left}
@@ -690,41 +817,26 @@ function FamilyAlphabetSheet({ sheet }: SheetProps) {
               size={guideSize}
             />
             <text
-              x={practiceLeft + 12}
+              x={practiceLeft + 10}
               y={baseY}
-              fill="#1a1f24"
-              fontFamily="Georgia, 'Times New Roman', serif"
-              fontSize={rowH > 75 ? 36 : 30}
-              fontStyle="italic"
+              fill={INK}
+              fontFamily="var(--font-script), Georgia, cursive"
+              fontSize={rowH > 78 ? 34 : 28}
             >
               {letter}
             </text>
-            <text
-              x={practiceLeft + colW + 12}
-              y={baseY}
-              fill="#b7c0cb"
-              fontFamily="Georgia, 'Times New Roman', serif"
-              fontSize={rowH > 75 ? 36 : 30}
-              fontStyle="italic"
-            >
-              {letter}
-            </text>
-            <line
-              x1={practiceLeft + colW - 6}
-              y1={y + 4}
-              x2={practiceLeft + colW - 6}
-              y2={y + bandH - 4}
-              stroke="#e2e6eb"
-              strokeWidth="1"
-            />
-            <line
-              x1={practiceLeft + colW * 2 - 6}
-              y1={y + 4}
-              x2={practiceLeft + colW * 2 - 6}
-              y2={y + bandH - 4}
-              stroke="#e2e6eb"
-              strokeWidth="1"
-            />
+            {Array.from({ length: 3 }).map((_, ghostIndex) => (
+              <text
+                key={`fg-${letter}-${ghostIndex}`}
+                x={practiceLeft + 10 + gap * (ghostIndex + 1)}
+                y={baseY}
+                fill={GHOST}
+                fontFamily="var(--font-script), Georgia, cursive"
+                fontSize={rowH > 78 ? 34 : 28}
+              >
+                {letter}
+              </text>
+            ))}
           </g>
         );
       })}
@@ -735,13 +847,12 @@ function FamilyAlphabetSheet({ sheet }: SheetProps) {
         fontFamily="'Noto Serif TC', serif"
         fontSize="12"
       >
-        筆畫示意為教學簡圖（非唯一正統寫法）。先慢描箭頭方向，再獨立書寫。
+        筆畫示意為教學簡圖。先慢描淺灰字，再在空白區獨立書寫。
       </text>
     </SheetFrame>
   );
 }
 
-/** 尖筆基本筆畫／複合曲線練習（銅板體、斯賓塞體） */
 function PointedPenStrokes({ sheet }: SheetProps) {
   const left = MARGIN;
   const right = PAGE_W - MARGIN;
@@ -841,37 +952,54 @@ function WordsSheet({ sheet }: SheetProps) {
   const words = sheet.content ?? [];
   const left = MARGIN;
   const right = PAGE_W - MARGIN;
-  const top = 110;
-  const rowH = 78;
+  const top = 122;
+  const rowH = 86;
 
   return (
-    <SheetFrame sheet={sheet}>
+    <SheetFrame sheet={sheet} showLegend>
       <text
         x={left}
-        y={102}
+        y={118}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
         fontSize="11"
       >
-        上行淡字可描；下行空白請獨立書寫，注意字母間距。
+        單詞連接節奏：深色範例 → 淺灰描紅 → 下方空白自寫
       </text>
       {words.map((word, index) => {
         const y = top + index * rowH;
         if (y + rowH > PAGE_H - 56) return null;
+        const bandH = 34;
+        const baseY = y + bandH * 0.72;
+        const ghostX = left + 8 + Math.min(240, 26 * word.length + 48);
         return (
           <g key={`word-${word}`}>
-            <RuledBand y={y} height={32} left={left} right={right} />
+            <RuledBand y={y} height={bandH} left={left} right={right} clipId={`w1-${index}`} />
             <text
               x={left + 8}
-              y={y + 32 * 0.72}
-              fill="#b0bac4"
-              fontFamily="Georgia, 'Times New Roman', serif"
-              fontSize="26"
-              fontStyle="italic"
+              y={baseY}
+              fill={INK}
+              fontFamily="var(--font-script), Georgia, cursive"
+              fontSize="24"
             >
               {word}
             </text>
-            <RuledBand y={y + 38} height={32} left={left} right={right} />
+            <text
+              x={ghostX}
+              y={baseY}
+              fill={GHOST}
+              fontFamily="var(--font-script), Georgia, cursive"
+              fontSize="24"
+            >
+              {word}
+            </text>
+            <RuledBand
+              y={y + bandH + 6}
+              height={bandH}
+              left={left}
+              right={right}
+              clipId={`w2-${index}`}
+            />
           </g>
         );
       })}
@@ -882,7 +1010,7 @@ function WordsSheet({ sheet }: SheetProps) {
         fontFamily="'Noto Serif TC', serif"
         fontSize="12"
       >
-        詞與詞之間留半個字寬呼吸；寫完檢查整行是否在同一基線上。
+        注意進出筆與字母間距；整行應落在同一基線、同一斜度。
       </text>
     </SheetFrame>
   );
@@ -892,37 +1020,43 @@ function SentencesSheet({ sheet }: SheetProps) {
   const sentences = sheet.content ?? [];
   const left = MARGIN;
   const right = PAGE_W - MARGIN;
-  const top = 110;
-  const blockH = 96;
+  const top = 122;
+  const blockH = 100;
 
   return (
-    <SheetFrame sheet={sheet}>
+    <SheetFrame sheet={sheet} showLegend>
       <text
         x={left}
-        y={102}
+        y={118}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
         fontSize="11"
       >
-        每句兩行：第一行臨摹，第二行自寫。寫前先想換氣位置。
+        短句練習：上行淺灰描紅，下行空白自寫
       </text>
       {sentences.map((sentence, index) => {
         const y = top + index * blockH;
         if (y + blockH > PAGE_H - 56) return null;
+        const bandH = 36;
         return (
           <g key={`sentence-${index}`}>
-            <RuledBand y={y} height={36} left={left} right={right} />
+            <RuledBand y={y} height={bandH} left={left} right={right} clipId={`s1-${index}`} />
             <text
               x={left + 6}
-              y={y + 36 * 0.7}
-              fill="#b0bac4"
-              fontFamily="Georgia, 'Times New Roman', serif"
-              fontSize="20"
-              fontStyle="italic"
+              y={y + bandH * 0.7}
+              fill={GHOST}
+              fontFamily="var(--font-script), Georgia, cursive"
+              fontSize="18"
             >
               {sentence}
             </text>
-            <RuledBand y={y + 44} height={36} left={left} right={right} />
+            <RuledBand
+              y={y + bandH + 8}
+              height={bandH}
+              left={left}
+              right={right}
+              clipId={`s2-${index}`}
+            />
           </g>
         );
       })}
@@ -933,7 +1067,7 @@ function SentencesSheet({ sheet }: SheetProps) {
         fontFamily="'Noto Serif TC', serif"
         fontSize="12"
       >
-        整句完成後，退後兩步看：字高、斜度、字距是否一致。
+        整句完成後退後兩步看：字高、斜度、字距是否一致。
       </text>
     </SheetFrame>
   );
