@@ -105,7 +105,7 @@ export const practiceStages: Array<{
   },
 ];
 
-/** 三條可並行的練習路線（斜體主線 + 兩條尖筆線） */
+/** 四條可並行的練習路線（斜體主線 + 兩條尖筆線 + 花飾線） */
 export const practiceTracks: Array<{
   id: Exclude<PracticeTrackId, "shared">;
   titleZh: string;
