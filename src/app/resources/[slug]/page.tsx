@@ -5,6 +5,7 @@ import { PracticeSheetActions } from "@/components/PracticeSheetActions";
 import { PracticeSheetArt } from "@/components/PracticeSheetArt";
 import { SiteHeader } from "@/components/SiteHeader";
 import {
+  getDifficultyLabel,
   getPracticeSheet,
   getStageLabel,
   getStyleLabel,
@@ -57,6 +58,11 @@ export default async function ResourceDetailPage({ params }: ResourcePageProps) 
               <span>{getStageLabel(sheet.stage)}</span>
               <span>{getStyleLabel(sheet.styleId)}</span>
               <span>{sheet.level}</span>
+              {sheet.difficulty ? (
+                <span className="resource-item__difficulty">
+                  難度 {getDifficultyLabel(sheet.difficulty)}
+                </span>
+              ) : null}
               <span>{sheet.tools}</span>
             </div>
 

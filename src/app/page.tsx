@@ -124,11 +124,8 @@ export default function HomePage() {
           <a className="btn btn--primary" href="/resources">
             打開練習本
           </a>
-          <a
-            className="btn btn--ghost"
-            href="/resources/italic-family-upper-straight"
-          >
-            從直筆家族開始
+          <a className="btn btn--ghost" href="/resources/copperplate-basic-strokes">
+            試試銅板尖筆線
           </a>
         </div>
       </section>

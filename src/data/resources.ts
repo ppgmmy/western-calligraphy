@@ -4,6 +4,7 @@ export type PracticeSheetKind =
   | "broad-nib-rules"
   | "gothic-grid"
   | "blank-lines"
+  | "pointed-pen-strokes"
   | "alphabet-upper"
   | "alphabet-lower"
   | "alphabet-family"
@@ -17,6 +18,16 @@ export type PracticeSheetStyleId =
   | "foundational"
   | "gothic"
   | "general";
+
+/** 練習路線：斜體主線，或尖筆銅板／斯賓塞平行進程 */
+export type PracticeTrackId =
+  | "italic"
+  | "copperplate"
+  | "spencerian"
+  | "shared";
+
+/** 詞語／句子難度 */
+export type PracticeDifficulty = "easy" | "medium" | "hard";
 
 /** 0 = 熱身格線；1–4 = 字母大寫 → 小寫 → 詞語 → 句子 */
 export type PracticeStage = 0 | 1 | 2 | 3 | 4;
@@ -42,6 +53,10 @@ export type PracticeSheet = {
   letters?: string[];
   /** 對應 letterFamilies 的 id */
   familyId?: string;
+  /** 所屬練習路線 */
+  track?: PracticeTrackId;
+  /** 詞語／句子難度 */
+  difficulty?: PracticeDifficulty;
 };
 
 export const practiceStages: Array<{
@@ -70,17 +85,87 @@ export const practiceStages: Array<{
   },
   {
     stage: 3,
-    titleZh: "第 3 級｜簡單詞語",
-    titleEn: "Simple Words",
-    goal: "把字母連成詞，注意字距與連筆。",
+    titleZh: "第 3 級｜詞語（易／中／難）",
+    titleEn: "Words by Difficulty",
+    goal: "由短詞到升降部多的詞，分難度練習字距與連筆。",
   },
   {
     stage: 4,
-    titleZh: "第 4 級｜短句練習",
-    titleEn: "Short Sentences",
-    goal: "以短句練習整行節奏、呼吸與一致性。",
+    titleZh: "第 4 級｜短句（易／中／難）",
+    titleEn: "Sentences by Difficulty",
+    goal: "由短句到節奏複雜的句子，分難度練習整行呼吸與一致性。",
   },
 ];
+
+/** 三條可並行的練習路線（斜體主線 + 兩條尖筆線） */
+export const practiceTracks: Array<{
+  id: Exclude<PracticeTrackId, "shared">;
+  titleZh: string;
+  titleEn: string;
+  summary: string;
+  tools: string;
+  sheetSlugs: string[];
+}> = [
+  {
+    id: "italic",
+    titleZh: "斜體字主線",
+    titleEn: "Italic Path",
+    summary: "闊尖筆：格線 → 字母家族 → 詞語難度冊 → 短句難度冊。",
+    tools: "闊尖筆、墨水",
+    sheetSlugs: [
+      "italic-rules",
+      "italic-family-upper-straight",
+      "italic-family-lower-oval",
+      "italic-words-easy",
+      "italic-sentences-easy",
+    ],
+  },
+  {
+    id: "copperplate",
+    titleZh: "銅板體尖筆線",
+    titleEn: "Copperplate Path",
+    summary: "尖筆：導引線 → 橢圓 → 基本筆畫 → 核心小寫 → 短詞。",
+    tools: "尖筆、墨水",
+    sheetSlugs: [
+      "copperplate-guidelines",
+      "copperplate-ovals",
+      "copperplate-basic-strokes",
+      "copperplate-minuscule-core",
+      "copperplate-words-easy",
+    ],
+  },
+  {
+    id: "spencerian",
+    titleZh: "斯賓塞體尖筆線",
+    titleEn: "Spencerian Path",
+    summary: "尖筆：導引線 → 複合曲線 → 基本筆畫 → 核心小寫 → 短詞。",
+    tools: "尖筆、墨水",
+    sheetSlugs: [
+      "spencerian-guidelines",
+      "spencerian-compound-curves",
+      "spencerian-basic-strokes",
+      "spencerian-minuscule-core",
+      "spencerian-words-easy",
+    ],
+  },
+];
+
+export function getDifficultyLabel(difficulty?: PracticeDifficulty): string {
+  switch (difficulty) {
+    case "easy":
+      return "易";
+    case "medium":
+      return "中";
+    case "hard":
+      return "難";
+    case undefined:
+      return "";
+    default: {
+      const _exhaustive: never = difficulty;
+      return _exhaustive;
+    }
+  }
+}
 
 export const practiceSheets: PracticeSheet[] = [
   // —— Stage 0 warm-up ——
@@ -390,25 +475,172 @@ export const practiceSheets: PracticeSheet[] = [
     sheetTip: "總覽頁：先家族、再整頁複習。",
   },
 
-  // —— Stage 3 words ——
+  // —— Copperplate pointed-pen path ——
   {
-    slug: "italic-words-basic",
-    titleZh: "斜體字簡單詞語",
-    titleEn: "Italic Basic Words",
+    slug: "copperplate-basic-strokes",
+    titleZh: "銅板體基本筆畫",
+    titleEn: "Copperplate Basic Strokes",
+    styleId: "copperplate",
+    kind: "pointed-pen-strokes",
+    stage: 0,
+    track: "copperplate",
+    summary: "尖筆壓力轉換：細畫上行、粗畫下行，建立銅板體筆觸基礎。",
+    level: "熱身",
+    tools: "尖筆、墨水",
+    uses: ["壓力控制", "粗細轉換", "尖筆熱身"],
+    guidance: [
+      "下行稍加力形成陰影筆畫，上行幾乎不施壓。",
+      "先求每一筆粗細轉換乾淨，再求速度。",
+      "完成後進入核心小寫字母。",
+    ],
+    sheetTip: "銅板基本筆畫：下行粗、上行細。",
+  },
+  {
+    slug: "copperplate-minuscule-core",
+    titleZh: "銅板體核心小寫",
+    titleEn: "Copperplate Minuscule Core",
+    styleId: "copperplate",
+    kind: "alphabet-family",
+    stage: 2,
+    track: "copperplate",
+    familyId: "copperplate-minuscule-core",
+    letters: ["i", "u", "n", "m", "a", "o", "c", "e"],
+    summary: "尖筆小寫核心形：i u n m a o c e。先穩橢圓與拱門。",
+    level: "第 2 級",
+    tools: "尖筆、墨水",
+    uses: ["核心小寫", "筆畫方向", "尖筆進程"],
+    guidance: [
+      "左側示意箭頭：慢描起筆到收筆。",
+      "保持約 55° 斜度，陰影筆畫寬度盡量一致。",
+      "這八個字母穩了，再進入短詞。",
+    ],
+    sheetTip: "銅板核心小寫：先穩 i/u/n/m 與 a/o/c/e。",
+  },
+  {
+    slug: "copperplate-words-easy",
+    titleZh: "銅板體短詞｜易",
+    titleEn: "Copperplate Words · Easy",
+    styleId: "copperplate",
+    kind: "words",
+    stage: 3,
+    track: "copperplate",
+    difficulty: "easy",
+    summary: "3–4 字母短詞，練習尖筆連筆與字距。",
+    level: "第 3 級",
+    tools: "尖筆、墨水",
+    uses: ["短詞", "連筆", "字距"],
+    guidance: [
+      "每個詞先慢寫一筆陰影、再補細畫連接。",
+      "字距以能放入細畫為直覺。",
+      "寫完遠看斜度是否整行一致。",
+    ],
+    sheetTip: "銅板短詞（易）：先求穩定，再求華麗。",
+    content: ["in", "on", "me", "one", "mine", "name", "come", "moon", "nice", "once"],
+  },
+
+  // —— Spencerian pointed-pen path ——
+  {
+    slug: "spencerian-compound-curves",
+    titleZh: "斯賓塞體複合曲線",
+    titleEn: "Spencerian Compound Curves",
+    styleId: "spencerian",
+    kind: "pointed-pen-strokes",
+    stage: 0,
+    track: "spencerian",
+    summary: "輕盈複合曲線熱身，為斯賓塞體流動節奏做準備。",
+    level: "熱身",
+    tools: "尖筆、墨水",
+    uses: ["曲線節奏", "輕壓", "流動感"],
+    guidance: [
+      "整頁保持輕壓，只在需要處略加重。",
+      "曲線連接要圓滑，避免突然折角。",
+      "節奏穩定後，再進入基本筆畫。",
+    ],
+    sheetTip: "斯賓塞複合曲線：輕、連、均勻。",
+  },
+  {
+    slug: "spencerian-basic-strokes",
+    titleZh: "斯賓塞體基本筆畫",
+    titleEn: "Spencerian Basic Strokes",
+    styleId: "spencerian",
+    kind: "pointed-pen-strokes",
+    stage: 0,
+    track: "spencerian",
+    summary: "直筆、曲線與進出筆練習，建立斯賓塞體骨架感。",
+    level: "熱身",
+    tools: "尖筆、墨水",
+    uses: ["基本筆畫", "進出筆", "骨架"],
+    guidance: [
+      "先練等距直筆，再練進出曲線。",
+      "筆畫之間留一致呼吸。",
+      "完成後進入核心小寫。",
+    ],
+    sheetTip: "斯賓塞基本筆畫：均勻勝過用力。",
+  },
+  {
+    slug: "spencerian-minuscule-core",
+    titleZh: "斯賓塞體核心小寫",
+    titleEn: "Spencerian Minuscule Core",
+    styleId: "spencerian",
+    kind: "alphabet-family",
+    stage: 2,
+    track: "spencerian",
+    familyId: "spencerian-minuscule-core",
+    letters: ["i", "u", "n", "m", "x", "v", "w", "r"],
+    summary: "斯賓塞核心小寫：i u n m x v w r。強調流動進出筆。",
+    level: "第 2 級",
+    tools: "尖筆、墨水",
+    uses: ["核心小寫", "流動進出", "尖筆進程"],
+    guidance: [
+      "進出筆保持輕盈，不要壓死起筆。",
+      "n / m 的拱門寬度盡量一致。",
+      "寫穩後進入短詞練習。",
+    ],
+    sheetTip: "斯賓塞核心小寫：輕進出、穩節奏。",
+  },
+  {
+    slug: "spencerian-words-easy",
+    titleZh: "斯賓塞體短詞｜易",
+    titleEn: "Spencerian Words · Easy",
+    styleId: "spencerian",
+    kind: "words",
+    stage: 3,
+    track: "spencerian",
+    difficulty: "easy",
+    summary: "短詞練習連筆流動，保持輕盈字距。",
+    level: "第 3 級",
+    tools: "尖筆、墨水",
+    uses: ["短詞", "連筆流動", "字距"],
+    guidance: [
+      "連筆不要拖泥帶水，保持輕快節奏。",
+      "每個詞寫完檢查基線是否平。",
+      "可與複合曲線熱身同一天交替練。",
+    ],
+    sheetTip: "斯賓塞短詞（易）：連筆輕快、字距勻。",
+    content: ["in", "run", "win", "vine", "mine", "warm", "rain", "wave", "river", "winter"],
+  },
+
+  // —— Stage 3 Italic words by difficulty ——
+  {
+    slug: "italic-words-easy",
+    titleZh: "斜體字詞語｜易",
+    titleEn: "Italic Words · Easy",
     styleId: "italic",
     kind: "words",
     stage: 3,
-    summary: "用短詞練習字母連接與字距，為寫句子做準備。",
+    track: "italic",
+    difficulty: "easy",
+    summary: "3–4 字母短詞，少升降部，適合剛離開字母家族的練習。",
     level: "第 3 級",
     tools: "闊尖筆、墨水",
-    uses: ["連字", "字距", "詞形節奏"],
+    uses: ["短詞", "字距入門", "連筆基礎"],
     guidance: [
       "每個詞先臨摹一行淡字，再獨立寫一行。",
       "字母之間保持呼吸感：不要黏死，也不要拆太開。",
       "寫完一個詞，停頓看整體是否水平、是否同高。",
-      "詞語順暢後，進入第 4 級短句。",
+      "順暢後再進入「中」難度冊。",
     ],
-    sheetTip: "第 3 級：簡單詞語。先摹後寫，注意字距。",
+    sheetTip: "詞語｜易：短詞、少升降部。先摹後寫。",
     content: [
       "art",
       "ink",
@@ -416,43 +648,169 @@ export const practiceSheets: PracticeSheet[] = [
       "calm",
       "form",
       "hand",
+      "note",
+      "line",
+      "soft",
+      "warm",
+      "care",
+      "time",
+    ],
+  },
+  {
+    slug: "italic-words-medium",
+    titleZh: "斜體字詞語｜中",
+    titleEn: "Italic Words · Medium",
+    styleId: "italic",
+    kind: "words",
+    stage: 3,
+    track: "italic",
+    difficulty: "medium",
+    summary: "5–6 字母、連筆較多的詞，練習節奏與字距穩定。",
+    level: "第 3 級",
+    tools: "闊尖筆、墨水",
+    uses: ["連筆", "字距", "詞形節奏"],
+    guidance: [
+      "先在心中規劃字母寬度，再落筆。",
+      "連筆入口與出口盡量一致。",
+      "寫完遠看整行，檢查疏密是否均勻。",
+    ],
+    sheetTip: "詞語｜中：連筆增多，節奏要穩。",
+    content: [
       "grace",
       "light",
       "script",
       "quiet",
       "letter",
       "beauty",
+      "paper",
+      "stroke",
+      "margin",
+      "rhythm",
+      "gentle",
+      "steady",
+    ],
+  },
+  {
+    slug: "italic-words-hard",
+    titleZh: "斜體字詞語｜難",
+    titleEn: "Italic Words · Hard",
+    styleId: "italic",
+    kind: "words",
+    stage: 3,
+    track: "italic",
+    difficulty: "hard",
+    summary: "含較多升部／降部的詞，挑戰高度控制與整詞平衡。",
+    level: "第 3 級",
+    tools: "闊尖筆、墨水",
+    uses: ["升降部", "整詞平衡", "進階字距"],
+    guidance: [
+      "升部與降部保持克制，不要搶走整詞重心。",
+      "g / y / p / b / d / h 出現時，先想好高度再寫。",
+      "同一頁速度放慢，品質優先。",
+    ],
+    sheetTip: "詞語｜難：升降部多，高度克制。",
+    content: [
+      "glyph",
+      "height",
+      "depth",
+      "happy",
+      "playful",
+      "daylight",
+      "alphabet",
+      "typography",
+      "paragraph",
+      "handwriting",
+      "calligraphy",
+      "flourish",
     ],
   },
 
-  // —— Stage 4 sentences ——
+  // —— Stage 4 Italic sentences by difficulty ——
   {
-    slug: "italic-sentences-basic",
-    titleZh: "斜體字短句練習",
-    titleEn: "Italic Short Sentences",
+    slug: "italic-sentences-easy",
+    titleZh: "斜體字短句｜易",
+    titleEn: "Italic Sentences · Easy",
     styleId: "italic",
     kind: "sentences",
     stage: 4,
-    summary: "以完整短句練習整行節奏、一致性與書寫呼吸。",
+    track: "italic",
+    difficulty: "easy",
+    summary: "短而清楚的句子，先練整行節奏與換氣。",
     level: "第 4 級",
     tools: "闊尖筆、墨水",
-    uses: ["整行節奏", "一致性", "書寫呼吸"],
+    uses: ["短句", "換氣", "整行節奏"],
     guidance: [
-      "每句先慢讀，想好從哪裡起筆、哪裡換氣。",
+      "每句先慢讀，想好起筆與換氣點。",
       "第一行可描淡字，第二行自己寫。",
-      "整句寫完後檢查：字高、斜度、字距是否一致。",
-      "熟練後可回到通用練習線，自由抄寫喜歡的句子。",
+      "寫完檢查字高與斜度是否一致。",
     ],
-    sheetTip: "第 4 級：短句。慢寫、換氣、保持整行一致。",
+    sheetTip: "短句｜易：短句、慢寫、先求整齊。",
     content: [
-      "Practice makes progress.",
-      "Write slowly and steadily.",
-      "Keep your lines even today.",
-      "Breathe, then begin again.",
-      "Beauty grows with patience.",
-      "A quiet hand writes clearly.",
+      "Write slowly today.",
+      "Keep the line even.",
+      "Breathe, then begin.",
+      "Practice with care.",
+      "A calm hand helps.",
+      "Begin again gently.",
     ],
   },
+  {
+    slug: "italic-sentences-medium",
+    titleZh: "斜體字短句｜中",
+    titleEn: "Italic Sentences · Medium",
+    styleId: "italic",
+    kind: "sentences",
+    stage: 4,
+    track: "italic",
+    difficulty: "medium",
+    summary: "稍長句子，練習字距連續與整行一致性。",
+    level: "第 4 級",
+    tools: "闊尖筆、墨水",
+    uses: ["稍長句", "連續字距", "一致性"],
+    guidance: [
+      "句子中段最容易變擠或變鬆，特別留意。",
+      "標點也要有位置意識。",
+      "第二遍可略求流暢，但仍保持可讀。",
+    ],
+    sheetTip: "短句｜中：中段字距最易亂，放慢。",
+    content: [
+      "Practice makes real progress.",
+      "Write slowly and steadily now.",
+      "Keep your lines even today.",
+      "Beauty grows with patience.",
+      "A quiet hand writes clearly.",
+      "Return to the page each day.",
+    ],
+  },
+  {
+    slug: "italic-sentences-hard",
+    titleZh: "斜體字短句｜難",
+    titleEn: "Italic Sentences · Hard",
+    styleId: "italic",
+    kind: "sentences",
+    stage: 4,
+    track: "italic",
+    difficulty: "hard",
+    summary: "較長、升降部較多的句子，挑戰整頁氣韻與控制。",
+    level: "第 4 級",
+    tools: "闊尖筆、墨水",
+    uses: ["長句", "升降部", "整頁氣韻"],
+    guidance: [
+      "先用鉛筆輕點換氣位置，再落墨。",
+      "升降部字母出現時，維持 x-height 穩定。",
+      "整句完成後退後兩步審視。",
+    ],
+    sheetTip: "短句｜難：長句與升降部，氣韻優先。",
+    content: [
+      "Typography begins with patient glyphs.",
+      "Keep height, depth, and rhythm aligned.",
+      "Beautiful letters grow through daily practice.",
+      "The quiet page rewards a steady hand.",
+      "Breathe through each stroke and space.",
+      "Your best line is written without hurry.",
+    ],
+  },
+
 ];
 
 export function getPracticeSheet(slug: string): PracticeSheet | undefined {
@@ -527,12 +885,12 @@ export function getTodaysPractice(date = new Date()) {
     {
       focus: "單字組合",
       reason: "把字母串成字，檢查字距與節奏。",
-      sheetSlugs: ["italic-words-basic", "italic-alphabet-lower"],
+      sheetSlugs: ["italic-words-easy", "copperplate-basic-strokes"],
     },
     {
-      focus: "短句與總複習",
-      reason: "用完整句子收束一週練習。",
-      sheetSlugs: ["italic-sentences-basic", "italic-alphabet-upper"],
+      focus: "短句與尖筆複習",
+      reason: "用短句收束，並點綴尖筆路線熱身。",
+      sheetSlugs: ["italic-sentences-easy", "spencerian-compound-curves"],
     },
   ] as const;
 

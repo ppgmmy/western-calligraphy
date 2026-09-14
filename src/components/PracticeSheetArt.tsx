@@ -741,6 +741,102 @@ function FamilyAlphabetSheet({ sheet }: SheetProps) {
   );
 }
 
+/** 尖筆基本筆畫／複合曲線練習（銅板體、斯賓塞體） */
+function PointedPenStrokes({ sheet }: SheetProps) {
+  const left = MARGIN;
+  const right = PAGE_W - MARGIN;
+  const top = 108;
+  const isSpencerian = sheet.styleId === "spencerian";
+  const rows = 7;
+  const cols = 8;
+  const rowH = 118;
+  const colW = (right - left) / cols;
+
+  return (
+    <SheetFrame sheet={sheet}>
+      <text
+        x={left}
+        y={102}
+        fill="#5b6570"
+        fontFamily="'Noto Serif TC', serif"
+        fontSize="11"
+      >
+        {isSpencerian
+          ? "輕壓為主：曲線要連、節奏要勻；前兩列可描，其後自寫。"
+          : "下行加力（粗）、上行減力（細）；前兩列可描，其後自寫。"}
+      </text>
+      {Array.from({ length: rows }).map((_, row) => {
+        const y = top + row * rowH;
+        const guide = row < 2;
+        const stroke = guide ? "#9a8658" : "#c5ccd6";
+        const weight = guide ? 1.2 : 0.9;
+        return (
+          <g key={`pp-row-${row}`}>
+            <line
+              x1={left}
+              y1={y + rowH - 18}
+              x2={right}
+              y2={y + rowH - 18}
+              stroke="#d0d6de"
+              strokeWidth="0.8"
+            />
+            {Array.from({ length: cols }).map((__, col) => {
+              const cx = left + col * colW + colW / 2;
+              const cy = y + 48;
+              if (isSpencerian && sheet.slug.includes("compound")) {
+                return (
+                  <path
+                    key={`curve-${row}-${col}`}
+                    d={`M ${cx - 18} ${cy + 22} C ${cx - 8} ${cy - 28}, ${cx + 8} ${cy + 28}, ${cx + 18} ${cy - 22}`}
+                    fill="none"
+                    stroke={stroke}
+                    strokeWidth={weight}
+                    strokeLinecap="round"
+                    strokeDasharray={guide ? undefined : "2 3"}
+                  />
+                );
+              }
+              // shade + hairline pair
+              return (
+                <g key={`stroke-${row}-${col}`}>
+                  <line
+                    x1={cx - 4}
+                    y1={cy - 28}
+                    x2={cx + 6}
+                    y2={cy + 28}
+                    stroke={stroke}
+                    strokeWidth={isSpencerian ? weight : guide ? 3.2 : 2.4}
+                    strokeLinecap="round"
+                    opacity={isSpencerian ? 0.85 : 1}
+                  />
+                  <path
+                    d={`M ${cx + 8} ${cy + 26} Q ${cx + 16} ${cy + 4} ${cx + 10} ${cy - 20}`}
+                    fill="none"
+                    stroke={stroke}
+                    strokeWidth={0.8}
+                    strokeDasharray={guide ? undefined : "2 3"}
+                  />
+                </g>
+              );
+            })}
+          </g>
+        );
+      })}
+      <text
+        x={left}
+        y={PAGE_H - 48}
+        fill="#5b6570"
+        fontFamily="'Noto Serif TC', serif"
+        fontSize="12"
+      >
+        {isSpencerian
+          ? "斯賓塞體：均勻輕盈優先；華麗線條留到骨架穩定之後。"
+          : "銅板體：陰影筆畫寬度盡量一致，細畫保持乾淨不斷墨。"}
+      </text>
+    </SheetFrame>
+  );
+}
+
 function WordsSheet({ sheet }: SheetProps) {
   const words = sheet.content ?? [];
   const left = MARGIN;
@@ -855,6 +951,8 @@ export function PracticeSheetArt({ sheet }: SheetProps) {
       return <GothicGrid sheet={sheet} />;
     case "blank-lines":
       return <BlankLines sheet={sheet} />;
+    case "pointed-pen-strokes":
+      return <PointedPenStrokes sheet={sheet} />;
     case "alphabet-upper":
       return <AlphabetSheet sheet={sheet} letters={UPPER} />;
     case "alphabet-lower":

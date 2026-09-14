@@ -3,15 +3,18 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { TodaysPractice } from "@/components/TodaysPractice";
 import {
+  getDifficultyLabel,
+  getPracticeSheet,
   getStyleLabel,
   practiceSheets,
   practiceStages,
+  practiceTracks,
 } from "@/data/resources";
 
 export const metadata: Metadata = {
   title: "資源庫｜Scriptoria 西洋書法練習本",
   description:
-    "按級下載並列印西洋書法練習紙：字母家族分冊、筆畫方向、A4 PDF、今日練習建議。",
+    "斜體主線與銅板／斯賓塞尖筆平行進程；詞語與短句分易／中／難；可下載 A4 PDF。",
 };
 
 export default function ResourcesPage() {
@@ -26,8 +29,8 @@ export default function ResourcesPage() {
             西洋書法練習本
           </h1>
           <p className="section__text">
-            按級前進：熱身格線 → 字母家族分冊 → 總覽複習 → 詞語 → 短句。
-            每張紙含用法說明與筆畫方向；可下載 A4 PDF／SVG，或直接列印。
+            三條路線可並行：斜體字主線、銅板體尖筆線、斯賓塞體尖筆線。
+            第 3／4 級詞語與短句已分易／中／難；每張紙可下載 A4 PDF／SVG 或直接列印。
           </p>
         </div>
 
@@ -44,6 +47,40 @@ export default function ResourcesPage() {
       </section>
 
       <TodaysPractice />
+
+      <section className="section track-section" aria-labelledby="tracks-title">
+        <div className="section__head">
+          <p className="section__eyebrow">Practice Tracks</p>
+          <h2 className="section__title" id="tracks-title">
+            三條練習路線
+          </h2>
+          <p className="section__text">
+            斜體走闊尖筆；銅板與斯賓塞走尖筆。可專心一條，也可一週穿插尖筆熱身。
+          </p>
+        </div>
+
+        <div className="track-grid">
+          {practiceTracks.map((track) => (
+            <article className="track-card" key={track.id}>
+              <p className="track-card__en">{track.titleEn}</p>
+              <h3 className="track-card__title">{track.titleZh}</h3>
+              <p className="track-card__summary">{track.summary}</p>
+              <p className="track-card__tools">{track.tools}</p>
+              <ol className="track-card__steps">
+                {track.sheetSlugs.map((slug) => {
+                  const sheet = getPracticeSheet(slug);
+                  if (!sheet) return null;
+                  return (
+                    <li key={slug}>
+                      <Link href={`/resources/${sheet.slug}`}>{sheet.titleZh}</Link>
+                    </li>
+                  );
+                })}
+              </ol>
+            </article>
+          ))}
+        </div>
+      </section>
 
       {practiceStages.map((stage) => {
         const sheets = practiceSheets.filter((sheet) => sheet.stage === stage.stage);
@@ -72,6 +109,11 @@ export default function ResourcesPage() {
                     <div className="resource-item__meta">
                       <span>{getStyleLabel(sheet.styleId)}</span>
                       <span>{sheet.level}</span>
+                      {sheet.difficulty ? (
+                        <span className="resource-item__difficulty">
+                          難度 {getDifficultyLabel(sheet.difficulty)}
+                        </span>
+                      ) : null}
                       <span>{sheet.tools}</span>
                     </div>
                     <h3 className="resource-item__title">{sheet.titleZh}</h3>

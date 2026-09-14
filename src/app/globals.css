@@ -632,6 +632,67 @@ a {
   cursor: wait;
 }
 
+.track-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  max-width: 72rem;
+}
+
+.track-card {
+  padding: 1.35rem 1.25rem 1.5rem;
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.55), rgba(247, 245, 241, 0.35)),
+    radial-gradient(circle at top left, rgba(154, 134, 88, 0.12), transparent 55%);
+  border-bottom: 1px solid var(--line);
+}
+
+.track-card__en {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-display), serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  color: var(--teal);
+}
+
+.track-card__title {
+  margin: 0 0 0.55rem;
+  font-size: 1.35rem;
+  letter-spacing: 0.03em;
+}
+
+.track-card__summary,
+.track-card__tools {
+  margin: 0 0 0.65rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.track-card__tools {
+  font-size: 0.84rem;
+  letter-spacing: 0.04em;
+}
+
+.track-card__steps {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.45rem;
+  color: var(--teal-soft);
+}
+
+.track-card__steps a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.resource-item__difficulty {
+  color: var(--brass);
+  letter-spacing: 0.06em;
+}
+
 .todays-practice {
   border-top: 1px solid var(--line);
 }
@@ -717,6 +778,10 @@ a {
   .site-header {
     position: relative;
     padding-bottom: 0.5rem;
+  }
+
+  .track-grid {
+    grid-template-columns: 1fr;
   }
 
   .site-nav {
