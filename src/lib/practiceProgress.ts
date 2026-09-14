@@ -9,7 +9,11 @@ export type PracticeProgressState = Record<string, SheetProgress>;
 export const PRACTICE_PROGRESS_KEY = "scriptoria-practice-progress-v1";
 export const PRINT_CHECKLIST_SKIP_KEY = "scriptoria-print-checklist-skip";
 
+/** Stable empty snapshot for SSR / first paint — must not be a fresh `{}` each call. */
+export const EMPTY_PRACTICE_PROGRESS: PracticeProgressState = Object.freeze({});
+
 const progressListeners = new Set<() => void>();
+let cachedState: PracticeProgressState | null = null;
 
 export function subscribePracticeProgress(listener: () => void) {
   progressListeners.add(listener);
@@ -27,25 +31,39 @@ function canUseStorage() {
 }
 
 export function loadPracticeProgress(): PracticeProgressState {
-  if (!canUseStorage()) return {};
+  if (!canUseStorage()) {
+    return EMPTY_PRACTICE_PROGRESS;
+  }
+
+  if (cachedState) {
+    return cachedState;
+  }
+
   try {
     const raw = window.localStorage.getItem(PRACTICE_PROGRESS_KEY);
-    if (!raw) return {};
+    if (!raw) {
+      cachedState = EMPTY_PRACTICE_PROGRESS;
+      return cachedState;
+    }
     const parsed = JSON.parse(raw) as PracticeProgressState;
-    return parsed && typeof parsed === "object" ? parsed : {};
+    cachedState =
+      parsed && typeof parsed === "object" ? parsed : EMPTY_PRACTICE_PROGRESS;
+    return cachedState;
   } catch {
-    return {};
+    cachedState = EMPTY_PRACTICE_PROGRESS;
+    return cachedState;
   }
 }
 
 export function savePracticeProgress(state: PracticeProgressState) {
   if (!canUseStorage()) return;
+  cachedState = state;
   window.localStorage.setItem(PRACTICE_PROGRESS_KEY, JSON.stringify(state));
   notifyPracticeProgress();
 }
 
 export function markSheetDownloaded(slug: string) {
-  const state = loadPracticeProgress();
+  const state = { ...loadPracticeProgress() };
   const current = state[slug] ?? {};
   state[slug] = {
     ...current,
@@ -57,7 +75,7 @@ export function markSheetDownloaded(slug: string) {
 }
 
 export function setSheetCompleted(slug: string, completed: boolean) {
-  const state = loadPracticeProgress();
+  const state = { ...loadPracticeProgress() };
   const current = state[slug] ?? {};
   state[slug] = {
     ...current,

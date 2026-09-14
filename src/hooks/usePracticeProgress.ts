@@ -2,19 +2,19 @@
 
 import { useCallback, useSyncExternalStore } from "react";
 import {
+  EMPTY_PRACTICE_PROGRESS,
   loadPracticeProgress,
   markSheetDownloaded,
   setSheetCompleted,
   subscribePracticeProgress,
-  type PracticeProgressState,
 } from "@/lib/practiceProgress";
 
-function getSnapshot(): PracticeProgressState {
+function getSnapshot() {
   return loadPracticeProgress();
 }
 
-function getServerSnapshot(): PracticeProgressState {
-  return {};
+function getServerSnapshot() {
+  return EMPTY_PRACTICE_PROGRESS;
 }
 
 export function usePracticeProgress() {
