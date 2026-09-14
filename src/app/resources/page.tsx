@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
+import { TodaysPractice } from "@/components/TodaysPractice";
 import {
   getStyleLabel,
   practiceSheets,
@@ -10,7 +11,7 @@ import {
 export const metadata: Metadata = {
   title: "資源庫｜Scriptoria 西洋書法練習本",
   description:
-    "按級下載並列印西洋書法練習紙：大寫 A–Z、小寫 a–z、簡單詞語、短句，以及熱身格線。",
+    "按級下載並列印西洋書法練習紙：字母家族分冊、筆畫方向、A4 PDF、今日練習建議。",
 };
 
 export default function ResourcesPage() {
@@ -25,8 +26,8 @@ export default function ResourcesPage() {
             西洋書法練習本
           </h1>
           <p className="section__text">
-            按級前進：熱身格線 → 大寫字母 → 小寫字母 → 簡單詞語 → 短句。
-            每張紙都有用法說明；下載 SVG 或直接列印成 A4，用筆在紙上練習。
+            按級前進：熱身格線 → 字母家族分冊 → 總覽複習 → 詞語 → 短句。
+            每張紙含用法說明與筆畫方向；可下載 A4 PDF／SVG，或直接列印。
           </p>
         </div>
 
@@ -41,6 +42,8 @@ export default function ResourcesPage() {
           ))}
         </ol>
       </section>
+
+      <TodaysPractice />
 
       {practiceStages.map((stage) => {
         const sheets = practiceSheets.filter((sheet) => sheet.stage === stage.stage);

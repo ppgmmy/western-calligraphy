@@ -627,6 +627,55 @@ a {
   font: inherit;
 }
 
+.sheet-actions button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.todays-practice {
+  border-top: 1px solid var(--line);
+}
+
+.todays-practice__list {
+  display: grid;
+  gap: 0;
+  max-width: 64rem;
+}
+
+.todays-practice__item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1rem 1.35rem;
+  align-items: center;
+  padding: 1.2rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.todays-practice__index {
+  font-family: var(--font-display), serif;
+  font-size: 0.9rem;
+  color: var(--brass);
+}
+
+.todays-practice__meta {
+  margin: 0 0 0.35rem;
+  font-size: 0.84rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
+
+.todays-practice__title {
+  margin: 0 0 0.35rem;
+  font-size: 1.25rem;
+  letter-spacing: 0.03em;
+}
+
+.todays-practice__summary {
+  margin: 0;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+
 .sheet-preview {
   padding: 0 clamp(1.25rem, 4vw, 3rem) clamp(3rem, 8vh, 5rem);
 }
@@ -716,6 +765,15 @@ a {
 
   .resource-item__actions {
     grid-column: 2;
+  }
+
+  .todays-practice__item {
+    grid-template-columns: auto 1fr;
+  }
+
+  .todays-practice__item .btn {
+    grid-column: 2;
+    justify-self: start;
   }
 }
 

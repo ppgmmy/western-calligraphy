@@ -1,5 +1,6 @@
 import { InkHero } from "@/components/InkHero";
 import { SiteHeader } from "@/components/SiteHeader";
+import { TodaysPractice } from "@/components/TodaysPractice";
 import {
   calligraphyStyles,
   practiceSteps,
@@ -123,11 +124,16 @@ export default function HomePage() {
           <a className="btn btn--primary" href="/resources">
             打開練習本
           </a>
-          <a className="btn btn--ghost" href="/resources/italic-alphabet-upper">
-            從大寫 A–Z 開始
+          <a
+            className="btn btn--ghost"
+            href="/resources/italic-family-upper-straight"
+          >
+            從直筆家族開始
           </a>
         </div>
       </section>
+
+      <TodaysPractice variant="home" />
 
       <footer className="site-footer">
         <p className="site-footer__brand">Scriptoria</p>

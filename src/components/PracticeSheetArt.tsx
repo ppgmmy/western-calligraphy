@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { getStrokeGuide, type StrokePath } from "@/data/letterFamilies";
 import type { PracticeSheet } from "@/data/resources";
 
 const PAGE_W = 794;
@@ -560,6 +561,186 @@ function AlphabetSheet({
   );
 }
 
+function strokeToPath(strokes: StrokePath[], size: number): string[] {
+  return strokes.map((stroke) => {
+    const [first, ...rest] = stroke.points;
+    if (!first) return "";
+    const scale = size / 100;
+    const to = ([x, y]: [number, number]) =>
+      `${(x * scale).toFixed(1)} ${(y * scale).toFixed(1)}`;
+    return `M ${to(first)} ${rest.map((p) => `L ${to(p)}`).join(" ")}`;
+  });
+}
+
+function arrowHead(
+  from: [number, number],
+  to: [number, number],
+  size: number,
+): string {
+  const scale = size / 100;
+  const x1 = from[0] * scale;
+  const y1 = from[1] * scale;
+  const x2 = to[0] * scale;
+  const y2 = to[1] * scale;
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  const len = 5;
+  const a1 = angle + Math.PI * 0.82;
+  const a2 = angle - Math.PI * 0.82;
+  const p1 = [x2 + Math.cos(a1) * len, y2 + Math.sin(a1) * len];
+  const p2 = [x2 + Math.cos(a2) * len, y2 + Math.sin(a2) * len];
+  return `M ${x2.toFixed(1)} ${y2.toFixed(1)} L ${p1[0].toFixed(1)} ${p1[1].toFixed(1)} M ${x2.toFixed(1)} ${y2.toFixed(1)} L ${p2[0].toFixed(1)} ${p2[1].toFixed(1)}`;
+}
+
+function StrokeGuideGlyph({
+  letter,
+  x,
+  y,
+  size = 52,
+}: {
+  letter: string;
+  x: number;
+  y: number;
+  size?: number;
+}) {
+  const strokes = getStrokeGuide(letter);
+  const paths = strokeToPath(strokes, size);
+  const colors = ["#245c54", "#9a8658", "#3a4450", "#5b6570"];
+
+  return (
+    <g transform={`translate(${x} ${y})`}>
+      <rect
+        width={size}
+        height={size}
+        rx={4}
+        fill="#fff"
+        stroke="#d5dbe3"
+        strokeWidth="0.8"
+      />
+      {paths.map((d, index) => {
+        const stroke = strokes[index];
+        if (!stroke || stroke.points.length < 2) return null;
+        const last = stroke.points[stroke.points.length - 1];
+        const prev = stroke.points[stroke.points.length - 2];
+        return (
+          <g key={`${letter}-stroke-${index}`}>
+            <path
+              d={d}
+              fill="none"
+              stroke={colors[index % colors.length]}
+              strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d={arrowHead(prev, last, size)}
+              fill="none"
+              stroke={colors[index % colors.length]}
+              strokeWidth="1.4"
+              strokeLinecap="round"
+            />
+            <circle
+              cx={(stroke.points[0][0] * size) / 100}
+              cy={(stroke.points[0][1] * size) / 100}
+              r={2.2}
+              fill={colors[index % colors.length]}
+            />
+          </g>
+        );
+      })}
+    </g>
+  );
+}
+
+/** 字母家族分冊：左側筆畫方向 + 範字／描寫／空白 */
+function FamilyAlphabetSheet({ sheet }: SheetProps) {
+  const letters = sheet.letters ?? [];
+  const left = MARGIN;
+  const right = PAGE_W - MARGIN;
+  const top = 108;
+  const usable = PAGE_H - 56 - top;
+  const rowH = Math.min(88, Math.max(64, Math.floor(usable / Math.max(letters.length, 1))));
+  const guideSize = Math.min(54, rowH - 10);
+
+  return (
+    <SheetFrame sheet={sheet}>
+      <text
+        x={left}
+        y={102}
+        fill="#5b6570"
+        fontFamily="'Noto Serif TC', serif"
+        fontSize="11"
+      >
+        左＝筆畫方向（圓點起筆、箭頭收筆）｜中左範字｜中右描寫｜右＝空白自寫
+      </text>
+      {letters.map((letter, index) => {
+        const y = top + index * rowH;
+        if (y + rowH > PAGE_H - 56) return null;
+        const bandH = rowH - 10;
+        const baseY = y + bandH * 0.72;
+        const practiceLeft = left + guideSize + 14;
+        const colW = (right - practiceLeft) / 3;
+
+        return (
+          <g key={`family-${letter}`}>
+            <RuledBand y={y} height={bandH} left={practiceLeft} right={right} />
+            <StrokeGuideGlyph
+              letter={letter}
+              x={left}
+              y={y + Math.max(0, (bandH - guideSize) / 2)}
+              size={guideSize}
+            />
+            <text
+              x={practiceLeft + 12}
+              y={baseY}
+              fill="#1a1f24"
+              fontFamily="Georgia, 'Times New Roman', serif"
+              fontSize={rowH > 75 ? 36 : 30}
+              fontStyle="italic"
+            >
+              {letter}
+            </text>
+            <text
+              x={practiceLeft + colW + 12}
+              y={baseY}
+              fill="#b7c0cb"
+              fontFamily="Georgia, 'Times New Roman', serif"
+              fontSize={rowH > 75 ? 36 : 30}
+              fontStyle="italic"
+            >
+              {letter}
+            </text>
+            <line
+              x1={practiceLeft + colW - 6}
+              y1={y + 4}
+              x2={practiceLeft + colW - 6}
+              y2={y + bandH - 4}
+              stroke="#e2e6eb"
+              strokeWidth="1"
+            />
+            <line
+              x1={practiceLeft + colW * 2 - 6}
+              y1={y + 4}
+              x2={practiceLeft + colW * 2 - 6}
+              y2={y + bandH - 4}
+              stroke="#e2e6eb"
+              strokeWidth="1"
+            />
+          </g>
+        );
+      })}
+      <text
+        x={left}
+        y={PAGE_H - 48}
+        fill="#5b6570"
+        fontFamily="'Noto Serif TC', serif"
+        fontSize="12"
+      >
+        筆畫示意為教學簡圖（非唯一正統寫法）。先慢描箭頭方向，再獨立書寫。
+      </text>
+    </SheetFrame>
+  );
+}
+
 function WordsSheet({ sheet }: SheetProps) {
   const words = sheet.content ?? [];
   const left = MARGIN;
@@ -678,6 +859,8 @@ export function PracticeSheetArt({ sheet }: SheetProps) {
       return <AlphabetSheet sheet={sheet} letters={UPPER} />;
     case "alphabet-lower":
       return <AlphabetSheet sheet={sheet} letters={LOWER} />;
+    case "alphabet-family":
+      return <FamilyAlphabetSheet sheet={sheet} />;
     case "words":
       return <WordsSheet sheet={sheet} />;
     case "sentences":
