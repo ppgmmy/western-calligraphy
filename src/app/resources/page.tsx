@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SiteHeader } from "@/components/SiteHeader";
 import { FullPracticeBookDownload } from "@/components/FullPracticeBookDownload";
 import {
   PracticeProgressSummary,
   SheetProgressBadges,
 } from "@/components/PracticeProgress";
+import { SiteFooter } from "@/components/SiteFooter";
+import { SiteHeader } from "@/components/SiteHeader";
 import { TodaysPractice } from "@/components/TodaysPractice";
 import {
   getDifficultyLabel,
@@ -17,7 +18,7 @@ import {
 } from "@/data/resources";
 
 export const metadata: Metadata = {
-  title: "資源庫｜Scriptoria 西洋書法練習本",
+  title: "練習本",
   description:
     "斜體主線與銅板／斯賓塞尖筆平行進程；詞語與短句分易／中／難；可下載 A4 PDF。",
 };
@@ -152,6 +153,8 @@ export default function ResourcesPage() {
           </section>
         );
       })}
+
+      <SiteFooter />
     </main>
   );
 }

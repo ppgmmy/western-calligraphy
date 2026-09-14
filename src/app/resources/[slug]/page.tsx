@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PracticeSheetActions } from "@/components/PracticeSheetActions";
 import { PracticeSheetArt } from "@/components/PracticeSheetArt";
+import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import {
   getDifficultyLabel,
@@ -99,6 +100,10 @@ export default async function ResourceDetailPage({ params }: ResourcePageProps) 
           <PracticeSheetArt sheet={sheet} />
         </div>
       </section>
+
+      <div className="no-print">
+        <SiteFooter />
+      </div>
     </main>
   );
 }

@@ -39,9 +39,12 @@ const zh = Noto_Serif_TC({
 });
 
 export const metadata: Metadata = {
-  title: "Scriptoria｜西洋書法",
+  title: {
+    default: "Scriptoria｜西洋書法工作室",
+    template: "%s｜Scriptoria",
+  },
   description:
-    "認識銅板體、斯賓塞體、斜體字與哥德體等西洋書法風格，並從工具與練習路徑開始入門。",
+    "Scriptoria 西洋書法專職工作室：教學、受託書寫與可列印練習系統。涵蓋 Copperplate、Spencerian、Italic 與 Blackletter。",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
