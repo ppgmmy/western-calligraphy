@@ -17,6 +17,6 @@ npm run dev
 - TypeScript
 - Tailwind CSS v4
 
-## 部署
+## 練習紙資源庫
 
-推送到 GitHub 後可連結 Vercel 自動部署；亦可直接用 Vercel CLI／Dashboard 部署本專案。
+開啟 `/resources` 可瀏覽可下載／列印的 A4 練習紙（SVG）。單張頁面提供「列印練習紙」與「下載 SVG」。

@@ -118,6 +118,15 @@ export default function HomePage() {
             </article>
           ))}
         </div>
+
+        <div className="cta-row practice-cta">
+          <a className="btn btn--primary" href="/resources">
+            前往練習紙資源庫
+          </a>
+          <a className="btn btn--ghost" href="/resources/copperplate-guidelines">
+            先下載銅板體導引線
+          </a>
+        </div>
       </section>
 
       <footer className="site-footer">
