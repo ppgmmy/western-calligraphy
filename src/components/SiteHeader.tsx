@@ -14,7 +14,7 @@ export function SiteHeader({ variant = "home" }: SiteHeaderProps) {
         <a href="/#styles">字體</a>
         <a href="/#tools">工具</a>
         <a href="/#practice">練習</a>
-        <a href="/resources">資源庫</a>
+        <a href="/resources">練習本</a>
       </nav>
     </header>
   );

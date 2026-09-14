@@ -121,10 +121,10 @@ export default function HomePage() {
 
         <div className="cta-row practice-cta">
           <a className="btn btn--primary" href="/resources">
-            前往練習紙資源庫
+            打開練習本
           </a>
-          <a className="btn btn--ghost" href="/resources/copperplate-guidelines">
-            先下載銅板體導引線
+          <a className="btn btn--ghost" href="/resources/italic-alphabet-upper">
+            從大寫 A–Z 開始
           </a>
         </div>
       </section>

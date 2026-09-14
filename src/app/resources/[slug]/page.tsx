@@ -6,6 +6,7 @@ import { PracticeSheetArt } from "@/components/PracticeSheetArt";
 import { SiteHeader } from "@/components/SiteHeader";
 import {
   getPracticeSheet,
+  getStageLabel,
   getStyleLabel,
   practiceSheets,
 } from "@/data/resources";
@@ -37,6 +38,10 @@ export default async function ResourceDetailPage({ params }: ResourcePageProps) 
   const sheet = getPracticeSheet(slug);
   if (!sheet) notFound();
 
+  const nextSheet = practiceSheets.find(
+    (item) => item.stage === ((sheet.stage + 1) as 0 | 1 | 2 | 3 | 4),
+  );
+
   return (
     <main id="top" className="inner-page sheet-detail">
       <div className="no-print">
@@ -49,17 +54,35 @@ export default async function ResourceDetailPage({ params }: ResourcePageProps) 
             </h1>
             <p className="section__text">{sheet.summary}</p>
             <div className="resource-item__meta sheet-detail__meta">
+              <span>{getStageLabel(sheet.stage)}</span>
               <span>{getStyleLabel(sheet.styleId)}</span>
               <span>{sheet.level}</span>
               <span>{sheet.tools}</span>
             </div>
+
+            <div className="guidance-box">
+              <h2 className="guidance-box__title">怎麼用這張練習紙</h2>
+              <ol className="guidance-box__list">
+                {sheet.guidance.map((step) => (
+                  <li key={step}>{step}</li>
+                ))}
+              </ol>
+            </div>
+
             <PracticeSheetActions slug={sheet.slug} titleZh={sheet.titleZh} />
             <p className="sheet-detail__hint">
               下載後可用瀏覽器或繪圖軟體開啟；列印時選擇 A4、實際大小，並關閉頁首頁尾。
             </p>
-            <Link className="sheet-detail__back" href="/resources">
-              ← 返回資源庫
-            </Link>
+            <div className="sheet-detail__nav">
+              <Link className="sheet-detail__back" href="/resources">
+                ← 返回練習本
+              </Link>
+              {nextSheet ? (
+                <Link className="sheet-detail__next" href={`/resources/${nextSheet.slug}`}>
+                  下一級推薦：{nextSheet.titleZh} →
+                </Link>
+              ) : null}
+            </div>
           </div>
         </section>
       </div>

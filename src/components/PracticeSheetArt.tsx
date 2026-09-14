@@ -52,11 +52,20 @@ function SheetFrame({
       >
         {sheet.titleZh}
       </text>
+      <text
+        x={MARGIN}
+        y={78}
+        fill="#5b6570"
+        fontFamily="'Noto Serif TC', serif"
+        fontSize="12"
+      >
+        {sheet.sheetTip}
+      </text>
       <line
         x1={MARGIN}
-        y1={70}
+        y1={88}
         x2={PAGE_W - MARGIN}
-        y2={70}
+        y2={88}
         stroke="#9a8658"
         strokeWidth="1"
       />
@@ -85,7 +94,7 @@ function SheetFrame({
 }
 
 function SlantGuidelines({ sheet }: SheetProps) {
-  const top = 88;
+  const top = 104;
   const bottom = PAGE_H - 48;
   const left = MARGIN;
   const right = PAGE_W - MARGIN;
@@ -181,7 +190,7 @@ function SlantGuidelines({ sheet }: SheetProps) {
 }
 
 function OvalDrills({ sheet }: SheetProps) {
-  const top = 96;
+  const top = 110;
   const left = MARGIN;
   const right = PAGE_W - MARGIN;
   const rows = 8;
@@ -238,7 +247,7 @@ function OvalDrills({ sheet }: SheetProps) {
 }
 
 function BroadNibRules({ sheet }: SheetProps) {
-  const top = 92;
+  const top = 108;
   const left = MARGIN;
   const right = PAGE_W - MARGIN;
   const unit = 10;
@@ -328,7 +337,7 @@ function BroadNibRules({ sheet }: SheetProps) {
 }
 
 function GothicGrid({ sheet }: SheetProps) {
-  const top = 92;
+  const top = 108;
   const bottom = PAGE_H - 56;
   const left = MARGIN;
   const right = PAGE_W - MARGIN;
@@ -378,7 +387,7 @@ function GothicGrid({ sheet }: SheetProps) {
 }
 
 function BlankLines({ sheet }: SheetProps) {
-  const top = 96;
+  const top = 110;
   const left = MARGIN;
   const right = PAGE_W - MARGIN;
   const spacing = 36;
@@ -411,6 +420,248 @@ function BlankLines({ sheet }: SheetProps) {
   );
 }
 
+const UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+const LOWER = "abcdefghijklmnopqrstuvwxyz".split("");
+
+function RuledBand({
+  y,
+  height,
+  left,
+  right,
+}: {
+  y: number;
+  height: number;
+  left: number;
+  right: number;
+}) {
+  const xTop = y + height * 0.28;
+  const base = y + height * 0.72;
+  return (
+    <g>
+      <line
+        x1={left}
+        y1={y}
+        x2={right}
+        y2={y}
+        stroke="#d0d6de"
+        strokeWidth="0.7"
+        strokeDasharray="2 3"
+      />
+      <line
+        x1={left}
+        y1={xTop}
+        x2={right}
+        y2={xTop}
+        stroke="#a8b4c0"
+        strokeWidth="0.8"
+      />
+      <line
+        x1={left}
+        y1={base}
+        x2={right}
+        y2={base}
+        stroke="#3a4450"
+        strokeWidth="1.1"
+      />
+      <line
+        x1={left}
+        y1={y + height}
+        x2={right}
+        y2={y + height}
+        stroke="#d0d6de"
+        strokeWidth="0.7"
+        strokeDasharray="2 3"
+      />
+    </g>
+  );
+}
+
+function AlphabetSheet({
+  sheet,
+  letters,
+}: SheetProps & { letters: string[] }) {
+  const left = MARGIN;
+  const right = PAGE_W - MARGIN;
+  const top = 108;
+  const rowH = 70;
+  const cols = 4;
+  const colW = (right - left) / cols;
+
+  const rows: string[][] = [];
+  for (let i = 0; i < letters.length; i += cols) {
+    rows.push(letters.slice(i, i + cols));
+  }
+
+  return (
+    <SheetFrame sheet={sheet}>
+      <text
+        x={left}
+        y={102}
+        fill="#5b6570"
+        fontFamily="'Noto Serif TC', serif"
+        fontSize="11"
+      >
+        每格：左＝範字｜中＝淡字描寫｜右＝空白自寫
+      </text>
+      {rows.map((rowLetters, rowIndex) => {
+        const y = top + rowIndex * rowH;
+        return (
+          <g key={`alpha-row-${rowIndex}`}>
+            <RuledBand y={y} height={rowH - 10} left={left} right={right} />
+            {rowLetters.map((letter, colIndex) => {
+              const x = left + colIndex * colW;
+              const baseY = y + (rowH - 10) * 0.72;
+              return (
+                <g key={`cell-${letter}`}>
+                  <text
+                    x={x + 18}
+                    y={baseY}
+                    fill="#1a1f24"
+                    fontFamily="Georgia, 'Times New Roman', serif"
+                    fontSize="34"
+                    fontStyle="italic"
+                  >
+                    {letter}
+                  </text>
+                  <text
+                    x={x + colW * 0.38}
+                    y={baseY}
+                    fill="#b7c0cb"
+                    fontFamily="Georgia, 'Times New Roman', serif"
+                    fontSize="34"
+                    fontStyle="italic"
+                  >
+                    {letter}
+                  </text>
+                  <line
+                    x1={x + colW - 8}
+                    y1={y + 4}
+                    x2={x + colW - 8}
+                    y2={y + rowH - 14}
+                    stroke="#e2e6eb"
+                    strokeWidth="1"
+                  />
+                </g>
+              );
+            })}
+          </g>
+        );
+      })}
+      <text
+        x={left}
+        y={PAGE_H - 48}
+        fill="#5b6570"
+        fontFamily="'Noto Serif TC', serif"
+        fontSize="12"
+      >
+        建議：一次練 4–6 字；寫完用鉛筆圈出最好的 3 個，明天先抄它們。
+      </text>
+    </SheetFrame>
+  );
+}
+
+function WordsSheet({ sheet }: SheetProps) {
+  const words = sheet.content ?? [];
+  const left = MARGIN;
+  const right = PAGE_W - MARGIN;
+  const top = 110;
+  const rowH = 78;
+
+  return (
+    <SheetFrame sheet={sheet}>
+      <text
+        x={left}
+        y={102}
+        fill="#5b6570"
+        fontFamily="'Noto Serif TC', serif"
+        fontSize="11"
+      >
+        上行淡字可描；下行空白請獨立書寫，注意字母間距。
+      </text>
+      {words.map((word, index) => {
+        const y = top + index * rowH;
+        if (y + rowH > PAGE_H - 56) return null;
+        return (
+          <g key={`word-${word}`}>
+            <RuledBand y={y} height={32} left={left} right={right} />
+            <text
+              x={left + 8}
+              y={y + 32 * 0.72}
+              fill="#b0bac4"
+              fontFamily="Georgia, 'Times New Roman', serif"
+              fontSize="26"
+              fontStyle="italic"
+            >
+              {word}
+            </text>
+            <RuledBand y={y + 38} height={32} left={left} right={right} />
+          </g>
+        );
+      })}
+      <text
+        x={left}
+        y={PAGE_H - 48}
+        fill="#5b6570"
+        fontFamily="'Noto Serif TC', serif"
+        fontSize="12"
+      >
+        詞與詞之間留半個字寬呼吸；寫完檢查整行是否在同一基線上。
+      </text>
+    </SheetFrame>
+  );
+}
+
+function SentencesSheet({ sheet }: SheetProps) {
+  const sentences = sheet.content ?? [];
+  const left = MARGIN;
+  const right = PAGE_W - MARGIN;
+  const top = 110;
+  const blockH = 96;
+
+  return (
+    <SheetFrame sheet={sheet}>
+      <text
+        x={left}
+        y={102}
+        fill="#5b6570"
+        fontFamily="'Noto Serif TC', serif"
+        fontSize="11"
+      >
+        每句兩行：第一行臨摹，第二行自寫。寫前先想換氣位置。
+      </text>
+      {sentences.map((sentence, index) => {
+        const y = top + index * blockH;
+        if (y + blockH > PAGE_H - 56) return null;
+        return (
+          <g key={`sentence-${index}`}>
+            <RuledBand y={y} height={36} left={left} right={right} />
+            <text
+              x={left + 6}
+              y={y + 36 * 0.7}
+              fill="#b0bac4"
+              fontFamily="Georgia, 'Times New Roman', serif"
+              fontSize="20"
+              fontStyle="italic"
+            >
+              {sentence}
+            </text>
+            <RuledBand y={y + 44} height={36} left={left} right={right} />
+          </g>
+        );
+      })}
+      <text
+        x={left}
+        y={PAGE_H - 48}
+        fill="#5b6570"
+        fontFamily="'Noto Serif TC', serif"
+        fontSize="12"
+      >
+        整句完成後，退後兩步看：字高、斜度、字距是否一致。
+      </text>
+    </SheetFrame>
+  );
+}
+
 export function PracticeSheetArt({ sheet }: SheetProps) {
   switch (sheet.kind) {
     case "slant-guidelines":
@@ -423,6 +674,14 @@ export function PracticeSheetArt({ sheet }: SheetProps) {
       return <GothicGrid sheet={sheet} />;
     case "blank-lines":
       return <BlankLines sheet={sheet} />;
+    case "alphabet-upper":
+      return <AlphabetSheet sheet={sheet} letters={UPPER} />;
+    case "alphabet-lower":
+      return <AlphabetSheet sheet={sheet} letters={LOWER} />;
+    case "words":
+      return <WordsSheet sheet={sheet} />;
+    case "sentences":
+      return <SentencesSheet sheet={sheet} />;
     default: {
       const _exhaustive: never = sheet.kind;
       return _exhaustive;
