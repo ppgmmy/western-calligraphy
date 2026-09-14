@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
+import { FullPracticeBookDownload } from "@/components/FullPracticeBookDownload";
+import {
+  PracticeProgressSummary,
+  SheetProgressBadges,
+} from "@/components/PracticeProgress";
 import { TodaysPractice } from "@/components/TodaysPractice";
 import {
   getDifficultyLabel,
@@ -18,6 +23,8 @@ export const metadata: Metadata = {
 };
 
 export default function ResourcesPage() {
+  const allSlugs = practiceSheets.map((sheet) => sheet.slug);
+
   return (
     <main id="top" className="inner-page">
       <SiteHeader variant="inner" />
@@ -30,7 +37,7 @@ export default function ResourcesPage() {
           </h1>
           <p className="section__text">
             三條路線可並行：斜體字主線、銅板體尖筆線、斯賓塞體尖筆線。
-            第 3／4 級詞語與短句已分易／中／難；每張紙可下載 A4 PDF／SVG 或直接列印。
+            第 3／4 級詞語與短句已分易／中／難；支援本機進度、列印檢查清單，以及完整練習本打包下載。
           </p>
         </div>
 
@@ -47,6 +54,12 @@ export default function ResourcesPage() {
       </section>
 
       <TodaysPractice />
+
+      <PracticeProgressSummary slugs={allSlugs} />
+
+      <section className="section full-book-section" aria-label="完整練習本">
+        <FullPracticeBookDownload />
+      </section>
 
       <section className="section track-section" aria-labelledby="tracks-title">
         <div className="section__head">
@@ -116,7 +129,10 @@ export default function ResourcesPage() {
                       ) : null}
                       <span>{sheet.tools}</span>
                     </div>
-                    <h3 className="resource-item__title">{sheet.titleZh}</h3>
+                    <h3 className="resource-item__title">
+                      {sheet.titleZh}{" "}
+                      <SheetProgressBadges slug={sheet.slug} />
+                    </h3>
                     <p className="resource-item__en">{sheet.titleEn}</p>
                     <p className="resource-item__summary">{sheet.summary}</p>
                     <ul className="resource-item__uses">

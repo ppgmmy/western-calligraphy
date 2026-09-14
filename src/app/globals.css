@@ -632,6 +632,223 @@ a {
   cursor: wait;
 }
 
+.sheet-actions-block {
+  display: grid;
+  gap: 1rem;
+  margin-top: 0.25rem;
+}
+
+.progress-summary {
+  border-top: 1px solid var(--line);
+}
+
+.progress-summary__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 40rem;
+  margin-bottom: 1rem;
+}
+
+.progress-summary__stats strong {
+  display: block;
+  font-family: var(--font-display), serif;
+  font-size: 1.75rem;
+  color: var(--teal);
+  letter-spacing: 0.03em;
+}
+
+.progress-summary__stats span {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+.progress-summary__bar {
+  height: 0.45rem;
+  max-width: 40rem;
+  background: rgba(36, 92, 84, 0.12);
+  overflow: hidden;
+}
+
+.progress-summary__bar > span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #245c54, #9a8658);
+}
+
+.sheet-progress {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+}
+
+.sheet-progress__badges,
+.sheet-progress-inline {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.sheet-progress__badge,
+.sheet-progress-inline span {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border: 1px solid var(--line);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.sheet-progress__badge.is-on,
+.sheet-progress-inline span {
+  color: var(--teal);
+  border-color: rgba(36, 92, 84, 0.28);
+}
+
+.sheet-progress__badge.is-done,
+.sheet-progress-inline .is-done {
+  color: #7a6438;
+  border-color: rgba(154, 134, 88, 0.45);
+}
+
+.full-book-section {
+  border-top: 1px solid var(--line);
+}
+
+.full-book {
+  display: grid;
+  gap: 1rem;
+  max-width: 48rem;
+  padding: 0.25rem 0 0.5rem;
+}
+
+.full-book__eyebrow {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-display), serif;
+  letter-spacing: 0.08em;
+  color: var(--teal);
+  font-size: 0.88rem;
+}
+
+.full-book__title {
+  margin: 0 0 0.55rem;
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  letter-spacing: 0.03em;
+}
+
+.full-book__text,
+.full-book__note {
+  margin: 0;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+
+.full-book__status {
+  margin: 0.75rem 0 0;
+  color: var(--teal);
+  font-size: 0.92rem;
+}
+
+.full-book__note {
+  font-size: 0.86rem;
+  letter-spacing: 0.03em;
+}
+
+.print-checklist {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+}
+
+.print-checklist__backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(26, 31, 36, 0.45);
+  cursor: pointer;
+}
+
+.print-checklist__panel {
+  position: relative;
+  width: min(34rem, 100%);
+  padding: 1.5rem 1.35rem 1.35rem;
+  background:
+    linear-gradient(165deg, #fbf9f5, #f3efe7),
+    radial-gradient(circle at top right, rgba(36, 92, 84, 0.08), transparent 50%);
+  border: 1px solid var(--line);
+  box-shadow: 0 18px 40px rgba(26, 31, 36, 0.18);
+}
+
+.print-checklist__eyebrow {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-display), serif;
+  letter-spacing: 0.08em;
+  color: var(--teal);
+  font-size: 0.85rem;
+}
+
+.print-checklist__title {
+  margin: 0 0 0.55rem;
+  font-size: 1.45rem;
+}
+
+.print-checklist__text {
+  margin: 0 0 1rem;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+
+.print-checklist__list {
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.print-checklist__item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.7rem;
+  align-items: start;
+  cursor: pointer;
+}
+
+.print-checklist__item strong {
+  display: block;
+  margin-bottom: 0.15rem;
+}
+
+.print-checklist__item em {
+  display: block;
+  font-style: normal;
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.print-checklist__skip {
+  display: flex;
+  gap: 0.55rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.print-checklist__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  justify-content: flex-end;
+}
+
 .track-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -784,6 +1001,10 @@ a {
     grid-template-columns: 1fr;
   }
 
+  .progress-summary__stats {
+    grid-template-columns: 1fr;
+  }
+
   .site-nav {
     gap: 0.85rem;
     font-size: 0.82rem;
@@ -873,7 +1094,11 @@ a {
 
   .no-print,
   .site-header,
-  .site-footer {
+  .site-footer,
+  .print-checklist,
+  .sheet-actions-block,
+  .progress-summary,
+  .full-book-section {
     display: none !important;
   }
 

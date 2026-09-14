@@ -77,8 +77,8 @@ export default async function ResourceDetailPage({ params }: ResourcePageProps) 
 
             <PracticeSheetActions slug={sheet.slug} titleZh={sheet.titleZh} />
             <p className="sheet-detail__hint">
-              建議直接「下載 A4 PDF」或列印；SVG 可用瀏覽器／繪圖軟體開啟。列印請選
-              A4、實際大小，並關閉頁首頁尾。
+              列印前會出現檢查清單（A4、實際大小、關閉頁首頁尾、單面）。下載
+              PDF／SVG 會記入本機進度；也可手動標記已完成。
             </p>
             <div className="sheet-detail__nav">
               <Link className="sheet-detail__back" href="/resources">
