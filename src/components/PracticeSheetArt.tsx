@@ -1317,8 +1317,9 @@ function FlourishCurvesSheet({ sheet }: SheetProps) {
 
   const cPath = (cx: number, cy: number) =>
     `M ${cx + 28} ${cy - 34} C ${cx - 8} ${cy - 42}, ${cx - 36} ${cy - 8}, ${cx - 28} ${cy + 18} C ${cx - 22} ${cy + 36}, ${cx + 6} ${cy + 40}, ${cx + 26} ${cy + 22}`;
+  // Forward S (top-right → bottom-left), not a mirrored Z-curve.
   const sPath = (cx: number, cy: number) =>
-    `M ${cx - 30} ${cy - 36} C ${cx + 18} ${cy - 44}, ${cx + 22} ${cy - 4}, ${cx} ${cy} C ${cx - 24} ${cy + 6}, ${cx - 20} ${cy + 42}, ${cx + 30} ${cy + 34}`;
+    `M ${cx + 30} ${cy - 36} C ${cx - 18} ${cy - 44}, ${cx - 22} ${cy - 4}, ${cx} ${cy} C ${cx + 24} ${cy + 6}, ${cx + 20} ${cy + 42}, ${cx - 30} ${cy + 34}`;
 
   return (
     <SheetFrame sheet={sheet}>
@@ -1329,7 +1330,7 @@ function FlourishCurvesSheet({ sheet }: SheetProps) {
         fontFamily="'Noto Serif TC', serif"
         fontSize="8"
       >
-        左欄 C 曲線｜右欄 S 曲線｜轉折減壓，交叉近 90°
+        左欄 C 曲線｜右欄 S 曲線（右上起筆→左下收筆，勿鏡像成 Z）｜轉折減壓，交叉近 90°
       </text>
       {Array.from({ length: rows }).map((_, row) => {
         const cy = top + row * rowH + 58;

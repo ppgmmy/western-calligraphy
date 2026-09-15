@@ -823,18 +823,19 @@ glyphs.s = {
   letter: "s",
   case: "lower",
   family: "special",
-  advance: 26,
+  advance: 30,
   strokes: [
     {
       id: "body",
       order: 1,
       kind: "shade",
       points: join(
-        pts([[20, XH + 4, H]]),
-        cubic(20, XH + 4, H, 16, XH - 2, 8, XH, 8, 46, H, 8),
-        cubic(8, 46, H, 8, 54, 14, 58, 20, 56, S * 0.8, 7),
-        cubic(20, 56, S * 0.8, 26, 54, 26, BASE + 1, 16, BASE, S, 8),
-        cubic(16, BASE, S, 8, BASE - 1, 6, BASE - 6, 12, BASE - 8, H, 6),
+        // Forward S: top bowl opens right, bottom bowl opens left, exit right on baseline.
+        pts([[22, XH + 2, H]]),
+        cubic(22, XH + 2, H, 14, XH - 4, 6, XH + 2, 8, 46, H, 8),
+        cubic(8, 46, H, 10, 52, 18, 56, 24, 58, S * 0.85, 7),
+        cubic(24, 58, S * 0.85, 28, 60, 26, BASE + 2, 16, BASE, S, 8),
+        cubic(16, BASE, S, 12, BASE + 1, 18, BASE + 1, 28, BASE - 2, H, 6),
       ),
     },
   ],
