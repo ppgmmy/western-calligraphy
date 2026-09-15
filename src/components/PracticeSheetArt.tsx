@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { GlyphLetter } from "@/components/GlyphLetter";
 import { getLetterGlyph } from "@/data/glyphs";
+import { getItalicLetterRecognition } from "@/data/letterRecognition";
 import { getStrokeGuide, type StrokePath } from "@/data/letterFamilies";
 import type { PracticeSheet } from "@/data/resources";
 
@@ -19,13 +20,39 @@ const RULE_SOFT = "#c5d3de";
 const TEAL = "#245c54";
 const BRASS = "#9a8658";
 
-/** Copperplate／Spencerian 正式尖筆範字 */
+/** Copperplate／Spencerian 正式尖筆範字（暫用；尖筆路線仍以逐字辨認為準） */
 const FONT_FORMAL = "var(--font-script), Italianno, cursive";
-/** 當代 modern calligraphy／花飾範字（接近工作室教學風格） */
+/** 當代 modern calligraphy／花飾範字 */
 const FONT_MODERN = "var(--font-modern), Allura, var(--font-script), cursive";
+/** 斜體主線：闊尖筆 Italic（目前唯一足夠靚、可作正式示範） */
+const FONT_ITALIC = "var(--font-display), 'Cormorant Garamond', serif";
 
 function exemplarFont(styleId: PracticeSheet["styleId"]) {
-  return styleId === "flourishing" ? FONT_MODERN : FONT_FORMAL;
+  switch (styleId) {
+    case "flourishing":
+      return FONT_MODERN;
+    case "italic":
+    case "foundational":
+      return FONT_ITALIC;
+    case "copperplate":
+    case "spencerian":
+    case "gothic":
+    case "general":
+      return FONT_FORMAL;
+    default: {
+      const _exhaustive: never = styleId;
+      return _exhaustive;
+    }
+  }
+}
+
+function exemplarFontStyle(styleId: PracticeSheet["styleId"]): "normal" | "italic" {
+  return styleId === "italic" || styleId === "foundational" ? "italic" : "normal";
+}
+
+/** 自建 tip-pen glyph 只用於花飾／modern script；斜體主線用闊尖筆字體示範。 */
+function useModernGlyphs(styleId: PracticeSheet["styleId"]) {
+  return styleId === "flourishing";
 }
 
 function pageLabel(sheet: PracticeSheet) {
@@ -185,8 +212,9 @@ function SlantGuidelines({ sheet }: SheetProps) {
     const x0 = left + i * step;
     const y1 = top;
     const y2 = bottom;
+    // Italic / pointed-pen slant leans forward (top-right → bottom-left = "/").
     const dx = (y2 - y1) / Math.tan(slantRad);
-    slantLines.push({ x1: x0, y1, x2: x0 + dx, y2 });
+    slantLines.push({ x1: x0, y1, x2: x0 - dx, y2 });
   }
 
   return (
@@ -523,8 +551,9 @@ function RuledBand({
     const step = 22;
     for (let i = -8; i < 36; i += 1) {
       const x0 = left + i * step;
+      // Forward italic slant "/": as y increases, x decreases.
       const dx = (desc - asc) / Math.tan(slantRad);
-      slantLines.push({ x1: x0, y1: asc, x2: x0 + dx, y2: desc });
+      slantLines.push({ x1: x0, y1: asc, x2: x0 - dx, y2: desc });
     }
   }
 
@@ -593,6 +622,8 @@ function TraceRow({
   ghostCount = 4,
   fontSize = 30,
   fontFamily = FONT_FORMAL,
+  fontStyle = "normal",
+  allowGlyph = false,
 }: {
   exemplar: string;
   y: number;
@@ -602,10 +633,13 @@ function TraceRow({
   ghostCount?: number;
   fontSize?: number;
   fontFamily?: string;
+  fontStyle?: "normal" | "italic";
+  allowGlyph?: boolean;
 }) {
   const baseY = y + height * 0.72;
   const gap = Math.min(56, Math.max(36, (right - left - 24) / (ghostCount + 2)));
-  const glyph = exemplar.length === 1 ? getLetterGlyph(exemplar) : undefined;
+  const glyph =
+    allowGlyph && exemplar.length === 1 ? getLetterGlyph(exemplar) : undefined;
   const glyphScale = Math.max(0.72, Math.min(1.05, height / 52));
 
   return (
@@ -638,6 +672,7 @@ function TraceRow({
             y={baseY}
             fill={INK}
             fontFamily={fontFamily}
+            fontStyle={fontStyle}
             fontSize={fontSize}
           >
             {exemplar}
@@ -649,6 +684,7 @@ function TraceRow({
               y={baseY}
               fill={GHOST}
               fontFamily={fontFamily}
+              fontStyle={fontStyle}
               fontSize={fontSize}
             >
               {exemplar}
@@ -683,7 +719,7 @@ function AlphabetSheet({
         fontFamily="'Noto Serif TC', serif"
         fontSize="8"
       >
-        每行：深色範字 → 淺灰描紅 → 右側空白自寫。小寫若有自建 glyph 會用 path（PDF 穩），否則回退字體。
+        每行：深色範字 → 淺灰描紅 → 右側空白自寫。斜體用闊尖筆示範字體；花飾小寫用自建 glyph path。
       </text>
       {columns.map((colLetters, colIndex) => {
         const x0 = left + colIndex * (colW + colGap);
@@ -703,6 +739,8 @@ function AlphabetSheet({
                   ghostCount={3}
                   fontSize={28}
                   fontFamily={exemplarFont(sheet.styleId)}
+                  fontStyle={exemplarFontStyle(sheet.styleId)}
+                  allowGlyph={useModernGlyphs(sheet.styleId)}
                 />
               );
             })}
@@ -833,6 +871,9 @@ function FamilyAlphabetSheet({ sheet }: SheetProps) {
         fontSize="8"
       >
         左＝筆畫方向｜其後深色範字＋淺灰描紅＋右側空白自寫
+        {sheet.styleId === "italic"
+          ? "｜斜體正逐字辨認中，通過後先製字體檔"
+          : ""}
       </text>
       {letters.map((letter, index) => {
         const y = top + index * rowH;
@@ -841,9 +882,17 @@ function FamilyAlphabetSheet({ sheet }: SheetProps) {
         const baseY = y + bandH * 0.72;
         const practiceLeft = left + guideSize + 14;
         const gap = Math.min(58, Math.max(40, (right - practiceLeft - 20) / 6));
-        const glyph = getLetterGlyph(letter);
+        const glyph = useModernGlyphs(sheet.styleId)
+          ? getLetterGlyph(letter)
+          : undefined;
         const glyphScale = Math.max(0.75, Math.min(1.1, bandH / 52));
         const fontSize = rowH > 78 ? 34 : 28;
+        const fontFamily = exemplarFont(sheet.styleId);
+        const fontStyle = exemplarFontStyle(sheet.styleId);
+        const recognition =
+          sheet.styleId === "italic"
+            ? getItalicLetterRecognition(letter)
+            : undefined;
 
         return (
           <g key={`family-${letter}`}>
@@ -860,6 +909,17 @@ function FamilyAlphabetSheet({ sheet }: SheetProps) {
               y={y + Math.max(0, (bandH - guideSize) / 2)}
               size={guideSize}
             />
+            {recognition ? (
+              <text
+                x={practiceLeft + 10}
+                y={y + 11}
+                fill="#7a8490"
+                fontFamily="'Noto Serif TC', serif"
+                fontSize="7"
+              >
+                {recognition.identity}
+              </text>
+            ) : null}
             {glyph ? (
               <>
                 <GlyphLetter
@@ -886,7 +946,8 @@ function FamilyAlphabetSheet({ sheet }: SheetProps) {
                   x={practiceLeft + 10}
                   y={baseY}
                   fill={INK}
-                  fontFamily={exemplarFont(sheet.styleId)}
+                  fontFamily={fontFamily}
+                  fontStyle={fontStyle}
                   fontSize={fontSize}
                 >
                   {letter}
@@ -897,7 +958,8 @@ function FamilyAlphabetSheet({ sheet }: SheetProps) {
                     x={practiceLeft + 10 + gap * (ghostIndex + 1)}
                     y={baseY}
                     fill={GHOST}
-                    fontFamily={exemplarFont(sheet.styleId)}
+                    fontFamily={fontFamily}
+                    fontStyle={fontStyle}
                     fontSize={fontSize}
                   >
                     {letter}
@@ -1048,6 +1110,7 @@ function WordsSheet({ sheet }: SheetProps) {
               y={baseY}
               fill={INK}
               fontFamily={exemplarFont(sheet.styleId)}
+              fontStyle={exemplarFontStyle(sheet.styleId)}
               fontSize="24"
             >
               {word}
@@ -1057,6 +1120,7 @@ function WordsSheet({ sheet }: SheetProps) {
               y={baseY}
               fill={GHOST}
               fontFamily={exemplarFont(sheet.styleId)}
+              fontStyle={exemplarFontStyle(sheet.styleId)}
               fontSize="24"
             >
               {word}
@@ -1114,6 +1178,7 @@ function SentencesSheet({ sheet }: SheetProps) {
               y={y + bandH * 0.7}
               fill={GHOST}
               fontFamily={exemplarFont(sheet.styleId)}
+              fontStyle={exemplarFontStyle(sheet.styleId)}
               fontSize="18"
             >
               {sentence}

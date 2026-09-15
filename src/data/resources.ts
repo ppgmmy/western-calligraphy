@@ -141,7 +141,7 @@ export const practiceTracks: Array<{
     id: "italic",
     titleZh: "斜體字主線",
     titleEn: "Italic Path",
-    summary: "闊尖筆五級：熱身 → 大寫 → 小寫 → 詞語 → 短句。",
+    summary: "闊尖筆五級：熱身 → 大寫 → 小寫 → 詞語 → 短句。正式示範主線；逐字辨認中，暫不製字體檔。",
     tools: "闊尖筆、墨水",
     levels: [
       {
@@ -192,7 +192,7 @@ export const practiceTracks: Array<{
     id: "copperplate",
     titleZh: "銅板體尖筆線",
     titleEn: "Copperplate Path",
-    summary: "尖筆五級：導引線 → 橢圓 → 筆畫 → 小寫 → 短詞。",
+    summary: "尖筆五級：導引線 → 橢圓 → 筆畫 → 小寫 → 短詞。範字暫用，優先練熱身關。",
     tools: "尖筆、墨水",
     levels: [
       {

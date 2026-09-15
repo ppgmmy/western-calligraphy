@@ -376,6 +376,14 @@ a {
   color: var(--teal);
 }
 
+.style-item--muted {
+  opacity: 0.78;
+}
+
+.style-item--muted .style-item__sample {
+  color: var(--ink-soft);
+}
+
 .style-item__sample--copperplate,
 .style-item__sample--spencerian {
   font-family: var(--font-script), cursive;

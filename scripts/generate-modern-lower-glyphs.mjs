@@ -79,7 +79,8 @@ function join(...segs) {
 
 function slantDown(x, y0, y1, r0, r1, steps = 8) {
   const dy = y1 - y0;
-  const dx = dy * 0.7;
+  // Forward slash slant "/": downstroke moves left as it descends.
+  const dx = dy * -0.7;
   return pts(
     Array.from({ length: steps + 1 }, (_, i) => {
       const t = i / steps;
@@ -90,7 +91,7 @@ function slantDown(x, y0, y1, r0, r1, steps = 8) {
 
 function slantUp(x, y0, y1, r0, r1, steps = 8) {
   const dy = y1 - y0;
-  const dx = dy * 0.7;
+  const dx = dy * -0.7;
   return pts(
     Array.from({ length: steps + 1 }, (_, i) => {
       const t = i / steps;
@@ -107,7 +108,8 @@ function ovalOC(cx, cy, rx, ry, start = 0.05, end = 1.05) {
     const ang = t * Math.PI * 2;
     const lx = Math.cos(ang) * rx;
     const ly = Math.sin(ang) * ry;
-    const x = cx + lx + ly * 0.55;
+    // Shear matches forward "/" slant (negate previous wrong lean).
+    const x = cx + lx + ly * -0.55;
     const y = cy + ly;
     const thick = lx < -1 && ly > 0 ? S : lx < 0 ? S * 0.8 : H;
     out.push({

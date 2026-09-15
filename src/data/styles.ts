@@ -1,3 +1,5 @@
+export type StyleQuality = "primary" | "draft" | "experimental";
+
 export type CalligraphyStyle = {
   id: string;
   nameZh: string;
@@ -7,31 +9,15 @@ export type CalligraphyStyle = {
   summary: string;
   traits: string[];
   tip: string;
+  /**
+   * primary = 目前唯一足夠靚、可作正式示範
+   * draft = 路線保留，範字暫用字體、尚未達展示水準
+   * experimental = 試驗對照
+   */
+  quality: StyleQuality;
 };
 
 export const calligraphyStyles: CalligraphyStyle[] = [
-  {
-    id: "copperplate",
-    nameZh: "銅板體",
-    nameEn: "Copperplate",
-    era: "18 世紀英國",
-    sample: "Flourish",
-    summary:
-      "以尖筆與墨水寫出粗細對比強烈的斜體字。上細下粗，線條如金屬雕刻般乾淨。",
-    traits: ["尖筆斜寫", "粗細分明", "華麗花飾"],
-    tip: "先練基本橢圓與上斜筆，再進入字母連寫。",
-  },
-  {
-    id: "spencerian",
-    nameZh: "斯賓塞體",
-    nameEn: "Spencerian",
-    era: "19 世紀美國",
-    sample: "Grace",
-    summary:
-      "美國商用書寫的經典。線條輕盈、節奏均勻，花飾如藤蔓自然延伸。",
-    traits: ["輕盈節奏", "卵形結構", "流暢連筆"],
-    tip: "保持整頁字距一致，花飾只點綴關鍵字母。",
-  },
   {
     id: "italic",
     nameZh: "斜體字",
@@ -39,53 +25,79 @@ export const calligraphyStyles: CalligraphyStyle[] = [
     era: "文藝復興意大利",
     sample: "Human",
     summary:
-      "由人文主義手寫演變而來，易讀又優雅，適合日常書寫與現代練習入門。",
-    traits: ["易讀", "略斜", "結構清晰"],
-    tip: "用寬尖筆寫出筆畫寬窄，先掌握 a、n、m 的骨架。",
+      "目前站內唯一足夠靚、可作正式示範嘅風格。闊尖筆、結構清晰，正進行逐字精準辨認；辨認穩咗先會做成自製字體檔。",
+    traits: ["正式示範", "闊尖筆", "逐字辨認中"],
+    tip: "用寬尖筆寫出筆畫寬窄，先掌握 a、n、m 的骨架；對照逐字辨認規格檢查每個字母。",
+    quality: "primary",
   },
   {
-    id: "gothic",
-    nameZh: "哥德體",
-    nameEn: "Gothic / Blackletter",
-    era: "中世紀歐洲",
-    sample: "Gothic",
+    id: "copperplate",
+    nameZh: "銅板體",
+    nameEn: "Copperplate",
+    era: "18 世紀英國 · 範字暫用",
+    sample: "Flourish",
     summary:
-      "垂直筆畫密實、稜角分明，帶有中世紀手抄本的莊嚴感。",
-    traits: ["垂直骨架", "密排字距", "儀式感強"],
-    tip: "先畫好等寬豎筆格線，再補斜筆與菱形收尾。",
+      "尖筆粗細對比強烈。練習路線保留，但站內示範字體暫未夠靚——先跟斜體主線，尖筆以筆畫／橢圓熱身為主。",
+    traits: ["尖筆斜寫", "路線保留", "範字待精修"],
+    tip: "先練基本橢圓與上斜筆；正式字母示範會等逐字辨認完成後再升級。",
+    quality: "draft",
   },
   {
-    id: "foundational",
-    nameZh: "基礎手寫體",
-    nameEn: "Foundational Hand",
-    era: "20 世紀復興",
-    sample: "Bookhand",
+    id: "spencerian",
+    nameZh: "斯賓塞體",
+    nameEn: "Spencerian",
+    era: "19 世紀美國 · 範字暫用",
+    sample: "Grace",
     summary:
-      "Edward Johnston 整理的入門體，平衡、端正，是學習西洋書法的穩固起點。",
-    traits: ["端正", "適合入門", "筆畫分明"],
-    tip: "用寬尖筆以筆寬倍數控制字高，建立比例感。",
-  },
-  {
-    id: "uncial",
-    nameZh: "安色爾體",
-    nameEn: "Uncial",
-    era: "晚期羅馬／早期中世紀",
-    sample: "Majuscule",
-    summary:
-      "圓潤的大寫手寫體，常出現在早期基督教手稿，氣質溫和而古老。",
-    traits: ["圓潤", "大寫為主", "古卷氣息"],
-    tip: "放慢速度，讓曲線飽滿，避免把字母壓得太扁。",
+      "輕盈節奏與卵形結構。同樣暫未達展示水準，僅作風格認識與路線佔位。",
+    traits: ["輕盈節奏", "路線佔位", "範字待精修"],
+    tip: "先建立尖筆壓力控制；字母精修排在斜體辨認之後。",
+    quality: "draft",
   },
   {
     id: "flourishing",
     nameZh: "花飾書法",
     nameEn: "Modern Flourishing",
-    era: "當代尖筆工作室傳統",
+    era: "當代尖筆 · glyph 試作",
     sample: "Flourish",
     summary:
-      "當代現代花飾書法：以橢圓與 C／S 為骨，在 modern script 上加大寫與詞尾花飾。氣質華麗、略帶彈跳節奏，接近香港工作室常見的教學風格。",
-    traits: ["現代花體", "橢圓花飾", "可讀優先"],
-    tip: "先穩 modern script，再練 uppercase／lowercase flourishing，最後加 decoration；花飾永遠服從可讀性。",
+      "現代花飾路線：小寫已用逐字母 glyph path 管理，但仍屬精修中，未打包自製字體。正式「夠靚」示範仍以斜體為準。",
+    traits: ["逐字母 glyph", "精修中", "暫緩字體檔"],
+    tip: "先穩 modern script 基礎形；改字形請改對應字母檔，唔好急住造 font。",
+    quality: "draft",
+  },
+  {
+    id: "gothic",
+    nameZh: "哥德體",
+    nameEn: "Gothic / Blackletter",
+    era: "中世紀歐洲 · 範字暫用",
+    sample: "Gothic",
+    summary: "垂直密實、稜角分明。暫作風格認識，示範水準未及斜體。",
+    traits: ["垂直骨架", "範字暫用"],
+    tip: "先畫好等寬豎筆格線，再補斜筆與菱形收尾。",
+    quality: "draft",
+  },
+  {
+    id: "foundational",
+    nameZh: "基礎手寫體",
+    nameEn: "Foundational Hand",
+    era: "20 世紀復興 · 範字暫用",
+    sample: "Bookhand",
+    summary: "端正入門體。示範暫用斜體同源展示字體，完整辨認尚未展開。",
+    traits: ["端正", "範字暫用"],
+    tip: "用寬尖筆以筆寬倍數控制字高，建立比例感。",
+    quality: "draft",
+  },
+  {
+    id: "uncial",
+    nameZh: "安色爾體",
+    nameEn: "Uncial",
+    era: "晚期羅馬／早期中世紀 · 範字暫用",
+    sample: "Majuscule",
+    summary: "圓潤大寫手寫體。暫作風格對照，非正式主線。",
+    traits: ["圓潤", "範字暫用"],
+    tip: "放慢速度，讓曲線飽滿，避免把字母壓得太扁。",
+    quality: "draft",
   },
   {
     id: "imperial-grandeur",
@@ -94,9 +106,10 @@ export const calligraphyStyles: CalligraphyStyle[] = [
     era: "試驗用 · 極華麗展示",
     sample: "Grandeur",
     summary:
-      "試驗字體：以極度華麗嘅大寫花飾作展示對照，氣場偏盛大、適合邀請卡與儀式感標題。暫唔納入正式練習路線，只作風格比較。",
-    traits: ["極華麗大寫", "儀式氣場", "試驗對照"],
-    tip: "只作視覺參考；真正書寫仍請跟 Copperplate／Flourishing 筆順與節奏，唔好照描印刷花體。",
+      "試驗字體：極度華麗大寫花飾作對照。唔納入正式練習，亦唔代表示範水準。",
+    traits: ["極華麗大寫", "試驗對照"],
+    tip: "只作視覺參考；真正書寫仍請跟正式路線筆順。",
+    quality: "experimental",
   },
 ];
 
@@ -108,7 +121,7 @@ export const practiceSteps = [
   {
     title: "熟悉工具",
     detail:
-      "尖筆練 Copperplate／Spencerian／Flourishing；寬尖筆練 Italic／Gothic／Foundational。",
+      "尖筆練 Copperplate／Spencerian／Flourishing；寬尖筆練 Italic／Gothic／Foundational。優先練斜體主線。",
   },
   {
     title: "基本筆畫",
@@ -117,7 +130,7 @@ export const practiceSteps = [
   },
   {
     title: "字母家族",
-    detail: "把形狀相近的字母分組練習，例如 o、a、d、g 或 n、h、m。",
+    detail: "把形狀相近的字母分組練習，例如 o、a、d、g 或 n、h、m；對照逐字辨認規格。",
   },
   {
     title: "短句與花飾",
@@ -140,6 +153,6 @@ export const tools = [
   },
   {
     name: "斜寫板／導引線",
-    detail: "Copperplate 常用斜寫板；所有字體都需要一致的基線與 x-height。",
+    detail: "Copperplate 常用斜寫板；所有字體都需要一致的基線與 x-height。斜線應為「／」方向（上右下左）。",
   },
 ];

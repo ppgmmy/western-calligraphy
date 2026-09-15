@@ -24,8 +24,8 @@ export default function HomePage() {
             <span>西洋書法工作室</span>
           </h1>
           <p className="hero__lead">
-            專職西洋書法教學與商業字跡。從 Copperplate、Spencerian、Flourishing
-            到 Italic 與 Blackletter，以可複製的練習路徑，寫出有節奏的一手字。
+            專職西洋書法教學與商業字跡。現階段以 Italic 斜體為正式示範主線；Copperplate、Spencerian、Flourishing
+            等路線保留練習，逐字辨認穩妥後再升級範字與自製字體。
           </p>
           <div className="cta-row">
             <Link className="btn btn--primary" href="/resources">
@@ -55,17 +55,19 @@ export default function HomePage() {
         <div className="section__head">
           <p className="section__eyebrow">Scripts</p>
           <h2 className="section__title" id="styles-title">
-            八種值得先認識的西洋書法
+            先練斜體，其餘風格認識即可
           </h2>
           <p className="section__text">
-            每種字體與畫風都有自己的工具、節奏與氣質。先看整體，再選一種深入練——含
-            Offhand 花飾線。
+            站內字體示範暫時只有斜體夠靚。其他風格保留路線與工具說明，範字標明暫用；自製字體檔會等逐字辨認完成後先做。
           </p>
         </div>
 
         <div className="style-grid">
           {calligraphyStyles.map((style) => (
-            <article className="style-item" key={style.id}>
+            <article
+              className={`style-item${style.quality !== "primary" ? " style-item--muted" : ""}`}
+              key={style.id}
+            >
               <p
                 className={`style-item__sample style-item__sample--${style.id}`}
               >
@@ -74,6 +76,13 @@ export default function HomePage() {
               <div className="style-item__meta">
                 <span>{style.nameEn}</span>
                 <span>{style.era}</span>
+                <span>
+                  {style.quality === "primary"
+                    ? "正式示範"
+                    : style.quality === "experimental"
+                      ? "試驗"
+                      : "範字暫用"}
+                </span>
               </div>
               <h3 className="style-item__name">{style.nameZh}</h3>
               <p className="style-item__summary">{style.summary}</p>

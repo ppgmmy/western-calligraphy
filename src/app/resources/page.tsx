@@ -37,7 +37,7 @@ export default function ResourcesPage() {
             西洋書法練習本
           </h1>
           <p className="section__text">
-            先選一條路線，再跟五級門檻往上走。每一級只問一件事：過關了沒有？過關再升，唔使一次睇晒所有練習紙。
+            建議先跟「斜體字主線」——目前唯一夠靚嘅正式示範。每級寫清過關標準；斜體正做逐字精準辨認，辨認穩妥前唔會打包自製字體檔。
           </p>
         </div>
 
@@ -69,7 +69,7 @@ export default function ResourcesPage() {
             四條練習路線
           </h2>
           <p className="section__text">
-            每條路線都壓成五步。左邊係本級練什麼，右邊係過關門檻——達標再點下一張。
+            斜體係主線；其他路線範字暫用。左邊係本級練什麼，右邊係過關門檻——達標再點下一張。
           </p>
         </div>
 

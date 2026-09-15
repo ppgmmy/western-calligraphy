@@ -49,6 +49,6 @@ export const GLYPH_METRICS = {
   xHeight: 38,
   baseline: 64,
   descender: 90,
-  /** Approximate Copperplate / modern script slant from horizontal */
+  /** Approximate pointed-pen slant from horizontal; strokes lean "/" (down-left). */
   slantDeg: 55,
 } as const;
