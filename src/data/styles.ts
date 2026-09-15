@@ -17,9 +17,9 @@ export const calligraphyStyles: CalligraphyStyle[] = [
     era: "18 世紀英國尖筆傳統",
     sample: "ABC",
     summary:
-      "經典 Copperplate Capitals：約 55° 斜度、橢圓結構、髮絲細畫與陰影粗畫強烈對比；大寫常帶入口環與出口花飾，氣質華麗而紀律分明。",
-    traits: ["橢圓大寫", "粗細對比", "55° 斜度"],
-    tip: "先穩橢圓與陰影筆畫，再寫帶環飾的大寫；花飾服從可讀性。",
+      "經典 Copperplate Capitals：手寫橢圓節奏、髮絲與陰影帶明顯過渡，約 55° 斜度；大寫入口環與出口花飾要有呼吸感，避免寫成工整印刷體。",
+    traits: ["手寫橢圓", "粗細過渡", "入口花環"],
+    tip: "陰影筆要有粗細變化，髮絲保持輕盈；花飾跟手走，不要對稱到死板。",
   },
   {
     id: "spencerian",

@@ -63,44 +63,45 @@ function CopperplateCapitalMark({
 }) {
   const glyph = getCopperplateCapital(letter);
   if (!glyph) return null;
-  const shade = tone === "ink" ? INK : GHOST;
-  const hair = tone === "ink" ? INK : GHOST;
-  const shadeW = tone === "ink" ? 3.15 : 2.4;
-  const hairW = tone === "ink" ? 0.8 : 0.7;
+  const ink = tone === "ink" ? INK : GHOST;
+  const hairW = tone === "ink" ? 0.95 : 0.75;
+  const shadeOpacity = tone === "ghost" ? 0.42 : 0.92;
+  const hairOpacity = tone === "ghost" ? 0.75 : 1;
+  // Slight skew ≈ Copperplate 55° rhythm without rigid geometry
+  const skew = -16;
   return (
-    <svg
-      x={x}
-      y={y}
-      width={size * 0.72}
-      height={size}
-      viewBox={`0 0 ${COPPERPLATE_CAPITAL_VB.w} ${COPPERPLATE_CAPITAL_VB.h}`}
-      overflow="visible"
-    >
-      {glyph.hair.map((d, index) => (
-        <path
-          key={`hair-${letter}-${index}`}
-          d={d}
-          fill="none"
-          stroke={hair}
-          strokeWidth={hairW}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          opacity={tone === "ghost" ? 0.9 : 1}
-        />
-      ))}
-      {glyph.shade.map((d, index) => (
-        <path
-          key={`shade-${letter}-${index}`}
-          d={d}
-          fill="none"
-          stroke={shade}
-          strokeWidth={shadeW}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          opacity={tone === "ghost" ? 0.55 : 1}
-        />
-      ))}
-    </svg>
+    <g transform={`translate(${x} ${y})`}>
+      <svg
+        width={size * 0.78}
+        height={size}
+        viewBox={`0 0 ${COPPERPLATE_CAPITAL_VB.w} ${COPPERPLATE_CAPITAL_VB.h}`}
+        overflow="visible"
+      >
+        <g transform={`skewX(${skew}) translate(8 0)`}>
+          {glyph.shade.map((d, index) => (
+            <path
+              key={`shade-${letter}-${index}`}
+              d={d}
+              fill={ink}
+              stroke="none"
+              opacity={shadeOpacity}
+            />
+          ))}
+          {glyph.hair.map((d, index) => (
+            <path
+              key={`hair-${letter}-${index}`}
+              d={d}
+              fill="none"
+              stroke={ink}
+              strokeWidth={hairW}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              opacity={hairOpacity}
+            />
+          ))}
+        </g>
+      </svg>
+    </g>
   );
 }
 
@@ -757,7 +758,7 @@ function AlphabetSheet({
   const isCopperCaps =
     sheet.styleId === "copperplate" &&
     letters.every((letter) => letter === letter.toUpperCase());
-  const rowH = isCopperCaps ? 72 : 58;
+  const rowH = isCopperCaps ? 80 : 58;
   const mid = Math.ceil(letters.length / 2);
   const columns = [letters.slice(0, mid), letters.slice(mid)];
 
@@ -771,7 +772,7 @@ function AlphabetSheet({
         fontSize="8"
       >
         {isCopperCaps
-          ? "Copperplate Capitals｜深色陰影筆 + 髮絲細畫 → 淺灰描紅 → 空白自寫｜約 55°"
+          ? "Copperplate Capitals｜陰影帶粗細過渡 + 髮絲橢圓環 → 描紅 → 自寫｜求節奏，勿描成印刷體"
           : "每行：深色範字 → 淺灰描紅 → 右側空白自寫（對齊基線與 55° 斜度）"}
       </text>
       {columns.map((colLetters, colIndex) => {
