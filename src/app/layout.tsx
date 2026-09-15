@@ -3,6 +3,7 @@ import {
   Allura,
   Cormorant_Garamond,
   Italianno,
+  Monsieur_La_Doulaise,
   Noto_Serif_TC,
   Source_Serif_4,
   UnifrakturMaguntia,
@@ -21,9 +22,16 @@ const body = Source_Serif_4({
   weight: ["400", "500", "600"],
 });
 
-/** 正式尖筆（Copperplate／Spencerian）範字 */
+/** Spencerian 等正式尖筆範字 */
 const script = Italianno({
   variable: "--font-script",
+  subsets: ["latin"],
+  weight: "400",
+});
+
+/** Copperplate Capitals：華麗橢圓環／粗細對比的大寫花體 */
+const copperplate = Monsieur_La_Doulaise({
+  variable: "--font-copperplate",
   subsets: ["latin"],
   weight: "400",
 });
@@ -53,14 +61,14 @@ export const metadata: Metadata = {
     template: "%s｜Scriptoria",
   },
   description:
-    "Scriptoria 西洋書法專職工作室：教學、受託書寫與可列印練習系統。涵蓋 Copperplate、Spencerian、Flourishing、Italic 與 Blackletter。",
+    "Scriptoria 西洋書法專職工作室：教學、受託書寫與可列印練習系統。涵蓋 Copperplate Capitals、Spencerian、Flourishing、Italic 與 Blackletter。",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="zh-Hant"
-      className={`${display.variable} ${body.variable} ${script.variable} ${modern.variable} ${blackletter.variable} ${zh.variable} h-full antialiased`}
+      className={`${display.variable} ${body.variable} ${script.variable} ${copperplate.variable} ${modern.variable} ${blackletter.variable} ${zh.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

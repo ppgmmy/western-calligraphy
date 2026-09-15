@@ -13,13 +13,13 @@ export const calligraphyStyles: CalligraphyStyle[] = [
   {
     id: "copperplate",
     nameZh: "銅板體",
-    nameEn: "Copperplate",
-    era: "18 世紀英國",
-    sample: "Flourish",
+    nameEn: "Copperplate Capitals",
+    era: "18 世紀英國尖筆傳統",
+    sample: "ABC",
     summary:
-      "以尖筆與墨水寫出粗細對比強烈的斜體字。上細下粗，線條如金屬雕刻般乾淨。",
-    traits: ["尖筆斜寫", "粗細分明", "華麗花飾"],
-    tip: "先練基本橢圓與上斜筆，再進入字母連寫。",
+      "經典 Copperplate Capitals：約 55° 斜度、橢圓結構、髮絲細畫與陰影粗畫強烈對比；大寫常帶入口環與出口花飾，氣質華麗而紀律分明。",
+    traits: ["橢圓大寫", "粗細對比", "55° 斜度"],
+    tip: "先穩橢圓與陰影筆畫，再寫帶環飾的大寫；花飾服從可讀性。",
   },
   {
     id: "spencerian",

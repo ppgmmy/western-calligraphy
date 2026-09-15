@@ -1,4 +1,8 @@
 import type { ReactNode } from "react";
+import {
+  COPPERPLATE_CAPITAL_VB,
+  getCopperplateCapital,
+} from "@/data/copperplateCapitals";
 import { getStrokeGuide, type StrokePath } from "@/data/letterFamilies";
 import type { PracticeSheet } from "@/data/resources";
 
@@ -17,13 +21,87 @@ const RULE_SOFT = "#c5d3de";
 const TEAL = "#245c54";
 const BRASS = "#9a8658";
 
-/** Copperplate／Spencerian 正式尖筆範字 */
+/** Spencerian 等正式尖筆範字 */
 const FONT_FORMAL = "var(--font-script), Georgia, cursive";
-/** 當代 modern calligraphy／花飾範字（接近工作室教學風格） */
+/** Copperplate Capitals 華麗大寫花體 */
+const FONT_COPPERPLATE =
+  "var(--font-copperplate), var(--font-script), Georgia, cursive";
+/** 當代 modern calligraphy／花飾範字 */
 const FONT_MODERN = "var(--font-modern), var(--font-script), cursive";
 
 function exemplarFont(styleId: PracticeSheet["styleId"]) {
-  return styleId === "flourishing" ? FONT_MODERN : FONT_FORMAL;
+  switch (styleId) {
+    case "flourishing":
+      return FONT_MODERN;
+    case "copperplate":
+      return FONT_COPPERPLATE;
+    case "spencerian":
+    case "italic":
+    case "foundational":
+    case "gothic":
+    case "general":
+      return FONT_FORMAL;
+    default: {
+      const _exhaustive: never = styleId;
+      return _exhaustive;
+    }
+  }
+}
+
+function CopperplateCapitalMark({
+  letter,
+  x,
+  y,
+  size,
+  tone,
+}: {
+  letter: string;
+  x: number;
+  y: number;
+  size: number;
+  tone: "ink" | "ghost";
+}) {
+  const glyph = getCopperplateCapital(letter);
+  if (!glyph) return null;
+  const shade = tone === "ink" ? INK : GHOST;
+  const hair = tone === "ink" ? INK : GHOST;
+  const shadeW = tone === "ink" ? 3.15 : 2.4;
+  const hairW = tone === "ink" ? 0.8 : 0.7;
+  return (
+    <svg
+      x={x}
+      y={y}
+      width={size * 0.72}
+      height={size}
+      viewBox={`0 0 ${COPPERPLATE_CAPITAL_VB.w} ${COPPERPLATE_CAPITAL_VB.h}`}
+      overflow="visible"
+    >
+      {glyph.hair.map((d, index) => (
+        <path
+          key={`hair-${letter}-${index}`}
+          d={d}
+          fill="none"
+          stroke={hair}
+          strokeWidth={hairW}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          opacity={tone === "ghost" ? 0.9 : 1}
+        />
+      ))}
+      {glyph.shade.map((d, index) => (
+        <path
+          key={`shade-${letter}-${index}`}
+          d={d}
+          fill="none"
+          stroke={shade}
+          strokeWidth={shadeW}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          opacity={tone === "ghost" ? 0.55 : 1}
+        />
+      ))}
+    </svg>
+  );
 }
 
 function pageLabel(sheet: PracticeSheet) {
@@ -87,7 +165,11 @@ function SheetFrame({
         x={MARGIN}
         y={28}
         fill={INK}
-        fontFamily="var(--font-script), 'Segoe Script', cursive"
+        fontFamily={
+          sheet.styleId === "copperplate"
+            ? FONT_COPPERPLATE
+            : "var(--font-script), 'Segoe Script', cursive"
+        }
         fontSize="20"
       >
         Scriptoria
@@ -591,6 +673,7 @@ function TraceRow({
   ghostCount = 4,
   fontSize = 30,
   fontFamily = FONT_FORMAL,
+  copperplateGlyph = false,
 }: {
   exemplar: string;
   y: number;
@@ -600,33 +683,63 @@ function TraceRow({
   ghostCount?: number;
   fontSize?: number;
   fontFamily?: string;
+  copperplateGlyph?: boolean;
 }) {
   const baseY = y + height * 0.72;
   const gap = Math.min(56, Math.max(36, (right - left - 24) / (ghostCount + 2)));
+  const glyphSize = height * 0.92;
+  const glyphY = y + height * 0.04;
+  const useGlyph =
+    copperplateGlyph && Boolean(getCopperplateCapital(exemplar));
+
   return (
     <g>
       <RuledBand y={y} height={height} left={left} right={right} clipId={`tr-${y}-${left}`} />
-      <text
-        x={left + 10}
-        y={baseY}
-        fill={INK}
-        fontFamily={fontFamily}
-        fontSize={fontSize}
-      >
-        {exemplar}
-      </text>
-      {Array.from({ length: ghostCount }).map((_, index) => (
-        <text
-          key={`ghost-${exemplar}-${index}`}
-          x={left + 10 + gap * (index + 1)}
-          y={baseY}
-          fill={GHOST}
-          fontFamily={fontFamily}
-          fontSize={fontSize}
-        >
-          {exemplar}
-        </text>
-      ))}
+      {useGlyph ? (
+        <>
+          <CopperplateCapitalMark
+            letter={exemplar}
+            x={left + 6}
+            y={glyphY}
+            size={glyphSize}
+            tone="ink"
+          />
+          {Array.from({ length: ghostCount }).map((_, index) => (
+            <CopperplateCapitalMark
+              key={`ghost-glyph-${exemplar}-${index}`}
+              letter={exemplar}
+              x={left + 6 + gap * (index + 1)}
+              y={glyphY}
+              size={glyphSize}
+              tone="ghost"
+            />
+          ))}
+        </>
+      ) : (
+        <>
+          <text
+            x={left + 10}
+            y={baseY}
+            fill={INK}
+            fontFamily={fontFamily}
+            fontSize={fontSize}
+          >
+            {exemplar}
+          </text>
+          {Array.from({ length: ghostCount }).map((_, index) => (
+            <text
+              key={`ghost-${exemplar}-${index}`}
+              x={left + 10 + gap * (index + 1)}
+              y={baseY}
+              fill={GHOST}
+              fontFamily={fontFamily}
+              fontSize={fontSize}
+            >
+              {exemplar}
+            </text>
+          ))}
+        </>
+      )}
     </g>
   );
 }
@@ -641,7 +754,10 @@ function AlphabetSheet({
   const cols = 2;
   const colGap = 18;
   const colW = (right - left - colGap) / cols;
-  const rowH = 58;
+  const isCopperCaps =
+    sheet.styleId === "copperplate" &&
+    letters.every((letter) => letter === letter.toUpperCase());
+  const rowH = isCopperCaps ? 72 : 58;
   const mid = Math.ceil(letters.length / 2);
   const columns = [letters.slice(0, mid), letters.slice(mid)];
 
@@ -654,7 +770,9 @@ function AlphabetSheet({
         fontFamily="'Noto Serif TC', serif"
         fontSize="8"
       >
-        每行：深色範字 → 淺灰描紅 → 右側空白自寫（對齊基線與 55° 斜度）
+        {isCopperCaps
+          ? "Copperplate Capitals｜深色陰影筆 + 髮絲細畫 → 淺灰描紅 → 空白自寫｜約 55°"
+          : "每行：深色範字 → 淺灰描紅 → 右側空白自寫（對齊基線與 55° 斜度）"}
       </text>
       {columns.map((colLetters, colIndex) => {
         const x0 = left + colIndex * (colW + colGap);
@@ -671,9 +789,10 @@ function AlphabetSheet({
                   height={rowH - 8}
                   left={x0}
                   right={x0 + colW}
-                  ghostCount={3}
-                  fontSize={28}
+                  ghostCount={isCopperCaps ? 2 : 3}
+                  fontSize={isCopperCaps ? 34 : 28}
                   fontFamily={exemplarFont(sheet.styleId)}
+                  copperplateGlyph={isCopperCaps}
                 />
               );
             })}
