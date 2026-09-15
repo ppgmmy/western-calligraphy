@@ -55,7 +55,7 @@ export default function HomePage() {
         <div className="section__head">
           <p className="section__eyebrow">Scripts</p>
           <h2 className="section__title" id="styles-title">
-            七種值得先認識的西洋書法
+            八種值得先認識的西洋書法
           </h2>
           <p className="section__text">
             每種字體與畫風都有自己的工具、節奏與氣質。先看整體，再選一種深入練——含

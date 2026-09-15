@@ -87,6 +87,17 @@ export const calligraphyStyles: CalligraphyStyle[] = [
     traits: ["現代花體", "橢圓花飾", "可讀優先"],
     tip: "先穩 modern script，再練 uppercase／lowercase flourishing，最後加 decoration；花飾永遠服從可讀性。",
   },
+  {
+    id: "imperial-grandeur",
+    nameZh: "御典華體",
+    nameEn: "Imperial Grandeur",
+    era: "試驗用 · 極華麗展示",
+    sample: "Grandeur",
+    summary:
+      "試驗字體：以極度華麗嘅大寫花飾作展示對照，氣場偏盛大、適合邀請卡與儀式感標題。暫唔納入正式練習路線，只作風格比較。",
+    traits: ["極華麗大寫", "儀式氣場", "試驗對照"],
+    tip: "只作視覺參考；真正書寫仍請跟 Copperplate／Flourishing 筆順與節奏，唔好照描印刷花體。",
+  },
 ];
 
 export const practiceSteps = [

@@ -25,6 +25,7 @@
   --font-display: var(--font-display);
   --font-script: var(--font-script);
   --font-modern: var(--font-modern);
+  --font-grand: var(--font-grand);
   --font-blackletter: var(--font-blackletter);
   --font-zh: var(--font-zh);
 }
@@ -395,6 +396,13 @@ a {
   background-size: 100% 0.12em;
   background-position: 0 88%;
   background-repeat: no-repeat;
+}
+
+.style-item__sample--imperial-grandeur {
+  font-family: var(--font-grand), var(--font-script), cursive;
+  letter-spacing: 0.04em;
+  font-size: clamp(3rem, 6vw, 4.2rem);
+  line-height: 1.15;
 }
 
 .style-item__sample--italic,

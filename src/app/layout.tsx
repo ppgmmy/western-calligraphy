@@ -3,6 +3,7 @@ import {
   Allura,
   Cormorant_Garamond,
   Italianno,
+  Mea_Culpa,
   Noto_Serif_TC,
   Source_Serif_4,
   UnifrakturMaguntia,
@@ -35,6 +36,13 @@ const modern = Allura({
   weight: "400",
 });
 
+/** 試驗用極華麗花體（Imperial Grandeur） */
+const grand = Mea_Culpa({
+  variable: "--font-grand",
+  subsets: ["latin"],
+  weight: "400",
+});
+
 const blackletter = UnifrakturMaguntia({
   variable: "--font-blackletter",
   subsets: ["latin"],
@@ -60,7 +68,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="zh-Hant"
-      className={`${display.variable} ${body.variable} ${script.variable} ${modern.variable} ${blackletter.variable} ${zh.variable} h-full antialiased`}
+      className={`${display.variable} ${body.variable} ${script.variable} ${modern.variable} ${grand.variable} ${blackletter.variable} ${zh.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
