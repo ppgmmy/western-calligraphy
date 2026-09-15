@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import { GlyphLetter } from "@/components/GlyphLetter";
+import { getLetterGlyph } from "@/data/glyphs";
 import { getStrokeGuide, type StrokePath } from "@/data/letterFamilies";
 import type { PracticeSheet } from "@/data/resources";
 
@@ -603,30 +605,57 @@ function TraceRow({
 }) {
   const baseY = y + height * 0.72;
   const gap = Math.min(56, Math.max(36, (right - left - 24) / (ghostCount + 2)));
+  const glyph = exemplar.length === 1 ? getLetterGlyph(exemplar) : undefined;
+  const glyphScale = Math.max(0.72, Math.min(1.05, height / 52));
+
   return (
     <g>
       <RuledBand y={y} height={height} left={left} right={right} clipId={`tr-${y}-${left}`} />
-      <text
-        x={left + 10}
-        y={baseY}
-        fill={INK}
-        fontFamily={fontFamily}
-        fontSize={fontSize}
-      >
-        {exemplar}
-      </text>
-      {Array.from({ length: ghostCount }).map((_, index) => (
-        <text
-          key={`ghost-${exemplar}-${index}`}
-          x={left + 10 + gap * (index + 1)}
-          y={baseY}
-          fill={GHOST}
-          fontFamily={fontFamily}
-          fontSize={fontSize}
-        >
-          {exemplar}
-        </text>
-      ))}
+      {glyph ? (
+        <>
+          <GlyphLetter
+            glyph={glyph}
+            x={left + 8}
+            baselineY={baseY}
+            scale={glyphScale}
+            fill={INK}
+          />
+          {Array.from({ length: ghostCount }).map((_, index) => (
+            <GlyphLetter
+              key={`ghost-glyph-${exemplar}-${index}`}
+              glyph={glyph}
+              x={left + 8 + gap * (index + 1)}
+              baselineY={baseY}
+              scale={glyphScale}
+              fill={GHOST}
+            />
+          ))}
+        </>
+      ) : (
+        <>
+          <text
+            x={left + 10}
+            y={baseY}
+            fill={INK}
+            fontFamily={fontFamily}
+            fontSize={fontSize}
+          >
+            {exemplar}
+          </text>
+          {Array.from({ length: ghostCount }).map((_, index) => (
+            <text
+              key={`ghost-${exemplar}-${index}`}
+              x={left + 10 + gap * (index + 1)}
+              y={baseY}
+              fill={GHOST}
+              fontFamily={fontFamily}
+              fontSize={fontSize}
+            >
+              {exemplar}
+            </text>
+          ))}
+        </>
+      )}
     </g>
   );
 }
@@ -654,7 +683,7 @@ function AlphabetSheet({
         fontFamily="'Noto Serif TC', serif"
         fontSize="8"
       >
-        每行：深色範字 → 淺灰描紅 → 右側空白自寫（對齊基線與 55° 斜度）
+        每行：深色範字 → 淺灰描紅 → 右側空白自寫。小寫若有自建 glyph 會用 path（PDF 穩），否則回退字體。
       </text>
       {columns.map((colLetters, colIndex) => {
         const x0 = left + colIndex * (colW + colGap);
@@ -812,6 +841,9 @@ function FamilyAlphabetSheet({ sheet }: SheetProps) {
         const baseY = y + bandH * 0.72;
         const practiceLeft = left + guideSize + 14;
         const gap = Math.min(58, Math.max(40, (right - practiceLeft - 20) / 6));
+        const glyph = getLetterGlyph(letter);
+        const glyphScale = Math.max(0.75, Math.min(1.1, bandH / 52));
+        const fontSize = rowH > 78 ? 34 : 28;
 
         return (
           <g key={`family-${letter}`}>
@@ -828,27 +860,51 @@ function FamilyAlphabetSheet({ sheet }: SheetProps) {
               y={y + Math.max(0, (bandH - guideSize) / 2)}
               size={guideSize}
             />
-            <text
-              x={practiceLeft + 10}
-              y={baseY}
-              fill={INK}
-              fontFamily={exemplarFont(sheet.styleId)}
-              fontSize={rowH > 78 ? 34 : 28}
-            >
-              {letter}
-            </text>
-            {Array.from({ length: 3 }).map((_, ghostIndex) => (
-              <text
-                key={`fg-${letter}-${ghostIndex}`}
-                x={practiceLeft + 10 + gap * (ghostIndex + 1)}
-                y={baseY}
-                fill={GHOST}
-                fontFamily={exemplarFont(sheet.styleId)}
-                fontSize={rowH > 78 ? 34 : 28}
-              >
-                {letter}
-              </text>
-            ))}
+            {glyph ? (
+              <>
+                <GlyphLetter
+                  glyph={glyph}
+                  x={practiceLeft + 8}
+                  baselineY={baseY}
+                  scale={glyphScale}
+                  fill={INK}
+                />
+                {Array.from({ length: 3 }).map((_, ghostIndex) => (
+                  <GlyphLetter
+                    key={`fg-glyph-${letter}-${ghostIndex}`}
+                    glyph={glyph}
+                    x={practiceLeft + 8 + gap * (ghostIndex + 1)}
+                    baselineY={baseY}
+                    scale={glyphScale}
+                    fill={GHOST}
+                  />
+                ))}
+              </>
+            ) : (
+              <>
+                <text
+                  x={practiceLeft + 10}
+                  y={baseY}
+                  fill={INK}
+                  fontFamily={exemplarFont(sheet.styleId)}
+                  fontSize={fontSize}
+                >
+                  {letter}
+                </text>
+                {Array.from({ length: 3 }).map((_, ghostIndex) => (
+                  <text
+                    key={`fg-${letter}-${ghostIndex}`}
+                    x={practiceLeft + 10 + gap * (ghostIndex + 1)}
+                    y={baseY}
+                    fill={GHOST}
+                    fontFamily={exemplarFont(sheet.styleId)}
+                    fontSize={fontSize}
+                  >
+                    {letter}
+                  </text>
+                ))}
+              </>
+            )}
           </g>
         );
       })}
