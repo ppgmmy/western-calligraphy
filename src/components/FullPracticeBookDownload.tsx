@@ -110,7 +110,7 @@ function drawGuidePage(pdf: jsPDF) {
     "5. Mark sheets completed in the website progress tracker.",
     "",
     "Suggested session: 15–20 minutes, one family or one difficulty sheet.",
-    "Pointed-pen tracks (Copperplate / Spencerian / Flourishing) can run in parallel.",
+    "Finish the Italic path first (minuscules especially); then learn the next style one at a time—do not mix tracks.",
   ];
 
   let y = 48;

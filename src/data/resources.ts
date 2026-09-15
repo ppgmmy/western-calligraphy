@@ -90,14 +90,14 @@ export const practiceStages: PracticeStageInfo[] = [
     stage: 1,
     titleZh: "第 1 級｜大寫",
     titleEn: "Level 1 · Capitals",
-    focus: "大寫骨架與筆畫方向。",
+    focus: "大寫骨架與筆畫方向。（斜體主線建議：小寫細草穩了再來）",
     gate: "過關門檻：同一家族大寫骨架不歪，粗細／筆寬開始可控。",
   },
   {
     stage: 2,
-    titleZh: "第 2 級｜小寫",
+    titleZh: "第 2 級｜小寫細草",
     titleEn: "Level 2 · Minuscules",
-    focus: "小寫基本形（橢圓、拱門、升降部）。",
+    focus: "小寫基本形（橢圓、拱門、升降部）。斜體入門主戰場，而家夠靚嘅示範亦喺呢度。",
     gate: "過關門檻：核心小寫形狀穩定，升降部唔亂撞格線。",
   },
   {
@@ -125,13 +125,18 @@ export type TrackLevel = {
   sheetSlug: string;
 };
 
-/** 四條可並行的練習路線（斜體主線 + 兩條尖筆線 + 花飾線） */
+/** 順序練習路線：初學先完成斜體（尤其小寫細草），再一款接一款，唔並行混練。 */
 export const practiceTracks: Array<{
   id: Exclude<PracticeTrackId, "shared">;
   titleZh: string;
   titleEn: string;
   summary: string;
   tools: string;
+  /** 建議學習順序（1 = 現在就開始） */
+  sequence: number;
+  /** open = 初學現開；after-italic = 學完斜體主線後再開 */
+  unlock: "open" | "after-italic";
+  beginnerNote: string;
   /** 由淺入深；每步一個門檻 */
   levels: TrackLevel[];
   /** 相容舊用法：代表練習紙 slug 列表 */
@@ -139,10 +144,13 @@ export const practiceTracks: Array<{
 }> = [
   {
     id: "italic",
-    titleZh: "斜體字主線",
+    titleZh: "① 斜體字主線（先學呢款）",
     titleEn: "Italic Path",
-    summary: "闊尖筆五級：熱身 → 大寫 → 小寫 → 詞語 → 短句。正式示範主線；逐字辨認中，暫不製字體檔。",
+    summary: "闊尖筆五級：熱身 → 小寫細草 → 大寫 → 詞語 → 短句。唯一正式示範主線；先學完呢款，先開其他。",
     tools: "闊尖筆、墨水",
+    sequence: 1,
+    unlock: "open",
+    beginnerNote: "初學只跟呢條。而家夠靚嘅示範主要係斜體小寫細草；請先把小寫練穩，再補大寫，整條過關後先換下一款。",
     levels: [
       {
         step: 1,
@@ -153,17 +161,17 @@ export const practiceTracks: Array<{
       },
       {
         step: 2,
-        stage: 1,
-        titleZh: "大寫家族",
-        gate: "直筆大寫骨架不歪",
-        sheetSlug: "italic-family-upper-straight",
+        stage: 2,
+        titleZh: "小寫細草（先練）",
+        gate: "橢圓小寫節奏一致、可辨認",
+        sheetSlug: "italic-family-lower-oval",
       },
       {
         step: 3,
-        stage: 2,
-        titleZh: "小寫家族",
-        gate: "橢圓小寫節奏一致",
-        sheetSlug: "italic-family-lower-oval",
+        stage: 1,
+        titleZh: "大寫家族（小寫後）",
+        gate: "直筆大寫骨架不歪",
+        sheetSlug: "italic-family-upper-straight",
       },
       {
         step: 4,
@@ -182,18 +190,22 @@ export const practiceTracks: Array<{
     ],
     sheetSlugs: [
       "italic-rules",
-      "italic-family-upper-straight",
       "italic-family-lower-oval",
+      "italic-family-upper-straight",
       "italic-words-easy",
       "italic-sentences-easy",
     ],
   },
+
   {
     id: "copperplate",
-    titleZh: "銅板體尖筆線",
+    titleZh: "② 銅板體（斜體之後）",
     titleEn: "Copperplate Path",
-    summary: "尖筆五級：導引線 → 橢圓 → 筆畫 → 小寫 → 短詞。範字暫用，優先練熱身關。",
+    summary: "尖筆五級。學完斜體後再開；範字暫用，一次只深耕一款。",
     tools: "尖筆、墨水",
+    sequence: 2,
+    unlock: "after-italic",
+    beginnerNote: "等斜體主線（含短句）過關後再開。唔好同斜體並行混練。",
     levels: [
       {
         step: 1,
@@ -239,12 +251,16 @@ export const practiceTracks: Array<{
       "copperplate-words-easy",
     ],
   },
+
   {
     id: "spencerian",
-    titleZh: "斯賓塞體尖筆線",
+    titleZh: "③ 斯賓塞體（斜體之後）",
     titleEn: "Spencerian Path",
-    summary: "尖筆五級：導引線 → 曲線 → 筆畫 → 小寫 → 短詞。",
+    summary: "尖筆五級。排在斜體之後；一次只學一款，唔並行。",
     tools: "尖筆、墨水",
+    sequence: 3,
+    unlock: "after-italic",
+    beginnerNote: "銅板或斜體過關後再開；仍建議一次只練一款尖筆體。",
     levels: [
       {
         step: 1,
@@ -290,12 +306,16 @@ export const practiceTracks: Array<{
       "spencerian-words-easy",
     ],
   },
+
   {
     id: "flourishing",
-    titleZh: "花飾／Modern 線",
+    titleZh: "④ 花飾（斜體穩後再加）",
     titleEn: "Modern Flourishing Path",
-    summary: "尖筆五級：橢圓 → 曲線 → 基礎字形 → script → 花飾詞。",
+    summary: "花飾加成線。斜體穩後再開；未穩字唔好急住加花。",
     tools: "尖筆、墨水",
+    sequence: 4,
+    unlock: "after-italic",
+    beginnerNote: "斜體詞語／短句可讀穩定後再加花飾；花飾係加成，唔係入門第一站。",
     levels: [
       {
         step: 1,
@@ -340,7 +360,7 @@ export const practiceTracks: Array<{
       "flourish-modern-lower",
       "flourish-words",
     ],
-  },
+  }
 ];
 
 export function getDifficultyLabel(difficulty?: PracticeDifficulty): string {
@@ -1261,47 +1281,45 @@ export function getTrackLevelForSheet(sheet: PracticeSheet): TrackLevel | undefi
 /** 依星期輪替，給出「今日練習」建議 */
 export function getTodaysPractice(date = new Date()) {
   const day = date.getDay(); // 0 Sun ... 6 Sat
+  // 初學建議：一週內只跟斜體，並以小寫細草為主；唔混其他字體。
   const plan = [
     {
-      focus: "熱身與筆壓",
-      reason: "適合放慢節奏，先把線條感覺找回來。",
-      sheetSlugs: ["copperplate-ovals", "flourish-ovals"],
+      focus: "斜體熱身格線",
+      reason: "先對斜度與字高；今日只練斜體，唔開其他字體。",
+      sheetSlugs: ["italic-rules"],
     },
     {
-      focus: "大寫直筆家族",
-      reason: "從結構最清楚的直筆大寫開始一週。",
-      sheetSlugs: ["italic-family-upper-straight", "copperplate-guidelines"],
+      focus: "斜體小寫｜橢圓家族",
+      reason: "而家夠靚嘅示範主要係斜體細草；先把 o／a／d 等橢圓形寫穩。",
+      sheetSlugs: ["italic-family-lower-oval"],
     },
     {
-      focus: "大寫斜筆與圓筆",
-      reason: "挑戰角度平衡與曲線控制。",
-      sheetSlugs: [
-        "italic-family-upper-diagonal",
-        "italic-family-upper-round",
-      ],
+      focus: "斜體小寫｜拱門家族",
+      reason: "繼續小寫細草：n／h／m 拱門節奏。",
+      sheetSlugs: ["italic-family-lower-arch"],
     },
     {
-      focus: "小寫橢圓與拱門",
-      reason: "打好小寫基本形，後面連筆會輕鬆很多。",
-      sheetSlugs: ["italic-family-lower-oval", "italic-family-lower-arch"],
-    },
-    {
-      focus: "升降部與特殊形",
-      reason: "處理 b/d/g/y 與 s/r/z 這些易歪字母。",
+      focus: "斜體小寫｜升降與特殊形",
+      reason: "處理 b／d／g／y 與 s／r／z；仍留在斜體小寫。",
       sheetSlugs: [
         "italic-family-lower-asc-desc",
         "italic-family-lower-special",
       ],
     },
     {
-      focus: "單字組合",
-      reason: "把字母串成字，檢查字距與節奏。",
-      sheetSlugs: ["italic-words-easy", "flourish-cs-curves"],
+      focus: "斜體小寫總覽",
+      reason: "把小寫串一次；過關後先考慮大寫，仍唔好跳去銅板／花飾。",
+      sheetSlugs: ["italic-alphabet-lower"],
     },
     {
-      focus: "短句與花飾複習",
-      reason: "用短句收束，並點綴 Offhand 8 字環熱身。",
-      sheetSlugs: ["italic-sentences-easy", "flourish-figure-eight"],
+      focus: "斜體短詞",
+      reason: "小寫穩了才串詞；檢查字距與連筆。",
+      sheetSlugs: ["italic-words-easy"],
+    },
+    {
+      focus: "斜體短句",
+      reason: "用短句收束斜體主線；整條過關後才換下一款字體。",
+      sheetSlugs: ["italic-sentences-easy"],
     },
   ] as const;
 

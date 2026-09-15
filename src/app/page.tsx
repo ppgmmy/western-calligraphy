@@ -24,8 +24,7 @@ export default function HomePage() {
             <span>西洋書法工作室</span>
           </h1>
           <p className="hero__lead">
-            專職西洋書法教學與商業字跡。現階段以 Italic 斜體為正式示範主線；Copperplate、Spencerian、Flourishing
-            等路線保留練習，逐字辨認穩妥後再升級範字與自製字體。
+            專職西洋書法教學與商業字跡。而家夠靚嘅示範主要係 Italic 斜體小寫細草；初學請先把斜體整條學完，先開下一款字體，避免並行混練。
           </p>
           <div className="cta-row">
             <Link className="btn btn--primary" href="/resources">
@@ -55,10 +54,10 @@ export default function HomePage() {
         <div className="section__head">
           <p className="section__eyebrow">Scripts</p>
           <h2 className="section__title" id="styles-title">
-            先練斜體，其餘風格認識即可
+            先練斜體小寫，其餘一款接一款
           </h2>
           <p className="section__text">
-            站內字體示範暫時只有斜體夠靚。其他風格保留路線與工具說明，範字標明暫用；自製字體檔會等逐字辨認完成後先做。
+            站內暫時只有斜體小寫（細草）夠靚。初學請學完斜體主線再開其他風格；範字暫用，自製字體檔會等逐字辨認完成後先做。
           </p>
         </div>
 
@@ -78,10 +77,10 @@ export default function HomePage() {
                 <span>{style.era}</span>
                 <span>
                   {style.quality === "primary"
-                    ? "正式示範"
+                    ? "小寫細草示範"
                     : style.quality === "experimental"
                       ? "試驗"
-                      : "範字暫用"}
+                      : "學完斜體後"}
                 </span>
               </div>
               <h3 className="style-item__name">{style.nameZh}</h3>

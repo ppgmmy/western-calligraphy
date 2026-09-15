@@ -20,7 +20,7 @@ import {
 export const metadata: Metadata = {
   title: "練習本",
   description:
-    "四條路線、五級門檻：熱身 → 大寫 → 小寫 → 詞語 → 短句。每級寫清過關標準，再升下一級。",
+    "初學先完成斜體（尤其小寫細草），再一款接一款。五級門檻：熱身 → 小寫 → 大寫 → 詞語 → 短句。",
 };
 
 export default function ResourcesPage() {
@@ -37,7 +37,7 @@ export default function ResourcesPage() {
             西洋書法練習本
           </h1>
           <p className="section__text">
-            建議先跟「斜體字主線」——目前唯一夠靚嘅正式示範。每級寫清過關標準；斜體正做逐字精準辨認，辨認穩妥前唔會打包自製字體檔。
+            初學只跟「斜體字主線」：而家夠靚嘅主要係斜體小寫細草。請先把斜體整條學完，先開下一款；唔好幾款並行混練。斜體正做逐字辨認，穩妥前唔會打包自製字體檔。
           </p>
         </div>
 
@@ -66,19 +66,29 @@ export default function ResourcesPage() {
         <div className="section__head">
           <p className="section__eyebrow">Practice Tracks</p>
           <h2 className="section__title" id="tracks-title">
-            四條練習路線
+            按順序學：一款過關再開下一款
           </h2>
           <p className="section__text">
-            斜體係主線；其他路線範字暫用。左邊係本級練什麼，右邊係過關門檻——達標再點下一張。
+            初學只開斜體。夠靚嘅示範主要係斜體小寫細草——先練小寫，再補大寫。整條斜體過關後，先開銅板／斯賓塞／花飾；唔好並行混練。
           </p>
         </div>
 
         <div className="track-grid">
-          {practiceTracks.map((track) => (
-            <article className="track-card" key={track.id} id={`track-${track.id}`}>
+          {[...practiceTracks]
+            .sort((a, b) => a.sequence - b.sequence)
+            .map((track) => (
+            <article
+              className={`track-card${track.unlock === "open" ? " track-card--open" : " track-card--later"}`}
+              key={track.id}
+              id={`track-${track.id}`}
+            >
+              <p className="track-card__badge">
+                {track.unlock === "open" ? "現在學" : "斜體之後"}
+              </p>
               <p className="track-card__en">{track.titleEn}</p>
               <h3 className="track-card__title">{track.titleZh}</h3>
               <p className="track-card__summary">{track.summary}</p>
+              <p className="track-card__note">{track.beginnerNote}</p>
               <p className="track-card__tools">{track.tools}</p>
               <ol className="track-levels">
                 {track.levels.map((level) => {

@@ -1224,6 +1224,40 @@ a {
   max-width: 72rem;
 }
 
+.track-card--open {
+  box-shadow: inset 3px 0 0 var(--teal);
+}
+
+.track-card--later {
+  opacity: 0.72;
+}
+
+.track-card__badge {
+  display: inline-block;
+  margin: 0 0 0.55rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: var(--teal);
+}
+
+.track-card--later .track-card__badge {
+  color: var(--ink-soft);
+}
+
+.track-card__note {
+  margin: 0 0 0.65rem;
+  padding: 0.55rem 0.7rem;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: var(--ink);
+  background: rgba(36, 92, 84, 0.06);
+}
+
+.track-card--later .track-card__note {
+  background: rgba(28, 35, 43, 0.04);
+  color: var(--ink-soft);
+}
+
 .track-card {
   padding: 1.35rem 1.25rem 1.5rem;
   background:
