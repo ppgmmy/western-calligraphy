@@ -18,9 +18,9 @@ const TEAL = "#245c54";
 const BRASS = "#9a8658";
 
 /** Copperplate／Spencerian 正式尖筆範字 */
-const FONT_FORMAL = "var(--font-script), Georgia, cursive";
+const FONT_FORMAL = "var(--font-script), Italianno, cursive";
 /** 當代 modern calligraphy／花飾範字（接近工作室教學風格） */
-const FONT_MODERN = "var(--font-modern), var(--font-script), cursive";
+const FONT_MODERN = "var(--font-modern), Allura, var(--font-script), cursive";
 
 function exemplarFont(styleId: PracticeSheet["styleId"]) {
   return styleId === "flourishing" ? FONT_MODERN : FONT_FORMAL;

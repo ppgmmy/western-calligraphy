@@ -10,6 +10,7 @@ import {
   practiceStages,
   type PracticeSheet,
 } from "@/data/resources";
+import { svgElementToJpeg } from "@/lib/exportPracticeSheet";
 import { markSheetDownloaded } from "@/lib/practiceProgress";
 
 async function waitForPaint() {
@@ -18,38 +19,6 @@ async function waitForPaint() {
       requestAnimationFrame(() => resolve());
     });
   });
-}
-
-async function svgElementToJpeg(svg: SVGSVGElement): Promise<string> {
-  const clone = svg.cloneNode(true) as SVGSVGElement;
-  clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-  clone.setAttribute("width", "794");
-  clone.setAttribute("height", "1123");
-
-  const xml = new XMLSerializer().serializeToString(clone);
-  const blob = new Blob([xml], { type: "image/svg+xml;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-
-  try {
-    const image = await new Promise<HTMLImageElement>((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => resolve(img);
-      img.onerror = () => reject(new Error("SVG image load failed"));
-      img.src = url;
-    });
-
-    const canvas = document.createElement("canvas");
-    canvas.width = 1588;
-    canvas.height = 2246;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) throw new Error("Canvas unavailable");
-    ctx.fillStyle = "#f7f5f1";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-    return canvas.toDataURL("image/jpeg", 0.92);
-  } finally {
-    URL.revokeObjectURL(url);
-  }
 }
 
 async function renderSheetJpeg(sheet: PracticeSheet): Promise<string> {
@@ -63,12 +32,13 @@ async function renderSheetJpeg(sheet: PracticeSheet): Promise<string> {
   try {
     root = createRoot(host);
     root.render(<PracticeSheetArt sheet={sheet} />);
+    await document.fonts.ready;
     await waitForPaint();
-    await new Promise((resolve) => window.setTimeout(resolve, 40));
+    await new Promise((resolve) => window.setTimeout(resolve, 80));
 
     const svg = host.querySelector<SVGSVGElement>(".practice-sheet-svg");
     if (!svg) throw new Error(`Missing SVG for ${sheet.slug}`);
-    return await svgElementToJpeg(svg);
+    return await svgElementToJpeg(svg, { scale: 2, quality: 0.92 });
   } finally {
     root?.unmount();
     host.remove();

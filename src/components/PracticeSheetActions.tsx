@@ -1,6 +1,5 @@
 "use client";
 
-import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import { useState } from "react";
 import {
@@ -9,6 +8,10 @@ import {
 } from "@/components/PrintChecklistDialog";
 import { SheetProgressControls } from "@/components/PracticeProgress";
 import { usePracticeProgress } from "@/hooks/usePracticeProgress";
+import {
+  svgElementToJpeg,
+  svgElementToSvgBlob,
+} from "@/lib/exportPracticeSheet";
 
 type PracticeSheetActionsProps = {
   slug: string;
@@ -36,42 +39,34 @@ export function PracticeSheetActions({
     setChecklistOpen(true);
   }
 
-  function handleDownloadSvg() {
+  async function handleDownloadSvg() {
     const svg = document.querySelector<SVGSVGElement>(".practice-sheet-svg");
     if (!svg) return;
 
-    const clone = svg.cloneNode(true) as SVGSVGElement;
-    clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-    clone.setAttribute("width", "794");
-    clone.setAttribute("height", "1123");
-
-    const payload = `<?xml version="1.0" encoding="UTF-8"?>\n${clone.outerHTML}`;
-    const blob = new Blob([payload], { type: "image/svg+xml;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = `scriptoria-${slug}.svg`;
-    anchor.click();
-    URL.revokeObjectURL(url);
-    markDownloaded(slug);
+    try {
+      const blob = await svgElementToSvgBlob(svg);
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = `scriptoria-${slug}.svg`;
+      anchor.click();
+      URL.revokeObjectURL(url);
+      markDownloaded(slug);
+    } catch (error) {
+      console.error("SVG download failed", error);
+      window.alert("SVG 產生失敗，請稍後再試。");
+    }
   }
 
   async function handleDownloadPdf() {
-    const frame =
-      document.querySelector<HTMLElement>(".sheet-preview__frame") ??
-      document.querySelector<HTMLElement>(".sheet-preview__frame");
-    if (!frame || pdfBusy) return;
+    const svg = document.querySelector<SVGSVGElement>(".practice-sheet-svg");
+    if (!svg || pdfBusy) return;
 
     setPdfBusy(true);
     try {
-      const canvas = await html2canvas(frame, {
-        backgroundColor: "#f7f5f1",
-        scale: 2,
-        useCORS: true,
-        logging: false,
-      });
-
-      const imgData = canvas.toDataURL("image/jpeg", 0.95);
+      // Rasterize the SVG with embedded calligraphy fonts — not html2canvas,
+      // which drops CSS-variable script faces and falls back to Georgia.
+      const imgData = await svgElementToJpeg(svg, { scale: 2, quality: 0.95 });
       const pdf = new jsPDF({
         orientation: "portrait",
         unit: "mm",
