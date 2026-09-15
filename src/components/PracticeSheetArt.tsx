@@ -40,25 +40,25 @@ function GuidelineLegend({
   withSlant?: boolean;
 }) {
   const items = [
-    { label: "Ascender 上升線", color: RULE_SOFT },
-    { label: "x-Height 字身高度", color: RULE },
-    { label: "Baseline 基線", color: "#4a5560" },
-    { label: "Descender 下降線", color: RULE_SOFT },
-    ...(withSlant ? [{ label: "55° Slant 傾斜線", color: RULE }] : []),
+    { label: "Asc", color: RULE_SOFT },
+    { label: "x-H", color: RULE },
+    { label: "Base", color: "#4a5560" },
+    { label: "Desc", color: RULE_SOFT },
+    ...(withSlant ? [{ label: "55°", color: RULE }] : []),
   ];
 
   return (
     <g transform={`translate(${x} ${y})`}>
       {items.map((item, index) => (
-        <g key={item.label} transform={`translate(${index * 138} 0)`}>
-          <circle cx={4} cy={-3} r={3} fill={item.color} />
+        <g key={item.label} transform={`translate(${index * 52} 0)`}>
+          <circle cx={3} cy={-2} r={2} fill={item.color} />
           <text
-            x={12}
+            x={9}
             y={0}
             fill="#5b6570"
             fontFamily="Georgia, 'Times New Roman', serif"
-            fontSize="9"
-            letterSpacing="0.4"
+            fontSize="7"
+            letterSpacing="0.2"
           >
             {item.label}
           </text>
@@ -85,77 +85,77 @@ function SheetFrame({
       <rect width={PAGE_W} height={PAGE_H} fill="#fbfaf7" />
       <text
         x={MARGIN}
-        y={42}
+        y={28}
         fill={INK}
         fontFamily="var(--font-script), 'Segoe Script', cursive"
-        fontSize="34"
+        fontSize="20"
       >
         Scriptoria
       </text>
       <text
         x={PAGE_W - MARGIN}
-        y={28}
+        y={18}
         fill={BRASS}
         fontFamily="Georgia, 'Times New Roman', serif"
-        fontSize="10"
-        letterSpacing="2"
+        fontSize="8"
+        letterSpacing="1.5"
         textAnchor="end"
       >
         {pageLabel(sheet)}
       </text>
       <text
         x={PAGE_W - MARGIN}
-        y={44}
+        y={30}
         fill="#5b6570"
         fontFamily="Georgia, 'Times New Roman', serif"
-        fontSize="11"
+        fontSize="8"
         textAnchor="end"
       >
         {sheet.titleEn}
       </text>
       <text
         x={MARGIN}
-        y={68}
+        y={46}
         fill={TEAL}
         fontFamily="'Noto Serif TC', 'Songti TC', serif"
-        fontSize="18"
+        fontSize="13"
       >
         {sheet.titleZh}
       </text>
       <text
         x={MARGIN}
-        y={86}
+        y={60}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="11"
+        fontSize="8"
       >
         {sheet.sheetTip}
       </text>
       <line
         x1={MARGIN}
-        y1={94}
+        y1={66}
         x2={PAGE_W - MARGIN}
-        y2={94}
+        y2={66}
         stroke={BRASS}
-        strokeWidth="0.8"
+        strokeWidth="0.6"
       />
-      {showLegend ? <GuidelineLegend x={MARGIN} y={108} /> : null}
+      {showLegend ? <GuidelineLegend x={MARGIN} y={78} /> : null}
       {children}
       <text
         x={MARGIN}
-        y={PAGE_H - 22}
+        y={PAGE_H - 14}
         fill="#6b7280"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="10"
+        fontSize="7"
       >
-        列印：A4｜實際大小｜關閉頁首頁尾｜單面｜深色範字＋淺灰描紅＋空白自寫
+        列印 A4｜實際大小｜關頁首頁尾｜單面
       </text>
       <text
         x={PAGE_W - MARGIN}
-        y={PAGE_H - 22}
+        y={PAGE_H - 14}
         fill="#6b7280"
         fontFamily="Georgia, serif"
-        fontSize="10"
+        fontSize="7"
         textAnchor="end"
       >
         western-calligraphy.vercel.app
@@ -165,7 +165,7 @@ function SheetFrame({
 }
 
 function SlantGuidelines({ sheet }: SheetProps) {
-  const top = 124;
+  const top = 92;
   const bottom = PAGE_H - 48;
   const left = MARGIN;
   const right = PAGE_W - MARGIN;
@@ -252,7 +252,7 @@ function SlantGuidelines({ sheet }: SheetProps) {
         y={bottom + 18}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="12"
+        fontSize="8"
       >
         斜度約 55°｜細線＝升部／降部｜中線＝x-height｜粗線＝基線
       </text>
@@ -261,7 +261,7 @@ function SlantGuidelines({ sheet }: SheetProps) {
 }
 
 function OvalDrills({ sheet }: SheetProps) {
-  const top = 110;
+  const top = 92;
   const left = MARGIN;
   const right = PAGE_W - MARGIN;
   const rows = 8;
@@ -306,10 +306,10 @@ function OvalDrills({ sheet }: SheetProps) {
       })}
       <text
         x={left}
-        y={PAGE_H - 48}
+        y={PAGE_H - 28}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="12"
+        fontSize="8"
       >
         前三列可沿虛／實線描寫；其後自行以橢圓節奏反覆練習。
       </text>
@@ -318,7 +318,7 @@ function OvalDrills({ sheet }: SheetProps) {
 }
 
 function BroadNibRules({ sheet }: SheetProps) {
-  const top = 108;
+  const top = 92;
   const left = MARGIN;
   const right = PAGE_W - MARGIN;
   const unit = 10;
@@ -396,10 +396,10 @@ function BroadNibRules({ sheet }: SheetProps) {
       })}
       <text
         x={left}
-        y={PAGE_H - 48}
+        y={PAGE_H - 28}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="12"
+        fontSize="8"
       >
         建議筆寬單位：升部 5｜x-height 5｜降部 5。陰影帶為主要書寫區。
       </text>
@@ -408,7 +408,7 @@ function BroadNibRules({ sheet }: SheetProps) {
 }
 
 function GothicGrid({ sheet }: SheetProps) {
-  const top = 108;
+  const top = 92;
   const bottom = PAGE_H - 56;
   const left = MARGIN;
   const right = PAGE_W - MARGIN;
@@ -446,10 +446,10 @@ function GothicGrid({ sheet }: SheetProps) {
       ))}
       <text
         x={left}
-        y={PAGE_H - 48}
+        y={PAGE_H - 28}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="12"
+        fontSize="8"
       >
         雙豎線協助等寬筆畫；先寫垂直骨架，再補斜筆與菱形收尾。
       </text>
@@ -458,7 +458,7 @@ function GothicGrid({ sheet }: SheetProps) {
 }
 
 function BlankLines({ sheet }: SheetProps) {
-  const top = 110;
+  const top = 92;
   const left = MARGIN;
   const right = PAGE_W - MARGIN;
   const spacing = 36;
@@ -480,10 +480,10 @@ function BlankLines({ sheet }: SheetProps) {
       ))}
       <text
         x={left}
-        y={PAGE_H - 48}
+        y={PAGE_H - 28}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="12"
+        fontSize="8"
       >
         通用基線紙：可臨摹範本、練習簽名，或自行加上斜度輔助線。
       </text>
@@ -637,7 +637,7 @@ function AlphabetSheet({
 }: SheetProps & { letters: string[] }) {
   const left = MARGIN;
   const right = PAGE_W - MARGIN;
-  const top = 128;
+  const top = 96;
   const cols = 2;
   const colGap = 18;
   const colW = (right - left - colGap) / cols;
@@ -649,10 +649,10 @@ function AlphabetSheet({
     <SheetFrame sheet={sheet} showLegend>
       <text
         x={left}
-        y={118}
+        y={78}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="11"
+        fontSize="8"
       >
         每行：深色範字 → 淺灰描紅 → 右側空白自寫（對齊基線與 55° 斜度）
       </text>
@@ -682,10 +682,10 @@ function AlphabetSheet({
       })}
       <text
         x={left}
-        y={PAGE_H - 48}
+        y={PAGE_H - 28}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="12"
+        fontSize="8"
       >
         建議一次練半欄；描紅求形準，空白格求自己寫得像範字。
       </text>
@@ -789,7 +789,7 @@ function FamilyAlphabetSheet({ sheet }: SheetProps) {
   const letters = sheet.letters ?? [];
   const left = MARGIN;
   const right = PAGE_W - MARGIN;
-  const top = 122;
+  const top = 92;
   const usable = PAGE_H - 56 - top;
   const rowH = Math.min(92, Math.max(68, Math.floor(usable / Math.max(letters.length, 1))));
   const guideSize = Math.min(56, rowH - 14);
@@ -798,10 +798,10 @@ function FamilyAlphabetSheet({ sheet }: SheetProps) {
     <SheetFrame sheet={sheet} showLegend>
       <text
         x={left}
-        y={118}
+        y={78}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="11"
+        fontSize="8"
       >
         左＝筆畫方向｜其後深色範字＋淺灰描紅＋右側空白自寫
       </text>
@@ -854,10 +854,10 @@ function FamilyAlphabetSheet({ sheet }: SheetProps) {
       })}
       <text
         x={left}
-        y={PAGE_H - 48}
+        y={PAGE_H - 28}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="12"
+        fontSize="8"
       >
         筆畫示意為教學簡圖。先慢描淺灰字，再在空白區獨立書寫。
       </text>
@@ -868,7 +868,7 @@ function FamilyAlphabetSheet({ sheet }: SheetProps) {
 function PointedPenStrokes({ sheet }: SheetProps) {
   const left = MARGIN;
   const right = PAGE_W - MARGIN;
-  const top = 108;
+  const top = 92;
   const isSpencerian = sheet.styleId === "spencerian";
   const rows = 7;
   const cols = 8;
@@ -882,7 +882,7 @@ function PointedPenStrokes({ sheet }: SheetProps) {
         y={102}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="11"
+        fontSize="8"
       >
         {isSpencerian
           ? "輕壓為主：曲線要連、節奏要勻；前兩列可描，其後自寫。"
@@ -947,10 +947,10 @@ function PointedPenStrokes({ sheet }: SheetProps) {
       })}
       <text
         x={left}
-        y={PAGE_H - 48}
+        y={PAGE_H - 28}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="12"
+        fontSize="8"
       >
         {isSpencerian
           ? "斯賓塞體：均勻輕盈優先；華麗線條留到骨架穩定之後。"
@@ -964,17 +964,17 @@ function WordsSheet({ sheet }: SheetProps) {
   const words = sheet.content ?? [];
   const left = MARGIN;
   const right = PAGE_W - MARGIN;
-  const top = 122;
+  const top = 92;
   const rowH = 86;
 
   return (
     <SheetFrame sheet={sheet} showLegend>
       <text
         x={left}
-        y={118}
+        y={78}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="11"
+        fontSize="8"
       >
         單詞連接節奏：深色範例 → 淺灰描紅 → 下方空白自寫
       </text>
@@ -1017,10 +1017,10 @@ function WordsSheet({ sheet }: SheetProps) {
       })}
       <text
         x={left}
-        y={PAGE_H - 48}
+        y={PAGE_H - 28}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="12"
+        fontSize="8"
       >
         注意進出筆與字母間距；整行應落在同一基線、同一斜度。
       </text>
@@ -1032,17 +1032,17 @@ function SentencesSheet({ sheet }: SheetProps) {
   const sentences = sheet.content ?? [];
   const left = MARGIN;
   const right = PAGE_W - MARGIN;
-  const top = 122;
+  const top = 92;
   const blockH = 100;
 
   return (
     <SheetFrame sheet={sheet} showLegend>
       <text
         x={left}
-        y={118}
+        y={78}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="11"
+        fontSize="8"
       >
         短句練習：上行淺灰描紅，下行空白自寫
       </text>
@@ -1074,10 +1074,10 @@ function SentencesSheet({ sheet }: SheetProps) {
       })}
       <text
         x={left}
-        y={PAGE_H - 48}
+        y={PAGE_H - 28}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="12"
+        fontSize="8"
       >
         整句完成後退後兩步看：字高、斜度、字距是否一致。
       </text>
@@ -1112,7 +1112,7 @@ function flourishStroke(tone: FlourishTone) {
 function FlourishOvalsSheet({ sheet }: SheetProps) {
   const left = MARGIN;
   const right = PAGE_W - MARGIN;
-  const top = 118;
+  const top = 94;
   const rows = 7;
   const cols = 5;
   const rowH = 128;
@@ -1130,10 +1130,10 @@ function FlourishOvalsSheet({ sheet }: SheetProps) {
     <SheetFrame sheet={sheet}>
       <text
         x={left}
-        y={112}
+        y={78}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="11"
+        fontSize="8"
       >
         Offhand 橢圓｜深色範例 → 淺灰描紅 → 虛線空白自寫｜用前臂帶動
       </text>
@@ -1175,10 +1175,10 @@ function FlourishOvalsSheet({ sheet }: SheetProps) {
       })}
       <text
         x={left}
-        y={PAGE_H - 48}
+        y={PAGE_H - 28}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="12"
+        fontSize="8"
       >
         每個橢圓想像落在隱形軌跡上；方向可變，結構不變。
       </text>
@@ -1190,7 +1190,7 @@ function FlourishOvalsSheet({ sheet }: SheetProps) {
 function FlourishCurvesSheet({ sheet }: SheetProps) {
   const left = MARGIN;
   const right = PAGE_W - MARGIN;
-  const top = 120;
+  const top = 96;
   const rows = 6;
   const rowH = 145;
 
@@ -1203,10 +1203,10 @@ function FlourishCurvesSheet({ sheet }: SheetProps) {
     <SheetFrame sheet={sheet}>
       <text
         x={left}
-        y={112}
+        y={78}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="11"
+        fontSize="8"
       >
         左欄 C 曲線｜右欄 S 曲線｜轉折減壓，交叉近 90°
       </text>
@@ -1271,10 +1271,10 @@ function FlourishCurvesSheet({ sheet }: SheetProps) {
       })}
       <text
         x={left}
-        y={PAGE_H - 48}
+        y={PAGE_H - 28}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="12"
+        fontSize="8"
       >
         C 是半橢圓；S 由兩橢圓相接。粗畫不相交。
       </text>
@@ -1286,7 +1286,7 @@ function FlourishCurvesSheet({ sheet }: SheetProps) {
 function FlourishFigureEightSheet({ sheet }: SheetProps) {
   const left = MARGIN;
   const right = PAGE_W - MARGIN;
-  const top = 118;
+  const top = 94;
   const rows = 5;
   const cols = 3;
   const rowH = 170;
@@ -1301,10 +1301,10 @@ function FlourishFigureEightSheet({ sheet }: SheetProps) {
     <SheetFrame sheet={sheet}>
       <text
         x={left}
-        y={112}
+        y={78}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="11"
+        fontSize="8"
       >
         Figure-eight｜一筆連成；上下環對稱優先於華麗
       </text>
@@ -1335,10 +1335,10 @@ function FlourishFigureEightSheet({ sheet }: SheetProps) {
       })}
       <text
         x={left}
-        y={PAGE_H - 48}
+        y={PAGE_H - 28}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="12"
+        fontSize="8"
       >
         交叉點保持乾淨；速度慢於你以為需要的速度。
       </text>
@@ -1350,9 +1350,9 @@ function FlourishFigureEightSheet({ sheet }: SheetProps) {
 function FlourishCartoucheSheet({ sheet }: SheetProps) {
   const left = MARGIN;
   const frames = [
-    { y: 130, tone: "ink" as FlourishTone, label: "範例骨架" },
-    { y: 430, tone: "ghost" as FlourishTone, label: "描紅" },
-    { y: 730, tone: "blank" as FlourishTone, label: "自寫" },
+    { y: 100, tone: "ink" as FlourishTone, label: "範例骨架" },
+    { y: 400, tone: "ghost" as FlourishTone, label: "描紅" },
+    { y: 700, tone: "blank" as FlourishTone, label: "自寫" },
   ];
 
   const cartouchePath = (cx: number, cy: number, w: number, h: number) => {
@@ -1379,10 +1379,10 @@ function FlourishCartoucheSheet({ sheet }: SheetProps) {
     <SheetFrame sheet={sheet}>
       <text
         x={left}
-        y={112}
+        y={78}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="11"
+        fontSize="8"
       >
         Cartouche｜中軸對稱；內框留給文字，外圈卷曲由大到小
       </text>
@@ -1476,10 +1476,10 @@ function FlourishCartoucheSheet({ sheet }: SheetProps) {
       })}
       <text
         x={left}
-        y={PAGE_H - 48}
+        y={PAGE_H - 28}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="12"
+        fontSize="8"
       >
         先骨架、後細節；花飾不要壓字。
       </text>
@@ -1492,7 +1492,7 @@ function FlourishCapitalsSheet({ sheet }: SheetProps) {
   const letters = sheet.letters ?? ["B", "H", "L", "P", "R", "T", "Y"];
   const left = MARGIN;
   const right = PAGE_W - MARGIN;
-  const top = 120;
+  const top = 96;
   const rowH = 120;
 
   const flourishFor = (letter: string, cx: number, base: number, tone: FlourishTone) => {
@@ -1579,10 +1579,10 @@ function FlourishCapitalsSheet({ sheet }: SheetProps) {
     <SheetFrame sheet={sheet} showLegend>
       <text
         x={left}
-        y={118}
+        y={78}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="11"
+        fontSize="8"
       >
         Modern flourishing 大寫｜先寫可讀骨架，再加橢圓主環與細尾｜花飾略大於字母
       </text>
@@ -1626,10 +1626,10 @@ function FlourishCapitalsSheet({ sheet }: SheetProps) {
       })}
       <text
         x={left}
-        y={PAGE_H - 48}
+        y={PAGE_H - 28}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="12"
+        fontSize="8"
       >
         粗畫不相交；交叉接近直角；可讀優先。
       </text>
@@ -1642,7 +1642,7 @@ function FlourishWordsSheet({ sheet }: SheetProps) {
   const words = sheet.content ?? ["Love", "Grace", "Beauty"];
   const left = MARGIN;
   const right = PAGE_W - MARGIN;
-  const top = 122;
+  const top = 92;
   const rowH = 140;
 
   const entryFlourish = (x: number, y: number, tone: FlourishTone) => {
@@ -1677,10 +1677,10 @@ function FlourishWordsSheet({ sheet }: SheetProps) {
     <SheetFrame sheet={sheet} showLegend>
       <text
         x={left}
-        y={118}
+        y={78}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="11"
+        fontSize="8"
       >
         現代花體詞語｜略帶彈跳節奏｜一詞只留一處主花飾（詞首或詞尾）
       </text>
@@ -1729,10 +1729,10 @@ function FlourishWordsSheet({ sheet }: SheetProps) {
       })}
       <text
         x={left}
-        y={PAGE_H - 48}
+        y={PAGE_H - 28}
         fill="#5b6570"
         fontFamily="'Noto Serif TC', serif"
-        fontSize="12"
+        fontSize="8"
       >
         整詞完成後退後審視：主花飾與留白是否平衡。
       </text>
