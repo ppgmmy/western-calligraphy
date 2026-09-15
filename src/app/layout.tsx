@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import {
+  Allura,
   Cormorant_Garamond,
   Italianno,
   Noto_Serif_TC,
@@ -20,8 +21,16 @@ const body = Source_Serif_4({
   weight: ["400", "500", "600"],
 });
 
+/** 正式尖筆（Copperplate／Spencerian）範字 */
 const script = Italianno({
   variable: "--font-script",
+  subsets: ["latin"],
+  weight: "400",
+});
+
+/** 當代現代花飾／modern calligraphy 範字（接近工作室教學風格） */
+const modern = Allura({
+  variable: "--font-modern",
   subsets: ["latin"],
   weight: "400",
 });
@@ -51,7 +60,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="zh-Hant"
-      className={`${display.variable} ${body.variable} ${script.variable} ${blackletter.variable} ${zh.variable} h-full antialiased`}
+      className={`${display.variable} ${body.variable} ${script.variable} ${modern.variable} ${blackletter.variable} ${zh.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

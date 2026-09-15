@@ -17,6 +17,15 @@ const RULE_SOFT = "#c5d3de";
 const TEAL = "#245c54";
 const BRASS = "#9a8658";
 
+/** Copperplate／Spencerian 正式尖筆範字 */
+const FONT_FORMAL = "var(--font-script), Georgia, cursive";
+/** 當代 modern calligraphy／花飾範字（接近工作室教學風格） */
+const FONT_MODERN = "var(--font-modern), var(--font-script), cursive";
+
+function exemplarFont(styleId: PracticeSheet["styleId"]) {
+  return styleId === "flourishing" ? FONT_MODERN : FONT_FORMAL;
+}
+
 function pageLabel(sheet: PracticeSheet) {
   return `PAGE ${String(sheet.stage + 1).padStart(2, "0")}`;
 }
@@ -581,6 +590,7 @@ function TraceRow({
   right,
   ghostCount = 4,
   fontSize = 30,
+  fontFamily = FONT_FORMAL,
 }: {
   exemplar: string;
   y: number;
@@ -589,6 +599,7 @@ function TraceRow({
   right: number;
   ghostCount?: number;
   fontSize?: number;
+  fontFamily?: string;
 }) {
   const baseY = y + height * 0.72;
   const gap = Math.min(56, Math.max(36, (right - left - 24) / (ghostCount + 2)));
@@ -599,7 +610,7 @@ function TraceRow({
         x={left + 10}
         y={baseY}
         fill={INK}
-        fontFamily="var(--font-script), Georgia, cursive"
+        fontFamily={fontFamily}
         fontSize={fontSize}
       >
         {exemplar}
@@ -610,7 +621,7 @@ function TraceRow({
           x={left + 10 + gap * (index + 1)}
           y={baseY}
           fill={GHOST}
-          fontFamily="var(--font-script), Georgia, cursive"
+          fontFamily={fontFamily}
           fontSize={fontSize}
         >
           {exemplar}
@@ -662,6 +673,7 @@ function AlphabetSheet({
                   right={x0 + colW}
                   ghostCount={3}
                   fontSize={28}
+                  fontFamily={exemplarFont(sheet.styleId)}
                 />
               );
             })}
@@ -820,7 +832,7 @@ function FamilyAlphabetSheet({ sheet }: SheetProps) {
               x={practiceLeft + 10}
               y={baseY}
               fill={INK}
-              fontFamily="var(--font-script), Georgia, cursive"
+              fontFamily={exemplarFont(sheet.styleId)}
               fontSize={rowH > 78 ? 34 : 28}
             >
               {letter}
@@ -831,7 +843,7 @@ function FamilyAlphabetSheet({ sheet }: SheetProps) {
                 x={practiceLeft + 10 + gap * (ghostIndex + 1)}
                 y={baseY}
                 fill={GHOST}
-                fontFamily="var(--font-script), Georgia, cursive"
+                fontFamily={exemplarFont(sheet.styleId)}
                 fontSize={rowH > 78 ? 34 : 28}
               >
                 {letter}
@@ -979,7 +991,7 @@ function WordsSheet({ sheet }: SheetProps) {
               x={left + 8}
               y={baseY}
               fill={INK}
-              fontFamily="var(--font-script), Georgia, cursive"
+              fontFamily={exemplarFont(sheet.styleId)}
               fontSize="24"
             >
               {word}
@@ -988,7 +1000,7 @@ function WordsSheet({ sheet }: SheetProps) {
               x={ghostX}
               y={baseY}
               fill={GHOST}
-              fontFamily="var(--font-script), Georgia, cursive"
+              fontFamily={exemplarFont(sheet.styleId)}
               fontSize="24"
             >
               {word}
@@ -1045,7 +1057,7 @@ function SentencesSheet({ sheet }: SheetProps) {
               x={left + 6}
               y={y + bandH * 0.7}
               fill={GHOST}
-              fontFamily="var(--font-script), Georgia, cursive"
+              fontFamily={exemplarFont(sheet.styleId)}
               fontSize="18"
             >
               {sentence}
@@ -1441,7 +1453,7 @@ function FlourishCartoucheSheet({ sheet }: SheetProps) {
                 x={cx}
                 y={cy + 6}
                 fill={frame.tone === "ink" ? TEAL : GHOST}
-                fontFamily="var(--font-script), Georgia, cursive"
+                fontFamily={FONT_MODERN}
                 fontSize="22"
                 textAnchor="middle"
               >
@@ -1492,43 +1504,72 @@ function FlourishCapitalsSheet({ sheet }: SheetProps) {
       strokeLinecap: "round" as const,
       strokeDasharray: stroke.dash,
     };
+    // 當代工作室風：橢圓主環 + 細尾，花飾略大於字母
     switch (letter) {
       case "B":
       case "P":
       case "R":
         return (
-          <path
-            {...common}
-            d={`M ${cx + 18} ${base - 42} C ${cx + 55} ${base - 70}, ${cx + 78} ${base - 20}, ${cx + 48} ${base + 8} C ${cx + 28} ${base + 28}, ${cx + 70} ${base + 36}, ${cx + 92} ${base + 12}`}
-          />
+          <g>
+            <path
+              {...common}
+              d={`M ${cx + 16} ${base - 46} C ${cx + 62} ${base - 88}, ${cx + 108} ${base - 36}, ${cx + 72} ${base + 4} C ${cx + 48} ${base + 28}, ${cx + 96} ${base + 44}, ${cx + 128} ${base + 10}`}
+            />
+            <path
+              {...common}
+              strokeWidth={stroke.width * 0.7}
+              d={`M ${cx + 70} ${base + 2} C ${cx + 92} ${base - 18}, ${cx + 86} ${base - 42}, ${cx + 58} ${base - 28}`}
+            />
+          </g>
         );
       case "H":
       case "T":
         return (
-          <path
-            {...common}
-            d={`M ${cx - 8} ${base - 48} C ${cx - 50} ${base - 78}, ${cx - 70} ${base - 30}, ${cx - 42} ${base} C ${cx - 20} ${base + 22}, ${cx - 60} ${base + 40}, ${cx - 88} ${base + 18}`}
-          />
+          <g>
+            <path
+              {...common}
+              d={`M ${cx - 6} ${base - 52} C ${cx - 58} ${base - 96}, ${cx - 112} ${base - 28}, ${cx - 64} ${base + 8} C ${cx - 34} ${base + 32}, ${cx - 88} ${base + 52}, ${cx - 126} ${base + 16}`}
+            />
+            <path
+              {...common}
+              strokeWidth={stroke.width * 0.7}
+              d={`M ${cx + 18} ${base - 40} C ${cx + 54} ${base - 68}, ${cx + 78} ${base - 18}, ${cx + 46} ${base + 6}`}
+            />
+          </g>
         );
       case "L":
         return (
-          <path
-            {...common}
-            d={`M ${cx + 22} ${base} C ${cx + 70} ${base + 8}, ${cx + 90} ${base - 28}, ${cx + 58} ${base - 48} C ${cx + 30} ${base - 62}, ${cx + 95} ${base - 70}, ${cx + 110} ${base - 40}`}
-          />
+          <g>
+            <path
+              {...common}
+              d={`M ${cx + 24} ${base} C ${cx + 88} ${base + 14}, ${cx + 118} ${base - 36}, ${cx + 74} ${base - 62} C ${cx + 40} ${base - 80}, ${cx + 122} ${base - 92}, ${cx + 148} ${base - 48}`}
+            />
+            <path
+              {...common}
+              strokeWidth={stroke.width * 0.7}
+              d={`M ${cx + 74} ${base - 58} C ${cx + 98} ${base - 78}, ${cx + 108} ${base - 44}, ${cx + 84} ${base - 36}`}
+            />
+          </g>
         );
       case "Y":
         return (
-          <path
-            {...common}
-            d={`M ${cx + 10} ${base - 8} C ${cx + 48} ${base + 30}, ${cx + 20} ${base + 55}, ${cx - 10} ${base + 42} C ${cx - 40} ${base + 28}, ${cx - 25} ${base + 70}, ${cx + 15} ${base + 62}`}
-          />
+          <g>
+            <path
+              {...common}
+              d={`M ${cx + 12} ${base - 6} C ${cx + 64} ${base + 38}, ${cx + 28} ${base + 72}, ${cx - 18} ${base + 52} C ${cx - 58} ${base + 34}, ${cx - 36} ${base + 88}, ${cx + 22} ${base + 78}`}
+            />
+            <path
+              {...common}
+              strokeWidth={stroke.width * 0.7}
+              d={`M ${cx - 4} ${base - 44} C ${cx - 42} ${base - 78}, ${cx - 68} ${base - 24}, ${cx - 30} ${base - 4}`}
+            />
+          </g>
         );
       default:
         return (
           <path
             {...common}
-            d={`M ${cx + 20} ${base - 36} C ${cx + 60} ${base - 60}, ${cx + 80} ${base - 10}, ${cx + 50} ${base + 16}`}
+            d={`M ${cx + 22} ${base - 40} C ${cx + 72} ${base - 78}, ${cx + 108} ${base - 12}, ${cx + 64} ${base + 22} C ${cx + 42} ${base + 40}, ${cx + 90} ${base + 48}, ${cx + 118} ${base + 18}`}
           />
         );
     }
@@ -1543,7 +1584,7 @@ function FlourishCapitalsSheet({ sheet }: SheetProps) {
         fontFamily="'Noto Serif TC', serif"
         fontSize="11"
       >
-        先寫可讀大寫，再加橢圓花飾｜花飾大於字母通常更耐看
+        Modern flourishing 大寫｜先寫可讀骨架，再加橢圓主環與細尾｜花飾略大於字母
       </text>
       {letters.map((letter, index) => {
         const y = top + index * rowH;
@@ -1557,7 +1598,7 @@ function FlourishCapitalsSheet({ sheet }: SheetProps) {
               x={left + 16}
               y={baseY}
               fill={INK}
-              fontFamily="var(--font-script), Georgia, cursive"
+              fontFamily={FONT_MODERN}
               fontSize="36"
             >
               {letter}
@@ -1567,7 +1608,7 @@ function FlourishCapitalsSheet({ sheet }: SheetProps) {
               x={left + 220}
               y={baseY}
               fill={GHOST}
-              fontFamily="var(--font-script), Georgia, cursive"
+              fontFamily={FONT_MODERN}
               fontSize="36"
             >
               {letter}
@@ -1641,14 +1682,16 @@ function FlourishWordsSheet({ sheet }: SheetProps) {
         fontFamily="'Noto Serif TC', serif"
         fontSize="11"
       >
-        一詞一主花飾｜通常只在詞首或詞尾加一處
+        現代花體詞語｜略帶彈跳節奏｜一詞只留一處主花飾（詞首或詞尾）
       </text>
       {words.map((word, index) => {
         const y = top + index * rowH;
         if (y + rowH > PAGE_H - 56) return null;
         const bandH = 40;
-        const baseY = y + bandH * 0.72;
+        const bounce = index % 2 === 0 ? 0 : 2.5;
+        const baseY = y + bandH * 0.72 + bounce;
         const wordWidth = Math.min(200, 28 * word.length + 40);
+        const ghostBase = y + bandH + 10 + bandH * 0.72 + bounce;
         return (
           <g key={`fword-${word}`}>
             <RuledBand y={y} height={bandH} left={left} right={right} clipId={`fw1-${index}`} />
@@ -1657,8 +1700,8 @@ function FlourishWordsSheet({ sheet }: SheetProps) {
               x={left + 90}
               y={baseY}
               fill={INK}
-              fontFamily="var(--font-script), Georgia, cursive"
-              fontSize="28"
+              fontFamily={FONT_MODERN}
+              fontSize="30"
             >
               {word}
             </text>
@@ -1670,21 +1713,17 @@ function FlourishWordsSheet({ sheet }: SheetProps) {
               right={right}
               clipId={`fw2-${index}`}
             />
-            {entryFlourish(left + 90, y + bandH + 10 + bandH * 0.72, "ghost")}
+            {entryFlourish(left + 90, ghostBase, "ghost")}
             <text
               x={left + 90}
-              y={y + bandH + 10 + bandH * 0.72}
+              y={ghostBase}
               fill={GHOST}
-              fontFamily="var(--font-script), Georgia, cursive"
-              fontSize="28"
+              fontFamily={FONT_MODERN}
+              fontSize="30"
             >
               {word}
             </text>
-            {exitFlourish(
-              left + 90 + wordWidth,
-              y + bandH + 10 + bandH * 0.72,
-              "ghost",
-            )}
+            {exitFlourish(left + 90 + wordWidth, ghostBase, "ghost")}
           </g>
         );
       })}

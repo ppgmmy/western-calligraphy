@@ -79,13 +79,13 @@ export const calligraphyStyles: CalligraphyStyle[] = [
   {
     id: "flourishing",
     nameZh: "花飾書法",
-    nameEn: "Flourishing / Offhand",
-    era: "19–20 世紀尖筆傳統",
-    sample: "Offhand",
+    nameEn: "Modern Flourishing",
+    era: "當代尖筆工作室傳統",
+    sample: "Flourish",
     summary:
-      "以橢圓、C／S 曲線與十字交叉為骨的裝飾筆法。可獨立成畫（offhand），也可為大寫與詞語加花飾，氣質華美而講究紀律。",
-    traits: ["橢圓結構", "90° 交叉", "粗細不互交"],
-    tip: "先練橢圓與 C／S，再進入 8 字環與 cartouche；花飾永遠服從可讀性。",
+      "當代現代花飾書法：以橢圓與 C／S 為骨，在 modern script 上加大寫與詞尾花飾。氣質華麗、略帶彈跳節奏，接近香港工作室常見的教學風格。",
+    traits: ["現代花體", "橢圓花飾", "可讀優先"],
+    tip: "先穩 modern script，再練 uppercase／lowercase flourishing，最後加 decoration；花飾永遠服從可讀性。",
   },
 ];
 

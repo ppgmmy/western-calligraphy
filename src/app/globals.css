@@ -24,6 +24,7 @@
   --font-sans: var(--font-body);
   --font-display: var(--font-display);
   --font-script: var(--font-script);
+  --font-modern: var(--font-modern);
   --font-blackletter: var(--font-blackletter);
   --font-zh: var(--font-zh);
 }
@@ -375,13 +376,14 @@ a {
 }
 
 .style-item__sample--copperplate,
-.style-item__sample--spencerian,
-.style-item__sample--flourishing {
+.style-item__sample--spencerian {
   font-family: var(--font-script), cursive;
 }
 
 .style-item__sample--flourishing {
-  letter-spacing: 0.04em;
+  font-family: var(--font-modern), var(--font-script), cursive;
+  letter-spacing: 0.06em;
+  font-size: clamp(2.8rem, 5.5vw, 3.8rem);
   background: linear-gradient(
     105deg,
     transparent 0%,
