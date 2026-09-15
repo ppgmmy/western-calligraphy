@@ -20,7 +20,7 @@ import {
 export const metadata: Metadata = {
   title: "練習本",
   description:
-    "斜體主線、銅板／斯賓塞尖筆與花飾／Offhand 平行進程；詞語與短句分易／中／難；可下載 A4 PDF。",
+    "四條路線、五級門檻：熱身 → 大寫 → 小寫 → 詞語 → 短句。每級寫清過關標準，再升下一級。",
 };
 
 export default function ResourcesPage() {
@@ -37,17 +37,17 @@ export default function ResourcesPage() {
             西洋書法練習本
           </h1>
           <p className="section__text">
-            四條路線可並行：斜體字主線、銅板體尖筆線、斯賓塞體尖筆線、花飾／Offhand 線。
-            第 3／4 級詞語與短句已分易／中／難；支援本機進度、列印檢查清單，以及完整練習本打包下載。
+            先選一條路線，再跟五級門檻往上走。每一級只問一件事：過關了沒有？過關再升，唔使一次睇晒所有練習紙。
           </p>
         </div>
 
-        <ol className="path-steps" aria-label="練習進程">
+        <ol className="path-steps" aria-label="五級學習門檻">
           {practiceStages.map((item) => (
             <li key={item.stage}>
               <a href={`#stage-${item.stage}`}>
                 <strong>{item.titleZh}</strong>
-                <span>{item.goal}</span>
+                <span className="path-steps__focus">{item.focus}</span>
+                <span className="path-steps__gate">{item.gate}</span>
               </a>
             </li>
           ))}
@@ -69,25 +69,38 @@ export default function ResourcesPage() {
             四條練習路線
           </h2>
           <p className="section__text">
-            斜體走闊尖筆；銅板、斯賓塞與花飾走尖筆。可專心一條，也可一週穿插尖筆與
-            Offhand 熱身。
+            每條路線都壓成五步。左邊係本級練什麼，右邊係過關門檻——達標再點下一張。
           </p>
         </div>
 
         <div className="track-grid">
           {practiceTracks.map((track) => (
-            <article className="track-card" key={track.id}>
+            <article className="track-card" key={track.id} id={`track-${track.id}`}>
               <p className="track-card__en">{track.titleEn}</p>
               <h3 className="track-card__title">{track.titleZh}</h3>
               <p className="track-card__summary">{track.summary}</p>
               <p className="track-card__tools">{track.tools}</p>
-              <ol className="track-card__steps">
-                {track.sheetSlugs.map((slug) => {
-                  const sheet = getPracticeSheet(slug);
+              <ol className="track-levels">
+                {track.levels.map((level) => {
+                  const sheet = getPracticeSheet(level.sheetSlug);
                   if (!sheet) return null;
                   return (
-                    <li key={slug}>
-                      <Link href={`/resources/${sheet.slug}`}>{sheet.titleZh}</Link>
+                    <li key={level.sheetSlug} className="track-level">
+                      <div className="track-level__index" aria-hidden="true">
+                        {level.step}
+                      </div>
+                      <div className="track-level__body">
+                        <p className="track-level__meta">
+                          {practiceStages.find((s) => s.stage === level.stage)?.titleZh}
+                        </p>
+                        <Link
+                          className="track-level__title"
+                          href={`/resources/${sheet.slug}`}
+                        >
+                          {level.titleZh}
+                        </Link>
+                        <p className="track-level__gate">門檻：{level.gate}</p>
+                      </div>
                     </li>
                   );
                 })}
@@ -111,7 +124,10 @@ export default function ResourcesPage() {
               <h2 className="section__title" id={`stage-title-${stage.stage}`}>
                 {stage.titleZh}
               </h2>
-              <p className="section__text">{stage.goal}</p>
+              <p className="section__text">{stage.focus}</p>
+              <p className="stage-gate" role="note">
+                {stage.gate}
+              </p>
             </div>
 
             <div className="resource-list">

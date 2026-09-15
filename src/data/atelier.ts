@@ -42,7 +42,7 @@ export const atelierCredentials = [
   },
   {
     title: "練習系統",
-    detail: "四條進程、字母家族、難度分冊與花飾線，支援本機進度與完整練習本下載。",
+    detail: "四條進程、五級門檻、字母家族與花飾線；支援本機進度與完整練習本下載。",
   },
   {
     title: "受託書寫",

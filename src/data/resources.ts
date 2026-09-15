@@ -67,43 +67,63 @@ export type PracticeSheet = {
   difficulty?: PracticeDifficulty;
 };
 
-export const practiceStages: Array<{
+/** 每級一個清楚門檻：學什麼 → 過關標準 → 再升下一級 */
+export type PracticeStageInfo = {
   stage: PracticeStage;
   titleZh: string;
   titleEn: string;
-  goal: string;
-}> = [
+  /** 本級在練什麼（一句） */
+  focus: string;
+  /** 升下一級前要達到的門檻 */
+  gate: string;
+};
+
+export const practiceStages: PracticeStageInfo[] = [
   {
     stage: 0,
-    titleZh: "第 0 級｜熱身與格線",
-    titleEn: "Warm-up & Guidelines",
-    goal: "先熟悉紙面比例、斜度與筆感，再進入字母。",
+    titleZh: "第 0 級｜熱身",
+    titleEn: "Level 0 · Warm-up",
+    focus: "格線、斜度、筆壓與基本線條。",
+    gate: "過關門檻：斜度／字高大致一致，筆尖不亂跳，先唔急寫完整字母。",
   },
   {
     stage: 1,
-    titleZh: "第 1 級｜大寫字母家族",
-    titleEn: "Uppercase Families",
-    goal: "依直筆、斜筆、圓筆分冊練習，再以總覽頁複習 A–Z。",
+    titleZh: "第 1 級｜大寫",
+    titleEn: "Level 1 · Capitals",
+    focus: "大寫骨架與筆畫方向。",
+    gate: "過關門檻：同一家族大寫骨架不歪，粗細／筆寬開始可控。",
   },
   {
     stage: 2,
-    titleZh: "第 2 級｜小寫字母家族",
-    titleEn: "Lowercase Families",
-    goal: "依橢圓、拱門、升降部與特殊形分冊，再以總覽頁複習 a–z。",
+    titleZh: "第 2 級｜小寫",
+    titleEn: "Level 2 · Minuscules",
+    focus: "小寫基本形（橢圓、拱門、升降部）。",
+    gate: "過關門檻：核心小寫形狀穩定，升降部唔亂撞格線。",
   },
   {
     stage: 3,
-    titleZh: "第 3 級｜詞語（易／中／難）",
-    titleEn: "Words by Difficulty",
-    goal: "由短詞到升降部多的詞，分難度練習字距與連筆。",
+    titleZh: "第 3 級｜詞語",
+    titleEn: "Level 3 · Words",
+    focus: "把字母串成詞，練字距與連筆。",
+    gate: "過關門檻：易詞字距均勻、連筆不亂；再挑戰中／難詞。",
   },
   {
     stage: 4,
-    titleZh: "第 4 級｜短句（易／中／難）",
-    titleEn: "Sentences by Difficulty",
-    goal: "由短句到節奏複雜的句子，分難度練習整行呼吸與一致性。",
+    titleZh: "第 4 級｜短句",
+    titleEn: "Level 4 · Sentences",
+    focus: "整行節奏、呼吸與一致性。",
+    gate: "過關門檻：短句一行內大小／斜度大致統一，先完成「易」再升難。",
   },
 ];
+
+/** 路線內每一級：代表練習紙 + 本級門檻 */
+export type TrackLevel = {
+  step: number;
+  stage: PracticeStage;
+  titleZh: string;
+  gate: string;
+  sheetSlug: string;
+};
 
 /** 四條可並行的練習路線（斜體主線 + 兩條尖筆線 + 花飾線） */
 export const practiceTracks: Array<{
@@ -112,14 +132,54 @@ export const practiceTracks: Array<{
   titleEn: string;
   summary: string;
   tools: string;
+  /** 由淺入深；每步一個門檻 */
+  levels: TrackLevel[];
+  /** 相容舊用法：代表練習紙 slug 列表 */
   sheetSlugs: string[];
 }> = [
   {
     id: "italic",
     titleZh: "斜體字主線",
     titleEn: "Italic Path",
-    summary: "闊尖筆：格線 → 字母家族 → 詞語難度冊 → 短句難度冊。",
+    summary: "闊尖筆五級：熱身 → 大寫 → 小寫 → 詞語 → 短句。",
     tools: "闊尖筆、墨水",
+    levels: [
+      {
+        step: 1,
+        stage: 0,
+        titleZh: "熱身格線",
+        gate: "斜度與字高寫穩",
+        sheetSlug: "italic-rules",
+      },
+      {
+        step: 2,
+        stage: 1,
+        titleZh: "大寫家族",
+        gate: "直筆大寫骨架不歪",
+        sheetSlug: "italic-family-upper-straight",
+      },
+      {
+        step: 3,
+        stage: 2,
+        titleZh: "小寫家族",
+        gate: "橢圓小寫節奏一致",
+        sheetSlug: "italic-family-lower-oval",
+      },
+      {
+        step: 4,
+        stage: 3,
+        titleZh: "短詞（易）",
+        gate: "字距均勻、連筆不亂",
+        sheetSlug: "italic-words-easy",
+      },
+      {
+        step: 5,
+        stage: 4,
+        titleZh: "短句（易）",
+        gate: "整行大小斜度一致",
+        sheetSlug: "italic-sentences-easy",
+      },
+    ],
     sheetSlugs: [
       "italic-rules",
       "italic-family-upper-straight",
@@ -132,8 +192,45 @@ export const practiceTracks: Array<{
     id: "copperplate",
     titleZh: "銅板體尖筆線",
     titleEn: "Copperplate Path",
-    summary: "尖筆：導引線 → 橢圓 → 基本筆畫 → 核心小寫 → 短詞。",
+    summary: "尖筆五級：導引線 → 橢圓 → 筆畫 → 小寫 → 短詞。",
     tools: "尖筆、墨水",
+    levels: [
+      {
+        step: 1,
+        stage: 0,
+        titleZh: "導引線",
+        gate: "55° 斜度對齊",
+        sheetSlug: "copperplate-guidelines",
+      },
+      {
+        step: 2,
+        stage: 0,
+        titleZh: "橢圓熱身",
+        gate: "橢圓閉合、壓力可控",
+        sheetSlug: "copperplate-ovals",
+      },
+      {
+        step: 3,
+        stage: 0,
+        titleZh: "基本筆畫",
+        gate: "上細下粗分明",
+        sheetSlug: "copperplate-basic-strokes",
+      },
+      {
+        step: 4,
+        stage: 2,
+        titleZh: "核心小寫",
+        gate: "核心字母形狀穩定",
+        sheetSlug: "copperplate-minuscule-core",
+      },
+      {
+        step: 5,
+        stage: 3,
+        titleZh: "短詞（易）",
+        gate: "連筆順、字距唔擠",
+        sheetSlug: "copperplate-words-easy",
+      },
+    ],
     sheetSlugs: [
       "copperplate-guidelines",
       "copperplate-ovals",
@@ -146,8 +243,45 @@ export const practiceTracks: Array<{
     id: "spencerian",
     titleZh: "斯賓塞體尖筆線",
     titleEn: "Spencerian Path",
-    summary: "尖筆：導引線 → 複合曲線 → 基本筆畫 → 核心小寫 → 短詞。",
+    summary: "尖筆五級：導引線 → 曲線 → 筆畫 → 小寫 → 短詞。",
     tools: "尖筆、墨水",
+    levels: [
+      {
+        step: 1,
+        stage: 0,
+        titleZh: "導引線",
+        gate: "斜度與基線對齊",
+        sheetSlug: "spencerian-guidelines",
+      },
+      {
+        step: 2,
+        stage: 0,
+        titleZh: "複合曲線",
+        gate: "曲線轉折順滑",
+        sheetSlug: "spencerian-compound-curves",
+      },
+      {
+        step: 3,
+        stage: 0,
+        titleZh: "基本筆畫",
+        gate: "輕重節奏均勻",
+        sheetSlug: "spencerian-basic-strokes",
+      },
+      {
+        step: 4,
+        stage: 2,
+        titleZh: "核心小寫",
+        gate: "小寫卵形穩定",
+        sheetSlug: "spencerian-minuscule-core",
+      },
+      {
+        step: 5,
+        stage: 3,
+        titleZh: "短詞（易）",
+        gate: "連寫輕盈不亂",
+        sheetSlug: "spencerian-words-easy",
+      },
+    ],
     sheetSlugs: [
       "spencerian-guidelines",
       "spencerian-compound-curves",
@@ -160,17 +294,50 @@ export const practiceTracks: Array<{
     id: "flourishing",
     titleZh: "花飾／Modern 線",
     titleEn: "Modern Flourishing Path",
-    summary:
-      "尖筆現代花飾：橢圓 → C／S → modern script → 8 字環 → Cartouche → 花飾大寫 → 花飾詞語。",
+    summary: "尖筆五級：橢圓 → 曲線 → script → 花飾結構 → 花飾詞。",
     tools: "尖筆、墨水",
+    levels: [
+      {
+        step: 1,
+        stage: 0,
+        titleZh: "橢圓熱身",
+        gate: "橢圓閉合、速度平均",
+        sheetSlug: "flourish-ovals",
+      },
+      {
+        step: 2,
+        stage: 0,
+        titleZh: "C／S 曲線",
+        gate: "轉向乾淨、不抖",
+        sheetSlug: "flourish-cs-curves",
+      },
+      {
+        step: 3,
+        stage: 1,
+        titleZh: "Modern script",
+        gate: "小寫可讀、大寫不搶戲",
+        sheetSlug: "flourish-modern-lower",
+      },
+      {
+        step: 4,
+        stage: 2,
+        titleZh: "花飾結構",
+        gate: "8 字環／Cartouche 對稱可控",
+        sheetSlug: "flourish-figure-eight",
+      },
+      {
+        step: 5,
+        stage: 4,
+        titleZh: "花飾詞語",
+        gate: "花飾服從可讀性",
+        sheetSlug: "flourish-words",
+      },
+    ],
     sheetSlugs: [
       "flourish-ovals",
       "flourish-cs-curves",
       "flourish-modern-lower",
-      "flourish-modern-upper",
       "flourish-figure-eight",
-      "flourish-cartouche",
-      "flourish-capitals",
       "flourish-words",
     ],
   },
@@ -202,6 +369,7 @@ export const practiceSheets: PracticeSheet[] = [
     styleId: "copperplate",
     kind: "slant-guidelines",
     stage: 0,
+    track: "copperplate",
     summary: "55° 斜寫導引線，幫你在寫字母前對好斜度與字高。",
     level: "熱身",
     tools: "尖筆、墨水",
@@ -220,6 +388,7 @@ export const practiceSheets: PracticeSheet[] = [
     styleId: "copperplate",
     kind: "oval-drills",
     stage: 0,
+    track: "copperplate",
     summary: "橢圓軌跡練習上細下粗，是尖筆壓力控制的基本功。",
     level: "熱身",
     tools: "尖筆、墨水",
@@ -238,6 +407,7 @@ export const practiceSheets: PracticeSheet[] = [
     styleId: "italic",
     kind: "broad-nib-rules",
     stage: 0,
+    track: "italic",
     summary: "闊尖筆 Italic 的比例格線，後續字母／詞語／句子練習以此為準。",
     level: "熱身",
     tools: "闊尖筆、墨水",
@@ -274,6 +444,7 @@ export const practiceSheets: PracticeSheet[] = [
     styleId: "spencerian",
     kind: "slant-guidelines",
     stage: 0,
+    track: "spencerian",
     summary: "輕盈斜寫紙面，為斯賓塞體連筆與花飾做準備。",
     level: "熱身",
     tools: "尖筆、墨水",
@@ -327,6 +498,7 @@ export const practiceSheets: PracticeSheet[] = [
     styleId: "italic",
     kind: "alphabet-family",
     stage: 1,
+    track: "italic",
     familyId: "upper-straight",
     letters: ["I", "L", "T", "H", "E", "F"],
     summary: "垂直與水平骨架：I L T H E F。適合建立大寫第一印象。",
@@ -408,6 +580,7 @@ export const practiceSheets: PracticeSheet[] = [
     styleId: "italic",
     kind: "alphabet-family",
     stage: 2,
+    track: "italic",
     familyId: "lower-oval",
     letters: ["o", "c", "e", "a", "d", "g", "q"],
     summary: "以 o 為核心的橢圓形小寫：o c e a d g q。",
@@ -1032,6 +1205,36 @@ export function getStyleLabel(styleId: PracticeSheetStyleId): string {
 export function getStageLabel(stage: PracticeStage): string {
   const found = practiceStages.find((item) => item.stage === stage);
   return found?.titleZh ?? `第 ${stage} 級`;
+}
+
+export function getStageInfo(stage: PracticeStage): PracticeStageInfo | undefined {
+  return practiceStages.find((item) => item.stage === stage);
+}
+
+export function getTrackById(id: PracticeTrackId) {
+  if (id === "shared") return undefined;
+  return practiceTracks.find((track) => track.id === id);
+}
+
+/** 同路線下一張代表練習紙（跟 levels 順序） */
+export function getNextSheetInTrack(
+  sheet: PracticeSheet,
+): PracticeSheet | undefined {
+  if (!sheet.track || sheet.track === "shared") return undefined;
+  const track = getTrackById(sheet.track);
+  if (!track) return undefined;
+  const index = track.levels.findIndex(
+    (level) => level.sheetSlug === sheet.slug,
+  );
+  if (index < 0 || index >= track.levels.length - 1) return undefined;
+  return getPracticeSheet(track.levels[index + 1].sheetSlug);
+}
+
+/** 本張練習紙對應路線級別門檻 */
+export function getTrackLevelForSheet(sheet: PracticeSheet): TrackLevel | undefined {
+  if (!sheet.track || sheet.track === "shared") return undefined;
+  const track = getTrackById(sheet.track);
+  return track?.levels.find((level) => level.sheetSlug === sheet.slug);
 }
 
 /** 依星期輪替，給出「今日練習」建議 */

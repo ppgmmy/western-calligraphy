@@ -7,9 +7,12 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import {
   getDifficultyLabel,
+  getNextSheetInTrack,
   getPracticeSheet,
+  getStageInfo,
   getStageLabel,
   getStyleLabel,
+  getTrackLevelForSheet,
   practiceSheets,
 } from "@/data/resources";
 
@@ -40,9 +43,13 @@ export default async function ResourceDetailPage({ params }: ResourcePageProps) 
   const sheet = getPracticeSheet(slug);
   if (!sheet) notFound();
 
-  const nextSheet = practiceSheets.find(
+  const stageInfo = getStageInfo(sheet.stage);
+  const trackLevel = getTrackLevelForSheet(sheet);
+  const nextInTrack = getNextSheetInTrack(sheet);
+  const nextByStage = practiceSheets.find(
     (item) => item.stage === ((sheet.stage + 1) as 0 | 1 | 2 | 3 | 4),
   );
+  const nextSheet = nextInTrack ?? nextByStage;
 
   return (
     <main id="top" className="inner-page sheet-detail">
@@ -67,6 +74,14 @@ export default async function ResourceDetailPage({ params }: ResourcePageProps) 
               <span>{sheet.tools}</span>
             </div>
 
+            {(trackLevel || stageInfo) && (
+              <p className="stage-gate stage-gate--sheet" role="note">
+                {trackLevel
+                  ? `本級門檻：${trackLevel.gate}`
+                  : stageInfo?.gate}
+              </p>
+            )}
+
             <div className="guidance-box">
               <h2 className="guidance-box__title">怎麼用這張練習紙</h2>
               <ol className="guidance-box__list">
@@ -87,7 +102,7 @@ export default async function ResourceDetailPage({ params }: ResourcePageProps) 
               </Link>
               {nextSheet ? (
                 <Link className="sheet-detail__next" href={`/resources/${nextSheet.slug}`}>
-                  下一級推薦：{nextSheet.titleZh} →
+                  {nextInTrack ? "下一關" : "下一級推薦"}：{nextSheet.titleZh} →
                 </Link>
               ) : null}
             </div>
