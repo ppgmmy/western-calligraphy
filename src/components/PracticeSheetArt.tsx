@@ -24,8 +24,9 @@ const BRASS = "#9a8658";
 const FONT_FORMAL = "var(--font-script), Italianno, cursive";
 /** 當代 modern calligraphy／花飾範字 */
 const FONT_MODERN = "var(--font-modern), Allura, var(--font-script), cursive";
-/** 斜體主線：闊尖筆 Italic（目前唯一足夠靚、可作正式示範） */
-const FONT_ITALIC = "var(--font-display), 'Cormorant Garamond', serif";
+/** 斜體／細草：自製 Scriptoria Italic（由 Cormorant Garamond Italic 裁字） */
+const FONT_ITALIC =
+  "var(--font-italic-custom), 'Scriptoria Italic', var(--font-display), 'Cormorant Garamond', serif";
 
 function exemplarFont(styleId: PracticeSheet["styleId"]) {
   switch (styleId) {
@@ -47,7 +48,9 @@ function exemplarFont(styleId: PracticeSheet["styleId"]) {
 }
 
 function exemplarFontStyle(styleId: PracticeSheet["styleId"]): "normal" | "italic" {
-  return styleId === "italic" || styleId === "foundational" ? "italic" : "normal";
+  // Scriptoria Italic 已係 Italic master 裁出；再設 italic 會雙重傾斜。
+  void styleId;
+  return "normal";
 }
 
 /** 自建 tip-pen glyph 只用於花飾／modern script；斜體主線用闊尖筆字體示範。 */

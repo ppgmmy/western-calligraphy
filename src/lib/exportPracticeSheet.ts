@@ -5,6 +5,7 @@
  */
 
 const FONT_VAR_NAMES = [
+  "--font-italic-custom",
   "--font-script",
   "--font-modern",
   "--font-display",
@@ -16,6 +17,7 @@ const FONT_VAR_NAMES = [
 
 /** Families we must keep for calligraphy exemplars */
 const EXPORT_FONT_HINTS = [
+  "scriptoria italic",
   "italianno",
   "allura",
   "mea culpa",
@@ -220,6 +222,12 @@ function appendPublicFamilyAliases(svg: SVGSVGElement): void {
     const aliases: string[] = [];
     if (lower.includes("italianno") && !/"Italianno"|'Italianno'/.test(current)) {
       aliases.push("Italianno");
+    }
+    if (
+      lower.includes("scriptoria") &&
+      !/"Scriptoria Italic"|'Scriptoria Italic'/.test(current)
+    ) {
+      aliases.push("'Scriptoria Italic'");
     }
     if (lower.includes("allura") && !/"Allura"|'Allura'/.test(current)) {
       aliases.push("Allura");

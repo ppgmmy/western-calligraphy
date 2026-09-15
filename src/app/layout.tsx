@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import {
   Allura,
   Cormorant_Garamond,
@@ -16,6 +17,21 @@ const display = Cormorant_Garamond({
   weight: ["400", "500", "600", "700"],
   style: ["normal", "italic"],
 });
+
+
+/** 自製斜體／細草範字：由 Cormorant Garamond Italic 裁字而成（OFL） */
+const italicCustom = localFont({
+  src: [
+    {
+      path: "../../public/fonts/scriptoria-italic/ScriptoriaItalic-Regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+  ],
+  variable: "--font-italic-custom",
+  display: "swap",
+});
+
 
 const body = Source_Serif_4({
   variable: "--font-body",
@@ -69,7 +85,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="zh-Hant"
-      className={`${display.variable} ${body.variable} ${script.variable} ${modern.variable} ${grand.variable} ${blackletter.variable} ${zh.variable} h-full antialiased`}
+      className={`${display.variable} ${italicCustom.variable} ${body.variable} ${script.variable} ${modern.variable} ${grand.variable} ${blackletter.variable} ${zh.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

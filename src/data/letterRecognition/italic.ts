@@ -299,7 +299,7 @@ export const italicRecognition: ScriptRecognitionCatalog = {
   slantFromVerticalDeg: 8,
   tool: "闊尖筆",
   fontGate:
-    "全套 a–z／A–Z 辨認狀態皆達 verified，且練習紙範字與規格一致後，才考慮製成自製字體檔；現階段禁止打包 .woff。",
+    "示範用自製字體檔 Scriptoria Italic 已由 Cormorant Garamond Italic 裁出；逐字辨認仍繼續精修，未全部 verified 前唔好再改字形結構。",
   letters: [...lower, ...upper],
 };
 

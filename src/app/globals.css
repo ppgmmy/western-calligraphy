@@ -23,6 +23,7 @@
   --color-brass: var(--brass);
   --font-sans: var(--font-body);
   --font-display: var(--font-display);
+  --font-italic-custom: var(--font-italic-custom);
   --font-script: var(--font-script);
   --font-modern: var(--font-modern);
   --font-grand: var(--font-grand);
@@ -413,7 +414,12 @@ a {
   line-height: 1.15;
 }
 
-.style-item__sample--italic,
+.style-item__sample--italic {
+  font-family: var(--font-italic-custom), "Scriptoria Italic", var(--font-display), serif;
+  font-style: normal; /* custom face already italic */
+  text-transform: lowercase; /* 細草示範 */
+}
+
 .style-item__sample--foundational,
 .style-item__sample--uncial {
   font-family: var(--font-display), serif;
