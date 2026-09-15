@@ -24,7 +24,6 @@
   --font-sans: var(--font-body);
   --font-display: var(--font-display);
   --font-script: var(--font-script);
-  --font-copperplate: var(--font-copperplate);
   --font-modern: var(--font-modern);
   --font-blackletter: var(--font-blackletter);
   --font-zh: var(--font-zh);
@@ -376,13 +375,7 @@ a {
   color: var(--teal);
 }
 
-.style-item__sample--copperplate {
-  font-family: var(--font-script), cursive;
-  font-size: clamp(2.6rem, 5vw, 3.5rem);
-  letter-spacing: 0.02em;
-  /* 唔再用華麗 display 字型冒充手寫 Copperplate Capitals */
-}
-
+.style-item__sample--copperplate,
 .style-item__sample--spencerian {
   font-family: var(--font-script), cursive;
 }
