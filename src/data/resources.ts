@@ -531,16 +531,16 @@ export const practiceSheets: PracticeSheet[] = [
     stage: 1,
     track: "copperplate",
     summary:
-      "華麗 Copperplate Capitals：橢圓入口環、陰影粗畫與髮絲細畫；約 55° 斜度，適合描紅與臨寫大寫花體。",
+      "用筆順（ductus）學 Copperplate Capitals：以陰影／髮絲／橢圓／55° 分辨結構，而唔係依賴花體字型。",
     level: "第 1 級",
     tools: "尖筆、墨水",
-    uses: ["大寫花體", "橢圓環飾", "粗細對比"],
+    uses: ["筆順辨識", "陰影與髮絲", "大寫結構"],
     guidance: [
-      "先看清陰影筆（粗）與髮絲筆（細）的路線，再落筆。",
-      "入口環與出口花飾保持橢圓感，交叉接近直角。",
-      "可讀優先：花飾服務字母骨架，不要搶戲。",
+      "先睇頂部四個結構標記：斜度、橢圓、陰影、髮絲。",
+      "跟圓點編號寫每一筆；粗線下行加壓，幼線上行放壓。",
+      "左邊完整筆順，右邊淺灰描紅；唔好當成印刷體描外形。",
     ],
-    sheetTip: "Copperplate Capitals：橢圓、粗細、55°。",
+    sheetTip: "結構紙：筆順＋陰影／髮絲，不是字型臨摹。",
   },
   {
     slug: "copperplate-minuscule-core",

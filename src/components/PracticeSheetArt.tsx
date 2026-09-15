@@ -1,7 +1,10 @@
 import type { ReactNode } from "react";
 import {
   COPPERPLATE_CAPITAL_VB,
+  COPPERPLATE_STYLE_DNA,
   getCopperplateCapital,
+  listCopperplateCapitals,
+  type CopperplateCapital,
 } from "@/data/copperplateCapitals";
 import { getStrokeGuide, type StrokePath } from "@/data/letterFamilies";
 import type { PracticeSheet } from "@/data/resources";
@@ -34,7 +37,8 @@ function exemplarFont(styleId: PracticeSheet["styleId"]) {
     case "flourishing":
       return FONT_MODERN;
     case "copperplate":
-      return FONT_COPPERPLATE;
+      // 詞語／小寫用尖筆感字型；大寫改走 ductus 結構紙，不以花體字型冒充
+      return FONT_FORMAL;
     case "spencerian":
     case "italic":
     case "foundational":
@@ -49,56 +53,75 @@ function exemplarFont(styleId: PracticeSheet["styleId"]) {
 }
 
 function CopperplateCapitalMark({
-  letter,
+  capital,
   x,
   y,
   size,
   tone,
+  showNumbers = false,
 }: {
-  letter: string;
+  capital: CopperplateCapital;
   x: number;
   y: number;
   size: number;
   tone: "ink" | "ghost";
+  showNumbers?: boolean;
 }) {
-  const glyph = getCopperplateCapital(letter);
-  if (!glyph) return null;
   const ink = tone === "ink" ? INK : GHOST;
-  const hairW = tone === "ink" ? 0.95 : 0.75;
-  const shadeOpacity = tone === "ghost" ? 0.42 : 0.92;
-  const hairOpacity = tone === "ghost" ? 0.75 : 1;
-  // Slight skew ≈ Copperplate 55° rhythm without rigid geometry
-  const skew = -16;
+  const shadeW = tone === "ink" ? 3.4 : 2.2;
+  const hairW = tone === "ink" ? 0.85 : 0.7;
+  const opacity = tone === "ghost" ? 0.45 : 1;
+
   return (
-    <g transform={`translate(${x} ${y})`}>
+    <g transform={`translate(${x} ${y})`} opacity={opacity}>
       <svg
-        width={size * 0.78}
+        width={size * 0.82}
         height={size}
         viewBox={`0 0 ${COPPERPLATE_CAPITAL_VB.w} ${COPPERPLATE_CAPITAL_VB.h}`}
         overflow="visible"
       >
-        <g transform={`skewX(${skew}) translate(8 0)`}>
-          {glyph.shade.map((d, index) => (
+        <g transform="skewX(-15) translate(10 0)">
+          {capital.strokes.map((stroke) => (
             <path
-              key={`shade-${letter}-${index}`}
-              d={d}
-              fill={ink}
-              stroke="none"
-              opacity={shadeOpacity}
-            />
-          ))}
-          {glyph.hair.map((d, index) => (
-            <path
-              key={`hair-${letter}-${index}`}
-              d={d}
+              key={`${capital.letter}-${stroke.order}`}
+              d={stroke.d}
               fill="none"
               stroke={ink}
-              strokeWidth={hairW}
+              strokeWidth={stroke.role === "shade" ? shadeW : hairW}
               strokeLinecap="round"
               strokeLinejoin="round"
-              opacity={hairOpacity}
             />
           ))}
+          {showNumbers && tone === "ink"
+            ? capital.strokes.map((stroke) => {
+                const match = /M\s+([\d.]+)\s+([\d.]+)/.exec(stroke.d);
+                if (!match) return null;
+                const sx = Number(match[1]);
+                const sy = Number(match[2]);
+                return (
+                  <g key={`num-${capital.letter}-${stroke.order}`}>
+                    <circle
+                      cx={sx}
+                      cy={sy}
+                      r={4.2}
+                      fill="#fbfaf7"
+                      stroke={TEAL}
+                      strokeWidth={0.8}
+                    />
+                    <text
+                      x={sx}
+                      y={sy + 2.6}
+                      textAnchor="middle"
+                      fill={TEAL}
+                      fontFamily="Georgia, serif"
+                      fontSize="6.5"
+                    >
+                      {stroke.order}
+                    </text>
+                  </g>
+                );
+              })
+            : null}
         </g>
       </svg>
     </g>
@@ -699,16 +722,17 @@ function TraceRow({
       {useGlyph ? (
         <>
           <CopperplateCapitalMark
-            letter={exemplar}
+            capital={getCopperplateCapital(exemplar)!}
             x={left + 6}
             y={glyphY}
             size={glyphSize}
             tone="ink"
+            showNumbers
           />
           {Array.from({ length: ghostCount }).map((_, index) => (
             <CopperplateCapitalMark
               key={`ghost-glyph-${exemplar}-${index}`}
-              letter={exemplar}
+              capital={getCopperplateCapital(exemplar)!}
               x={left + 6 + gap * (index + 1)}
               y={glyphY}
               size={glyphSize}
@@ -1860,6 +1884,114 @@ function FlourishWordsSheet({ sheet }: SheetProps) {
   );
 }
 
+
+/** 以筆畫結構（ductus）辨識 Copperplate Capitals，而非字型檔 */
+function CopperplateCapitalsDuctusSheet({ sheet }: SheetProps) {
+  const capitals = listCopperplateCapitals();
+  const left = MARGIN;
+  const right = PAGE_W - MARGIN;
+  const top = 118;
+  const cols = 2;
+  const colGap = 16;
+  const colW = (right - left - colGap) / cols;
+  const rowH = 72;
+  const mid = Math.ceil(capitals.length / 2);
+  const columns = [capitals.slice(0, mid), capitals.slice(mid)];
+
+  return (
+    <SheetFrame sheet={sheet}>
+      <text
+        x={left}
+        y={78}
+        fill={TEAL}
+        fontFamily="'Noto Serif TC', serif"
+        fontSize="10"
+      >
+        分辨方式：尖筆結構（唔係電腦字型）
+      </text>
+      {COPPERPLATE_STYLE_DNA.map((item, index) => (
+        <g key={item.id} transform={`translate(${left + index * 170} 88)`}>
+          <circle cx={4} cy={-2} r={2.5} fill={BRASS} />
+          <text
+            x={12}
+            y={1}
+            fill="#5b6570"
+            fontFamily="'Noto Serif TC', serif"
+            fontSize="8"
+          >
+            {item.labelZh}
+          </text>
+        </g>
+      ))}
+      <text
+        x={left}
+        y={108}
+        fill="#5b6570"
+        fontFamily="'Noto Serif TC', serif"
+        fontSize="8"
+      >
+        數字＝筆順｜粗線＝陰影下行｜幼線＝髮絲上行｜先跟筆順，再描紅，最後自寫
+      </text>
+      {columns.map((colCaps, colIndex) => {
+        const x0 = left + colIndex * (colW + colGap);
+        return (
+          <g key={`ductus-col-${colIndex}`}>
+            {colCaps.map((capital, rowIndex) => {
+              const y = top + rowIndex * rowH;
+              if (y + rowH > PAGE_H - 48) return null;
+              const bandH = rowH - 10;
+              return (
+                <g key={`ductus-${capital.letter}`}>
+                  <RuledBand
+                    y={y}
+                    height={bandH}
+                    left={x0}
+                    right={x0 + colW}
+                    clipId={`dc-${capital.letter}`}
+                  />
+                  <text
+                    x={x0 + 4}
+                    y={y + 11}
+                    fill={BRASS}
+                    fontFamily="Georgia, serif"
+                    fontSize="8"
+                  >
+                    {capital.letter}
+                  </text>
+                  <CopperplateCapitalMark
+                    capital={capital}
+                    x={x0 + 18}
+                    y={y + 2}
+                    size={bandH - 4}
+                    tone="ink"
+                    showNumbers
+                  />
+                  <CopperplateCapitalMark
+                    capital={capital}
+                    x={x0 + colW * 0.42}
+                    y={y + 2}
+                    size={bandH - 4}
+                    tone="ghost"
+                  />
+                </g>
+              );
+            })}
+          </g>
+        );
+      })}
+      <text
+        x={left}
+        y={PAGE_H - 22}
+        fill="#5b6570"
+        fontFamily="'Noto Serif TC', serif"
+        fontSize="8"
+      >
+        Copperplate Capitals＝手寫尖筆大寫系統（橢圓＋陰影／髮絲＋約55°）；勿用印刷體花字代替。
+      </text>
+    </SheetFrame>
+  );
+}
+
 export function PracticeSheetArt({ sheet }: SheetProps) {
   switch (sheet.kind) {
     case "slant-guidelines":
@@ -1875,6 +2007,9 @@ export function PracticeSheetArt({ sheet }: SheetProps) {
     case "pointed-pen-strokes":
       return <PointedPenStrokes sheet={sheet} />;
     case "alphabet-upper":
+      if (sheet.styleId === "copperplate") {
+        return <CopperplateCapitalsDuctusSheet sheet={sheet} />;
+      }
       return <AlphabetSheet sheet={sheet} letters={UPPER} />;
     case "alphabet-lower":
       return <AlphabetSheet sheet={sheet} letters={LOWER} />;

@@ -1,312 +1,347 @@
 /**
- * Organic Copperplate Capitals — pointed-pen practice guides.
+ * Copperplate Capitals — identified by pointed-pen CONSTRUCTION, not a font.
  *
- * shade = filled tapered ribbons (pressure downstrokes)
- * hair  = hairline stroke paths (upstrokes / ovals / exits)
+ * June-style Copperplate Majuscules are handwritten Engrosser's / Copperplate
+ * capitals. Distinguishing traits (not typeface names):
+ *   1. ~55° right slant
+ *   2. Oval (not circle) as the governing shape
+ *   3. Shade = weighted downstroke; hair = pressure-release upstroke
+ *   4. Entrance oval / exit flourish attached to a readable skeleton
  *
- * ViewBox 0–80 × 0–110, baseline ≈ 78. Built for a lively Engrosser's /
- * Copperplate capital feel (oval rhythm, ~55° slant, entrance loops) —
- * not a copy of any studio's copyrighted exemplar.
+ * Each letter is a numbered ductus (stroke order). Paths are open pen tracks
+ * for teaching — not filled “font outlines”.
  */
 
-export type CopperplateCapitalGlyph = {
-  shade: string[];
-  hair: string[];
+export type StrokeRole = "shade" | "hair";
+
+export type CapitalStroke = {
+  order: number;
+  role: StrokeRole;
+  /** Open path in viewBox 0–100 × 0–120 (baseline ≈ 88) */
+  d: string;
 };
 
-export const COPPERPLATE_CAPITAL_VB = { w: 80, h: 110 } as const;
+export type CopperplateFamily =
+  | "oval-entry" // A C E G O Q S …
+  | "stem-loop" // B D F H I J K L P R T …
+  | "compound"; // M N U V W X Y Z …
 
-export const COPPERPLATE_CAPITALS: Record<string, CopperplateCapitalGlyph> = {
+export type CopperplateCapital = {
+  letter: string;
+  family: CopperplateFamily;
+  strokes: CapitalStroke[];
+  tipZh: string;
+};
+
+export const COPPERPLATE_CAPITAL_VB = { w: 100, h: 120 } as const;
+
+export const COPPERPLATE_STYLE_DNA = [
+  { id: "slant", labelZh: "約 55° 右斜", labelEn: "55° slant" },
+  { id: "oval", labelZh: "橢圓主宰", labelEn: "Oval-led" },
+  { id: "shade", labelZh: "下行加壓＝陰影", labelEn: "Shade down" },
+  { id: "hair", labelZh: "上行放壓＝髮絲", labelEn: "Hair up" },
+] as const;
+
+/** Representative majuscules with teaching ductus (A–Z). */
+export const COPPERPLATE_CAPITALS: Record<string, CopperplateCapital> = {
   A: {
-    shade: [
-      // right shade stem, thick mid, taper ends
-      "M 49 24 C 52 26, 53 32, 52 40 L 58 76 C 59 80, 56 82, 52 81 L 46 80 C 43 79, 43 76, 44 72 L 40 36 C 39 28, 42 23, 49 24 Z",
-      // crossbar shade hint
-      "M 30 56 C 34 54, 48 54, 54 57 C 55 59, 53 61, 48 60 L 32 60 C 28 59, 28 57, 30 56 Z",
-    ],
-    hair: [
-      "M 22 70 C 10 58, 8 28, 26 20 C 38 14, 48 28, 50 42",
-      "M 22 70 C 18 78, 28 84, 36 78",
-      "M 49 24 C 58 18, 68 30, 62 44",
+    letter: "A",
+    family: "oval-entry",
+    tipZh: "先畫左入口橢圓，再落右陰影幹，最後輕架橫畫。",
+    strokes: [
+      { order: 1, role: "hair", d: "M 28 92 C 12 78, 10 36, 32 28 C 46 22, 56 40, 54 58" },
+      { order: 2, role: "shade", d: "M 54 34 L 62 90" },
+      { order: 3, role: "hair", d: "M 36 64 L 60 64" },
+      { order: 4, role: "hair", d: "M 62 90 C 70 102, 84 92, 76 78" },
     ],
   },
   B: {
-    shade: [
-      "M 28 18 C 31 18, 33 22, 33 30 L 34 78 C 34 82, 31 84, 27 83 L 23 82 C 20 81, 20 78, 21 74 L 22 28 C 22 20, 24 18, 28 18 Z",
-      "M 33 22 C 52 14, 64 28, 52 40 C 46 44, 38 42, 33 40 Z",
-      "M 33 42 C 56 40, 66 62, 48 76 C 42 80, 36 78, 33 74 Z",
-    ],
-    hair: [
-      "M 28 18 C 14 10, 8 30, 22 38 C 26 42, 30 34, 28 24",
-      "M 52 40 C 46 36, 40 38, 33 40",
-      "M 48 76 C 58 84, 68 72, 60 62",
+    letter: "B",
+    family: "stem-loop",
+    tipZh: "主幹陰影垂直斜下；上下兩葉由髮絲橢圓接回主幹。",
+    strokes: [
+      { order: 1, role: "hair", d: "M 34 30 C 18 16, 10 40, 28 52" },
+      { order: 2, role: "shade", d: "M 34 28 L 36 92" },
+      { order: 3, role: "hair", d: "M 36 30 C 68 18, 78 48, 36 56" },
+      { order: 4, role: "hair", d: "M 36 56 C 74 54, 82 86, 36 92" },
     ],
   },
   C: {
-    shade: [
-      "M 58 30 C 48 12, 18 16, 16 48 C 14 74, 36 90, 60 74 C 62 72, 60 68, 56 70 C 40 80, 24 70, 26 48 C 28 26, 46 24, 54 34 Z",
-    ],
-    hair: [
-      "M 58 30 C 66 36, 64 48, 54 52 C 50 54, 48 48, 52 44",
-      "M 60 74 C 68 66, 64 56, 54 56",
+    letter: "C",
+    family: "oval-entry",
+    tipZh: "整字是打開的橢圓；開口處兩端用髮絲收。",
+    strokes: [
+      { order: 1, role: "shade", d: "M 72 38 C 58 16, 22 22, 24 60 C 26 92, 58 104, 74 82" },
+      { order: 2, role: "hair", d: "M 72 38 C 82 48, 78 60, 66 64" },
+      { order: 3, role: "hair", d: "M 74 82 C 84 70, 78 60, 66 62" },
     ],
   },
   D: {
-    shade: [
-      "M 26 18 C 30 18, 32 22, 32 30 L 33 78 C 33 82, 30 84, 26 83 L 22 82 C 19 81, 19 78, 20 74 L 21 28 C 21 20, 23 18, 26 18 Z",
-      "M 32 20 C 58 12, 72 40, 58 68 C 50 80, 38 82, 32 76 Z",
-    ],
-    hair: [
-      "M 26 18 C 12 8, 6 32, 20 42 C 24 46, 28 36, 26 24",
-      "M 58 68 C 66 58, 62 48, 52 50",
+    letter: "D",
+    family: "stem-loop",
+    tipZh: "左幹陰影 + 右大橢圓葉；入口小環用髮絲。",
+    strokes: [
+      { order: 1, role: "hair", d: "M 32 28 C 16 14, 8 42, 26 54" },
+      { order: 2, role: "shade", d: "M 32 26 L 34 92" },
+      { order: 3, role: "hair", d: "M 34 28 C 78 16, 90 58, 34 92" },
     ],
   },
   E: {
-    shade: [
-      "M 56 32 C 46 12, 16 18, 16 48 C 16 74, 38 90, 60 72 C 62 70, 60 66, 56 68 C 40 80, 26 70, 26 48 C 26 28, 44 26, 52 36 Z",
-      "M 26 48 C 34 45, 46 46, 54 50 C 55 52, 53 54, 48 53 L 28 52 C 24 51, 24 49, 26 48 Z",
-    ],
-    hair: [
-      "M 56 32 C 64 38, 62 50, 52 54",
-      "M 60 72 C 68 62, 64 54, 54 54",
+    letter: "E",
+    family: "oval-entry",
+    tipZh: "如打開的 C，中腰加一筆輕橫連接橢圓氣口。",
+    strokes: [
+      { order: 1, role: "shade", d: "M 70 40 C 56 16, 20 24, 22 60 C 24 90, 56 104, 74 80" },
+      { order: 2, role: "hair", d: "M 26 60 L 58 60" },
+      { order: 3, role: "hair", d: "M 70 40 C 80 50, 76 62, 64 66" },
+      { order: 4, role: "hair", d: "M 74 80 C 84 68, 78 58, 66 60" },
     ],
   },
   F: {
-    shade: [
-      "M 40 34 C 43 34, 45 38, 45 46 L 48 80 C 49 84, 46 86, 42 85 L 36 84 C 33 83, 33 80, 34 76 L 34 48 C 34 38, 36 34, 40 34 Z",
-      // waving top canopy
-      "M 14 38 C 12 18, 28 8, 46 12 C 64 16, 70 36, 56 46 C 48 52, 42 46, 40 38 Z",
-      "M 34 54 C 40 51, 50 50, 58 54 C 59 56, 57 58, 52 57 L 36 57 C 32 56, 32 54, 34 54 Z",
-    ],
-    hair: [
-      "M 14 38 C 8 30, 14 20, 24 24",
-      "M 56 46 C 62 40, 60 32, 52 34",
-      "M 48 80 C 56 90, 68 78, 60 66",
+    letter: "F",
+    family: "stem-loop",
+    tipZh: "頂蓋是波浪橢圓冠；主幹陰影；中腰短橫。",
+    strokes: [
+      { order: 1, role: "hair", d: "M 18 48 C 14 22, 36 10, 60 18 C 82 26, 84 52, 62 60 C 50 64, 44 54, 42 44" },
+      { order: 2, role: "shade", d: "M 44 44 L 48 94" },
+      { order: 3, role: "hair", d: "M 40 66 L 64 60" },
+      { order: 4, role: "hair", d: "M 48 94 C 58 106, 74 94, 66 78" },
     ],
   },
   G: {
-    shade: [
-      "M 56 32 C 46 12, 16 18, 16 50 C 16 78, 40 94, 60 76 L 60 54 C 60 50, 56 48, 52 50 L 44 52 C 40 53, 40 56, 44 56 L 52 56 L 52 72 C 40 82, 26 74, 26 50 C 26 28, 44 26, 52 36 Z",
-    ],
-    hair: [
-      "M 56 32 C 64 38, 62 50, 52 54",
-      "M 60 76 C 70 88, 48 102, 28 90 C 16 82, 20 68, 32 70",
+    letter: "G",
+    family: "oval-entry",
+    tipZh: "C 形橢圓 + 右下垂尾；尾部可帶小出口環。",
+    strokes: [
+      { order: 1, role: "shade", d: "M 70 40 C 56 16, 20 24, 22 60 C 24 92, 58 106, 74 84" },
+      { order: 2, role: "hair", d: "M 74 84 L 74 58 L 56 58" },
+      { order: 3, role: "hair", d: "M 74 84 C 86 100, 58 116, 34 100 C 20 90, 26 74, 40 76" },
     ],
   },
   H: {
-    shade: [
-      "M 24 20 C 28 20, 30 24, 30 32 L 31 80 C 31 84, 28 86, 24 85 L 20 84 C 17 83, 17 80, 18 76 L 19 30 C 19 22, 21 20, 24 20 Z",
-      "M 52 28 C 56 28, 58 32, 58 40 L 59 80 C 59 84, 56 86, 52 85 L 48 84 C 45 83, 45 80, 46 76 L 47 38 C 47 30, 49 28, 52 28 Z",
-      "M 30 50 C 36 47, 48 47, 56 51 C 57 53, 55 55, 50 54 L 32 54 C 28 53, 28 51, 30 50 Z",
-    ],
-    hair: [
-      "M 24 20 C 10 8, 4 34, 20 44 C 24 48, 28 38, 26 28",
-      "M 52 28 C 64 16, 72 38, 56 48 C 52 52, 50 42, 52 34",
-      "M 59 80 C 68 92, 78 78, 70 66",
+    letter: "H",
+    family: "stem-loop",
+    tipZh: "雙陰影幹，中間髮絲橋；兩端入口／出口環。",
+    strokes: [
+      { order: 1, role: "hair", d: "M 30 30 C 14 14, 6 42, 24 56" },
+      { order: 2, role: "shade", d: "M 30 28 L 32 94" },
+      { order: 3, role: "hair", d: "M 32 62 L 64 62" },
+      { order: 4, role: "shade", d: "M 64 36 L 66 94" },
+      { order: 5, role: "hair", d: "M 64 36 C 80 20, 90 48, 70 60" },
+      { order: 6, role: "hair", d: "M 66 94 C 78 108, 92 92, 82 76" },
     ],
   },
   I: {
-    shade: [
-      "M 40 30 C 44 30, 46 34, 46 42 L 47 80 C 47 84, 44 86, 40 85 L 36 84 C 33 83, 33 80, 34 76 L 35 40 C 35 32, 37 30, 40 30 Z",
-    ],
-    hair: [
-      "M 40 30 C 26 10, 8 28, 24 46 C 30 54, 40 46, 42 36",
-      "M 47 80 C 56 94, 72 78, 60 64",
+    letter: "I",
+    family: "stem-loop",
+    tipZh: "單陰影幹；上下入口與出口橢圓環對稱呼吸。",
+    strokes: [
+      { order: 1, role: "hair", d: "M 50 36 C 32 12, 10 36, 30 58 C 38 68, 50 56, 52 42" },
+      { order: 2, role: "shade", d: "M 50 38 L 52 92" },
+      { order: 3, role: "hair", d: "M 52 92 C 64 108, 86 90, 72 72" },
     ],
   },
   J: {
-    shade: [
-      "M 48 26 C 52 26, 54 30, 54 38 L 54 68 C 54 88, 28 98, 18 78 C 16 74, 20 72, 24 74 C 32 86, 46 80, 46 66 L 46 40 C 46 30, 46 26, 48 26 Z",
-    ],
-    hair: [
-      "M 48 26 C 34 8, 14 28, 30 46 C 36 54, 48 44, 50 34",
-      "M 18 78 C 12 66, 26 62, 32 72",
+    letter: "J",
+    family: "stem-loop",
+    tipZh: "陰影幹下探成下延環；頂部入口橢圓。",
+    strokes: [
+      { order: 1, role: "hair", d: "M 58 32 C 40 10, 16 36, 36 56 C 44 64, 58 52, 60 40" },
+      { order: 2, role: "shade", d: "M 58 34 L 58 78 C 58 102, 26 112, 18 86" },
+      { order: 3, role: "hair", d: "M 18 86 C 14 72, 32 68, 38 80" },
     ],
   },
   K: {
-    shade: [
-      "M 24 20 C 28 20, 30 24, 30 32 L 31 80 C 31 84, 28 86, 24 85 L 20 84 C 17 83, 17 80, 18 76 L 19 30 C 19 22, 21 20, 24 20 Z",
-      // upper arm
-      "M 54 22 C 58 20, 62 26, 58 34 L 36 52 C 32 54, 30 50, 34 46 L 52 28 C 54 26, 54 23, 54 22 Z",
-      // lower leg
-      "M 34 48 C 40 50, 50 62, 58 80 C 60 84, 56 86, 52 84 L 34 56 C 32 52, 32 48, 34 48 Z",
-    ],
-    hair: [
-      "M 24 20 C 10 8, 4 34, 20 44",
-      "M 54 22 C 64 10, 74 28, 62 40",
-      "M 58 80 C 66 92, 76 78, 68 66",
+    letter: "K",
+    family: "stem-loop",
+    tipZh: "主幹陰影；上臂與下腿皆由髮絲斜接，下腿可略加重。",
+    strokes: [
+      { order: 1, role: "hair", d: "M 30 28 C 14 12, 6 40, 24 54" },
+      { order: 2, role: "shade", d: "M 30 26 L 32 94" },
+      { order: 3, role: "hair", d: "M 70 28 C 78 16, 88 36, 74 48 L 36 64" },
+      { order: 4, role: "shade", d: "M 40 60 L 72 96" },
+      { order: 5, role: "hair", d: "M 72 96 C 82 110, 96 94, 84 78" },
     ],
   },
   L: {
-    shade: [
-      "M 30 22 C 34 22, 36 26, 36 34 L 36 78 C 36 82, 33 84, 29 83 L 25 82 C 22 81, 22 78, 23 74 L 24 32 C 24 24, 26 22, 30 22 Z",
-      // bottom flourish lobe
-      "M 30 76 C 42 88, 68 84, 66 58 C 65 50, 56 52, 54 60 C 52 72, 40 74, 32 70 Z",
-    ],
-    hair: [
-      "M 30 22 C 16 4, 2 30, 20 48 C 26 56, 34 44, 32 32",
-      "M 66 58 C 72 48, 68 40, 58 42",
+    letter: "L",
+    family: "stem-loop",
+    tipZh: "主幹陰影；底部大出口橢圓向右 sweep。",
+    strokes: [
+      { order: 1, role: "hair", d: "M 36 28 C 18 6, 2 40, 26 60 C 34 68, 40 52, 38 36" },
+      { order: 2, role: "shade", d: "M 36 30 L 38 88" },
+      { order: 3, role: "hair", d: "M 38 88 C 52 108, 90 100, 86 64 C 84 50, 68 54, 66 68 C 64 86, 48 90, 40 84" },
     ],
   },
   M: {
-    shade: [
-      "M 16 28 C 20 28, 22 32, 22 40 L 22 80 C 22 84, 19 86, 15 85 L 12 84 C 9 83, 9 80, 10 76 L 12 38 C 12 30, 14 28, 16 28 Z",
-      "M 38 40 C 42 40, 44 44, 44 52 L 44 80 C 44 84, 41 86, 37 85 L 34 84 C 31 83, 31 80, 32 76 L 34 50 C 34 42, 36 40, 38 40 Z",
-      "M 60 28 C 64 28, 66 32, 66 40 L 66 80 C 66 84, 63 86, 59 85 L 56 84 C 53 83, 53 80, 54 76 L 56 38 C 56 30, 58 28, 60 28 Z",
-      // connecting valleys as soft shade
-      "M 22 32 L 38 68 L 44 68 L 32 36 Z",
-      "M 44 36 L 60 68 L 66 66 L 50 34 Z",
-    ],
-    hair: [
-      "M 16 28 C 6 12, 0 36, 14 48",
-      "M 60 28 C 72 12, 78 38, 62 50",
+    letter: "M",
+    family: "compound",
+    tipZh: "三幹：左右陰影，中峰可較輕；峰谷用髮絲連。",
+    strokes: [
+      { order: 1, role: "hair", d: "M 20 34 C 8 16, 0 44, 16 58" },
+      { order: 2, role: "shade", d: "M 20 32 L 22 94" },
+      { order: 3, role: "hair", d: "M 22 36 L 48 84" },
+      { order: 4, role: "shade", d: "M 48 84 L 50 94" },
+      { order: 5, role: "hair", d: "M 50 84 L 76 36" },
+      { order: 6, role: "shade", d: "M 76 34 L 78 94" },
+      { order: 7, role: "hair", d: "M 76 34 C 90 16, 98 46, 80 60" },
     ],
   },
   N: {
-    shade: [
-      "M 20 26 C 24 26, 26 30, 26 38 L 26 80 C 26 84, 23 86, 19 85 L 16 84 C 13 83, 13 80, 14 76 L 16 36 C 16 28, 18 26, 20 26 Z",
-      "M 54 32 C 58 32, 60 36, 60 44 L 60 80 C 60 84, 57 86, 53 85 L 50 84 C 47 83, 47 80, 48 76 L 50 42 C 50 34, 52 32, 54 32 Z",
-      "M 26 30 L 54 78 L 60 76 L 34 30 Z",
-    ],
-    hair: [
-      "M 20 26 C 8 10, 2 36, 18 48",
-      "M 54 32 C 66 16, 74 40, 58 52",
+    letter: "N",
+    family: "compound",
+    tipZh: "雙幹陰影，中間斜髮絲由左頂落到右底。",
+    strokes: [
+      { order: 1, role: "hair", d: "M 24 32 C 10 14, 2 42, 20 56" },
+      { order: 2, role: "shade", d: "M 24 30 L 26 94" },
+      { order: 3, role: "hair", d: "M 26 34 L 70 92" },
+      { order: 4, role: "shade", d: "M 68 36 L 70 94" },
+      { order: 5, role: "hair", d: "M 68 36 C 84 18, 94 46, 74 60" },
     ],
   },
   O: {
-    shade: [
-      "M 54 34 C 46 14, 18 18, 16 50 C 14 78, 38 96, 60 76 C 70 64, 68 42, 54 34 Z M 52 40 C 60 46, 58 66, 48 74 C 36 84, 26 72, 28 50 C 30 30, 44 28, 52 40 Z",
+    letter: "O",
+    family: "oval-entry",
+    tipZh: "完整橢圓；右上可留髮絲入口觸角。",
+    strokes: [
+      { order: 1, role: "shade", d: "M 68 42 C 58 18, 24 24, 22 62 C 20 94, 52 110, 74 84 C 86 68, 82 50, 68 42" },
+      { order: 2, role: "hair", d: "M 68 42 C 78 50, 74 64, 62 68" },
     ],
-    hair: ["M 54 34 C 62 40, 60 52, 50 56 C 46 58, 46 52, 50 48"],
   },
   P: {
-    shade: [
-      "M 28 20 C 32 20, 34 24, 34 32 L 34 82 C 34 86, 31 88, 27 87 L 23 86 C 20 85, 20 82, 21 78 L 22 30 C 22 22, 24 20, 28 20 Z",
-      "M 34 22 C 58 10, 72 34, 56 50 C 48 56, 40 52, 34 48 Z",
-    ],
-    hair: [
-      "M 28 20 C 14 8, 6 34, 22 46",
-      "M 56 50 C 64 42, 60 32, 50 34",
-      "M 34 82 C 42 94, 56 82, 48 70",
+    letter: "P",
+    family: "stem-loop",
+    tipZh: "主幹貫底；上葉橢圓在腰線收回，勿封死成 B。",
+    strokes: [
+      { order: 1, role: "hair", d: "M 32 28 C 16 12, 6 40, 24 54" },
+      { order: 2, role: "shade", d: "M 32 26 L 34 96" },
+      { order: 3, role: "hair", d: "M 34 28 C 72 12, 84 48, 34 62" },
+      { order: 4, role: "hair", d: "M 34 96 C 44 110, 62 96, 52 80" },
     ],
   },
   Q: {
-    shade: [
-      "M 54 34 C 46 14, 18 18, 16 50 C 14 78, 38 96, 60 76 C 70 64, 68 42, 54 34 Z M 52 40 C 60 46, 58 66, 48 74 C 36 84, 26 72, 28 50 C 30 30, 44 28, 52 40 Z",
-      // 2-like tail
-      "M 44 64 C 52 72, 66 86, 70 78 C 72 74, 66 70, 60 74 C 54 78, 48 72, 46 68 Z",
-    ],
-    hair: [
-      "M 54 34 C 62 40, 60 52, 50 56",
-      "M 70 78 C 64 68, 52 78, 56 88 C 58 94, 68 90, 66 82",
+    letter: "Q",
+    family: "oval-entry",
+    tipZh: "O 形橢圓 + 右下「2」字尾；尾是識別點。",
+    strokes: [
+      { order: 1, role: "shade", d: "M 68 42 C 58 18, 24 24, 22 62 C 20 94, 52 110, 74 84 C 86 68, 82 50, 68 42" },
+      { order: 2, role: "hair", d: "M 56 78 C 68 90, 88 108, 92 94 C 94 86, 78 82, 70 90" },
     ],
   },
   R: {
-    shade: [
-      "M 26 20 C 30 20, 32 24, 32 32 L 33 82 C 33 86, 30 88, 26 87 L 22 86 C 19 85, 19 82, 20 78 L 21 30 C 21 22, 23 20, 26 20 Z",
-      "M 32 22 C 56 10, 68 34, 52 48 C 44 54, 38 50, 32 46 Z",
-      "M 36 48 C 44 52, 54 66, 62 82 C 64 86, 60 88, 56 85 L 38 56 C 36 52, 34 48, 36 48 Z",
-    ],
-    hair: [
-      "M 26 20 C 12 8, 4 34, 20 46",
-      "M 52 48 C 58 40, 54 32, 44 34",
-      "M 62 82 C 70 94, 80 78, 70 66",
+    letter: "R",
+    family: "stem-loop",
+    tipZh: "如 P 之上葉，再加右下斜腿陰影。",
+    strokes: [
+      { order: 1, role: "hair", d: "M 30 28 C 14 12, 4 40, 22 54" },
+      { order: 2, role: "shade", d: "M 30 26 L 32 96" },
+      { order: 3, role: "hair", d: "M 32 28 C 68 12, 80 46, 32 60" },
+      { order: 4, role: "shade", d: "M 40 58 L 74 96" },
+      { order: 5, role: "hair", d: "M 74 96 C 84 110, 98 92, 86 76" },
     ],
   },
   S: {
-    shade: [
-      "M 58 28 C 48 8, 18 14, 18 36 C 18 50, 36 54, 48 58 C 62 64, 66 78, 52 88 C 40 96, 20 90, 18 76 C 17 72, 22 70, 26 74 C 30 84, 44 86, 50 80 C 56 74, 52 66, 42 62 C 28 56, 18 50, 20 36 C 22 22, 44 22, 52 32 Z",
-    ],
-    hair: [
-      "M 58 28 C 66 34, 64 46, 54 50",
-      "M 18 76 C 12 64, 24 60, 30 70",
+    letter: "S",
+    family: "oval-entry",
+    tipZh: "上下兩個反向橢圓相接；粗細在轉折處交換。",
+    strokes: [
+      { order: 1, role: "shade", d: "M 70 36 C 58 14, 22 20, 24 44 C 26 60, 52 64, 62 74 C 74 86, 62 104, 36 98 C 22 94, 18 80, 28 76" },
+      { order: 2, role: "hair", d: "M 70 36 C 80 44, 76 58, 64 62" },
+      { order: 3, role: "hair", d: "M 28 76 C 18 66, 30 60, 38 70" },
     ],
   },
   T: {
-    shade: [
-      "M 40 36 C 44 36, 46 40, 46 48 L 47 82 C 47 86, 44 88, 40 87 L 36 86 C 33 85, 33 82, 34 78 L 35 46 C 35 38, 37 36, 40 36 Z",
-      "M 12 40 C 10 18, 30 6, 50 12 C 68 18, 74 40, 58 50 C 48 56, 42 48, 40 40 Z",
-    ],
-    hair: [
-      "M 12 40 C 6 32, 12 20, 22 24",
-      "M 58 50 C 66 42, 62 30, 52 32",
-      "M 47 82 C 56 96, 72 80, 60 66",
+    letter: "T",
+    family: "stem-loop",
+    tipZh: "波浪頂冠 + 中軸陰影幹；底部出口環。",
+    strokes: [
+      { order: 1, role: "hair", d: "M 14 48 C 10 20, 36 8, 62 16 C 84 24, 88 52, 66 60 C 52 66, 46 54, 48 44" },
+      { order: 2, role: "shade", d: "M 48 44 L 50 94" },
+      { order: 3, role: "hair", d: "M 50 94 C 60 110, 80 94, 68 76" },
     ],
   },
   U: {
-    shade: [
-      "M 22 26 C 26 26, 28 30, 28 38 L 28 56 C 28 74, 48 86, 62 68 L 62 30 C 62 26, 66 24, 68 28 L 68 66 C 66 88, 36 96, 20 72 L 20 38 C 20 28, 20 26, 22 26 Z",
-    ],
-    hair: [
-      "M 22 26 C 10 10, 2 36, 18 48",
-      "M 62 26 C 74 10, 80 38, 64 50",
-      "M 62 68 C 68 60, 64 52, 56 54",
+    letter: "U",
+    family: "compound",
+    tipZh: "左幹下探接右幹；底部是寬橢圓彎。",
+    strokes: [
+      { order: 1, role: "hair", d: "M 28 30 C 12 12, 4 42, 22 56" },
+      { order: 2, role: "shade", d: "M 28 32 L 28 70 C 28 94, 64 102, 74 72" },
+      { order: 3, role: "shade", d: "M 74 34 L 74 70" },
+      { order: 4, role: "hair", d: "M 74 34 C 90 16, 98 44, 78 58" },
     ],
   },
   V: {
-    shade: [
-      "M 18 26 C 24 26, 28 32, 30 40 L 40 78 C 42 84, 38 86, 34 84 L 16 36 C 14 30, 14 26, 18 26 Z",
-      "M 66 26 C 70 26, 72 30, 70 36 L 46 84 C 44 88, 38 86, 40 80 L 60 34 C 62 28, 64 26, 66 26 Z",
-    ],
-    hair: [
-      "M 18 26 C 8 10, 0 34, 16 46",
-      "M 66 26 C 78 10, 84 36, 68 48",
+    letter: "V",
+    family: "compound",
+    tipZh: "左髮絲斜下、右陰影斜下，交於底尖。",
+    strokes: [
+      { order: 1, role: "hair", d: "M 24 30 C 10 14, 2 40, 18 54" },
+      { order: 2, role: "hair", d: "M 24 34 L 48 94" },
+      { order: 3, role: "shade", d: "M 76 30 L 48 94" },
+      { order: 4, role: "hair", d: "M 76 30 C 90 14, 98 42, 80 56" },
     ],
   },
   W: {
-    shade: [
-      "M 10 26 C 16 26, 18 32, 20 40 L 26 80 C 28 86, 22 86, 20 82 L 8 36 C 6 30, 6 26, 10 26 Z",
-      "M 26 80 L 38 36 C 40 30, 46 30, 48 36 L 54 80 C 56 86, 50 86, 48 82 L 40 48 L 32 82 C 30 86, 24 86, 26 80 Z",
-      "M 54 80 L 70 36 C 72 30, 78 28, 80 34 L 68 82 C 66 86, 60 86, 58 82 L 54 80 Z",
-    ],
-    hair: [
-      "M 10 26 C 2 12, -2 34, 12 46",
-      "M 74 26 C 86 10, 90 36, 74 48",
+    letter: "W",
+    family: "compound",
+    tipZh: "雙 V 相連；內谷勿高過外肩。",
+    strokes: [
+      { order: 1, role: "hair", d: "M 14 30 C 4 16, -2 40, 12 52" },
+      { order: 2, role: "shade", d: "M 16 34 L 30 94" },
+      { order: 3, role: "hair", d: "M 30 94 L 48 40" },
+      { order: 4, role: "shade", d: "M 48 40 L 64 94" },
+      { order: 5, role: "hair", d: "M 64 94 L 84 34" },
+      { order: 6, role: "hair", d: "M 84 30 C 96 14, 102 42, 86 56" },
     ],
   },
   X: {
-    shade: [
-      "M 18 26 C 24 24, 30 30, 34 38 L 58 82 C 62 88, 56 90, 52 86 L 24 36 C 20 30, 16 26, 18 26 Z",
-      "M 62 26 C 66 24, 70 30, 66 38 L 28 86 C 24 90, 18 86, 22 80 L 56 34 C 60 28, 60 26, 62 26 Z",
-    ],
-    hair: [
-      "M 18 26 C 8 10, 0 34, 16 46",
-      "M 62 26 C 74 10, 82 34, 66 48",
-      "M 58 82 C 66 94, 78 80, 68 68",
-      "M 28 86 C 18 96, 8 82, 18 70",
+    letter: "X",
+    family: "compound",
+    tipZh: "兩斜交叉；交叉點接近字心，四端可帶小環。",
+    strokes: [
+      { order: 1, role: "shade", d: "M 24 30 L 74 96" },
+      { order: 2, role: "hair", d: "M 74 30 L 24 96" },
+      { order: 3, role: "hair", d: "M 24 30 C 12 14, 4 40, 20 52" },
+      { order: 4, role: "hair", d: "M 74 30 C 88 14, 96 40, 78 54" },
+      { order: 5, role: "hair", d: "M 74 96 C 86 112, 98 94, 86 78" },
+      { order: 6, role: "hair", d: "M 24 96 C 12 112, 2 92, 16 78" },
     ],
   },
   Y: {
-    shade: [
-      "M 16 26 C 22 24, 28 30, 32 40 L 40 58 C 42 62, 38 64, 34 60 L 14 36 C 10 30, 12 26, 16 26 Z",
-      "M 66 26 C 70 24, 74 30, 70 38 L 44 60 C 40 64, 36 60, 40 56 L 62 34 C 66 28, 66 26, 66 26 Z",
-      "M 38 58 C 42 58, 44 62, 44 70 L 44 84 C 44 88, 40 90, 36 88 L 34 86 C 32 84, 32 82, 33 78 L 34 68 C 34 60, 36 58, 38 58 Z",
-    ],
-    hair: [
-      "M 16 26 C 6 10, -2 34, 16 46",
-      "M 66 26 C 78 10, 84 36, 68 48",
-      "M 44 84 C 52 98, 68 84, 56 70",
+    letter: "Y",
+    family: "compound",
+    tipZh: "上分叉接中軸下延；下延可加出口環。",
+    strokes: [
+      { order: 1, role: "hair", d: "M 22 30 C 10 14, 2 40, 18 52" },
+      { order: 2, role: "hair", d: "M 22 34 L 48 70" },
+      { order: 3, role: "shade", d: "M 78 30 L 48 70" },
+      { order: 4, role: "shade", d: "M 48 70 L 48 98" },
+      { order: 5, role: "hair", d: "M 78 30 C 92 14, 100 42, 82 56" },
+      { order: 6, role: "hair", d: "M 48 98 C 58 114, 78 98, 66 80" },
     ],
   },
   Z: {
-    shade: [
-      // top bar with wave
-      "M 20 28 C 28 20, 50 18, 62 28 C 66 32, 62 36, 56 34 L 28 34 C 22 34, 18 32, 20 28 Z",
-      // diagonal shade
-      "M 56 34 C 60 36, 58 44, 52 52 L 28 76 C 24 80, 18 76, 22 70 L 48 42 C 52 38, 54 34, 56 34 Z",
-      // bottom bar + exit loop body
-      "M 22 74 C 30 70, 48 72, 58 80 C 68 88, 60 100, 44 96 C 32 92, 28 82, 34 78 Z",
-    ],
-    hair: [
-      "M 20 28 C 12 16, 28 8, 38 18",
-      "M 62 28 C 70 20, 74 36, 64 42",
-      "M 44 96 C 36 88, 48 84, 52 90",
+    letter: "Z",
+    family: "compound",
+    tipZh: "上下橫用波浪髮絲；中斜可略加陰影；底部常帶大環。",
+    strokes: [
+      { order: 1, role: "hair", d: "M 24 34 C 36 20, 64 22, 76 36" },
+      { order: 2, role: "shade", d: "M 72 38 L 30 86" },
+      { order: 3, role: "hair", d: "M 28 84 C 44 76, 70 84, 78 98 C 86 110, 64 118, 48 108 C 36 100, 40 88, 52 88" },
     ],
   },
 };
 
 export function getCopperplateCapital(
   letter: string,
-): CopperplateCapitalGlyph | undefined {
+): CopperplateCapital | undefined {
   return COPPERPLATE_CAPITALS[letter.toUpperCase()];
+}
+
+export function listCopperplateCapitals(): CopperplateCapital[] {
+  return "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    .split("")
+    .map((letter) => COPPERPLATE_CAPITALS[letter])
+    .filter((item): item is CopperplateCapital => Boolean(item));
 }

@@ -12,14 +12,14 @@ export type CalligraphyStyle = {
 export const calligraphyStyles: CalligraphyStyle[] = [
   {
     id: "copperplate",
-    nameZh: "銅板體",
+    nameZh: "銅板體大寫",
     nameEn: "Copperplate Capitals",
-    era: "18 世紀英國尖筆傳統",
-    sample: "ABC",
+    era: "尖筆結構系統（非字型檔）",
+    sample: "A",
     summary:
-      "經典 Copperplate Capitals：手寫橢圓節奏、髮絲與陰影帶明顯過渡，約 55° 斜度；大寫入口環與出口花飾要有呼吸感，避免寫成工整印刷體。",
-    traits: ["手寫橢圓", "粗細過渡", "入口花環"],
-    tip: "陰影筆要有粗細變化，髮絲保持輕盈；花飾跟手走，不要對稱到死板。",
+      "June 示範嘅 Copperplate Capitals 唔係電腦花體字，而係手寫尖筆大寫結構：約 55° 斜度、橢圓主導、下行陰影／上行髮絲，再加入口環與出口飾。練習應跟筆順（ductus）分辨，而唔係換一個 Google Font。",
+    traits: ["筆順結構", "陰影／髮絲", "橢圓＋55°"],
+    tip: "先認筆畫角色（陰影定髮絲），再跟編號筆順寫；可讀骨架穩了才加花飾。",
   },
   {
     id: "spencerian",
