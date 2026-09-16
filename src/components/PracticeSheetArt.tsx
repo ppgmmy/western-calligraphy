@@ -1495,11 +1495,6 @@ function FlourishCartoucheSheet({ sheet }: SheetProps) {
     ].join(" ");
   };
 
-  const sideScroll = (cx: number, cy: number, side: 1 | -1) => {
-    const s = side;
-    return `M ${cx + s * 118} ${cy - 20} C ${cx + s * 168} ${cy - 55}, ${cx + s * 175} ${cy + 10}, ${cx + s * 145} ${cy + 35} C ${cx + s * 120} ${cy + 52}, ${cx + s * 105} ${cy + 18}, ${cx + s * 118} ${cy - 8}`;
-  };
-
   return (
     <SheetFrame sheet={sheet}>
       <text
@@ -1509,7 +1504,7 @@ function FlourishCartoucheSheet({ sheet }: SheetProps) {
         fontFamily="'Noto Serif TC', serif"
         fontSize="8"
       >
-        Cartouche｜中軸對稱；內框留給文字，外圈卷曲由大到小
+        Cartouche｜中軸對稱；內框留給文字；唔加左右側卷鬚
       </text>
       {frames.map((frame) => {
         const cx = PAGE_W / 2;
@@ -1541,22 +1536,6 @@ function FlourishCartoucheSheet({ sheet }: SheetProps) {
               fill="none"
               stroke={stroke.color}
               strokeWidth={stroke.width}
-              strokeDasharray={stroke.dash}
-            />
-            <path
-              d={sideScroll(cx, cy, -1)}
-              fill="none"
-              stroke={stroke.color}
-              strokeWidth={stroke.width * 0.9}
-              strokeLinecap="round"
-              strokeDasharray={stroke.dash}
-            />
-            <path
-              d={sideScroll(cx, cy, 1)}
-              fill="none"
-              stroke={stroke.color}
-              strokeWidth={stroke.width * 0.9}
-              strokeLinecap="round"
               strokeDasharray={stroke.dash}
             />
             <path
@@ -1620,86 +1599,6 @@ function FlourishCapitalsSheet({ sheet }: SheetProps) {
   const top = 96;
   const rowH = 120;
 
-  const flourishFor = (letter: string, cx: number, base: number, tone: FlourishTone) => {
-    const stroke = flourishStroke(tone);
-    const common = {
-      fill: "none" as const,
-      stroke: stroke.color,
-      strokeWidth: stroke.width * 0.95,
-      strokeLinecap: "round" as const,
-      strokeDasharray: stroke.dash,
-    };
-    // 當代工作室風：橢圓主環 + 細尾，花飾略大於字母
-    switch (letter) {
-      case "B":
-      case "P":
-      case "R":
-        return (
-          <g>
-            <path
-              {...common}
-              d={`M ${cx + 16} ${base - 46} C ${cx + 62} ${base - 88}, ${cx + 108} ${base - 36}, ${cx + 72} ${base + 4} C ${cx + 48} ${base + 28}, ${cx + 96} ${base + 44}, ${cx + 128} ${base + 10}`}
-            />
-            <path
-              {...common}
-              strokeWidth={stroke.width * 0.7}
-              d={`M ${cx + 70} ${base + 2} C ${cx + 92} ${base - 18}, ${cx + 86} ${base - 42}, ${cx + 58} ${base - 28}`}
-            />
-          </g>
-        );
-      case "H":
-      case "T":
-        return (
-          <g>
-            <path
-              {...common}
-              d={`M ${cx - 6} ${base - 52} C ${cx - 58} ${base - 96}, ${cx - 112} ${base - 28}, ${cx - 64} ${base + 8} C ${cx - 34} ${base + 32}, ${cx - 88} ${base + 52}, ${cx - 126} ${base + 16}`}
-            />
-            <path
-              {...common}
-              strokeWidth={stroke.width * 0.7}
-              d={`M ${cx + 18} ${base - 40} C ${cx + 54} ${base - 68}, ${cx + 78} ${base - 18}, ${cx + 46} ${base + 6}`}
-            />
-          </g>
-        );
-      case "L":
-        return (
-          <g>
-            <path
-              {...common}
-              d={`M ${cx + 24} ${base} C ${cx + 88} ${base + 14}, ${cx + 118} ${base - 36}, ${cx + 74} ${base - 62} C ${cx + 40} ${base - 80}, ${cx + 122} ${base - 92}, ${cx + 148} ${base - 48}`}
-            />
-            <path
-              {...common}
-              strokeWidth={stroke.width * 0.7}
-              d={`M ${cx + 74} ${base - 58} C ${cx + 98} ${base - 78}, ${cx + 108} ${base - 44}, ${cx + 84} ${base - 36}`}
-            />
-          </g>
-        );
-      case "Y":
-        return (
-          <g>
-            <path
-              {...common}
-              d={`M ${cx + 12} ${base - 6} C ${cx + 64} ${base + 38}, ${cx + 28} ${base + 72}, ${cx - 18} ${base + 52} C ${cx - 58} ${base + 34}, ${cx - 36} ${base + 88}, ${cx + 22} ${base + 78}`}
-            />
-            <path
-              {...common}
-              strokeWidth={stroke.width * 0.7}
-              d={`M ${cx - 4} ${base - 44} C ${cx - 42} ${base - 78}, ${cx - 68} ${base - 24}, ${cx - 30} ${base - 4}`}
-            />
-          </g>
-        );
-      default:
-        return (
-          <path
-            {...common}
-            d={`M ${cx + 22} ${base - 40} C ${cx + 72} ${base - 78}, ${cx + 108} ${base - 12}, ${cx + 64} ${base + 22} C ${cx + 42} ${base + 40}, ${cx + 90} ${base + 48}, ${cx + 118} ${base + 18}`}
-          />
-        );
-    }
-  };
-
   return (
     <SheetFrame sheet={sheet} showLegend>
       <text
@@ -1709,7 +1608,7 @@ function FlourishCapitalsSheet({ sheet }: SheetProps) {
         fontFamily="'Noto Serif TC', serif"
         fontSize="8"
       >
-        Modern flourishing 大寫｜先寫可讀骨架，再加橢圓主環與細尾｜花飾略大於字母
+        Modern script 大寫｜只練可讀骨架；唔加左右卷鬚／細尾花飾
       </text>
       {letters.map((letter, index) => {
         const y = top + index * rowH;
@@ -1728,7 +1627,6 @@ function FlourishCapitalsSheet({ sheet }: SheetProps) {
             >
               {letter}
             </text>
-            {flourishFor(letter, left + 48, baseY, "ink")}
             <text
               x={left + 220}
               y={baseY}
@@ -1738,7 +1636,6 @@ function FlourishCapitalsSheet({ sheet }: SheetProps) {
             >
               {letter}
             </text>
-            {flourishFor(letter, left + 252, baseY, "ghost")}
             <RuledBand
               y={y + bandH + 8}
               height={bandH}
@@ -1756,7 +1653,7 @@ function FlourishCapitalsSheet({ sheet }: SheetProps) {
         fontFamily="'Noto Serif TC', serif"
         fontSize="8"
       >
-        粗畫不相交；交叉接近直角；可讀優先。
+        先求骨架清楚、斜度一致；花飾留待自己手寫時再加。
       </text>
     </SheetFrame>
   );
@@ -1770,34 +1667,6 @@ function FlourishWordsSheet({ sheet }: SheetProps) {
   const top = 92;
   const rowH = 140;
 
-  const entryFlourish = (x: number, y: number, tone: FlourishTone) => {
-    const stroke = flourishStroke(tone);
-    return (
-      <path
-        d={`M ${x - 70} ${y + 8} C ${x - 40} ${y + 36}, ${x - 55} ${y - 28}, ${x - 8} ${y - 6}`}
-        fill="none"
-        stroke={stroke.color}
-        strokeWidth={stroke.width}
-        strokeLinecap="round"
-        strokeDasharray={stroke.dash}
-      />
-    );
-  };
-
-  const exitFlourish = (x: number, y: number, tone: FlourishTone) => {
-    const stroke = flourishStroke(tone);
-    return (
-      <path
-        d={`M ${x + 8} ${y - 4} C ${x + 55} ${y - 30}, ${x + 70} ${y + 20}, ${x + 110} ${y - 8} C ${x + 135} ${y - 24}, ${x + 125} ${y + 28}, ${x + 95} ${y + 22}`}
-        fill="none"
-        stroke={stroke.color}
-        strokeWidth={stroke.width}
-        strokeLinecap="round"
-        strokeDasharray={stroke.dash}
-      />
-    );
-  };
-
   return (
     <SheetFrame sheet={sheet} showLegend>
       <text
@@ -1807,7 +1676,7 @@ function FlourishWordsSheet({ sheet }: SheetProps) {
         fontFamily="'Noto Serif TC', serif"
         fontSize="8"
       >
-        現代花體詞語｜略帶彈跳節奏｜一詞只留一處主花飾（詞首或詞尾）
+        現代花體詞語｜略帶彈跳節奏｜只練字形與字距，唔加左右卷鬚花飾
       </text>
       {words.map((word, index) => {
         const y = top + index * rowH;
@@ -1815,14 +1684,12 @@ function FlourishWordsSheet({ sheet }: SheetProps) {
         const bandH = 40;
         const bounce = index % 2 === 0 ? 0 : 2.5;
         const baseY = y + bandH * 0.72 + bounce;
-        const wordWidth = Math.min(200, 28 * word.length + 40);
         const ghostBase = y + bandH + 10 + bandH * 0.72 + bounce;
         return (
           <g key={`fword-${word}`}>
             <RuledBand y={y} height={bandH} left={left} right={right} clipId={`fw1-${index}`} />
-            {entryFlourish(left + 90, baseY, "ink")}
             <text
-              x={left + 90}
+              x={left + 24}
               y={baseY}
               fill={INK}
               fontFamily={FONT_MODERN}
@@ -1830,7 +1697,6 @@ function FlourishWordsSheet({ sheet }: SheetProps) {
             >
               {word}
             </text>
-            {exitFlourish(left + 90 + wordWidth, baseY, "ink")}
             <RuledBand
               y={y + bandH + 10}
               height={bandH}
@@ -1838,9 +1704,8 @@ function FlourishWordsSheet({ sheet }: SheetProps) {
               right={right}
               clipId={`fw2-${index}`}
             />
-            {entryFlourish(left + 90, ghostBase, "ghost")}
             <text
-              x={left + 90}
+              x={left + 24}
               y={ghostBase}
               fill={GHOST}
               fontFamily={FONT_MODERN}
@@ -1848,7 +1713,6 @@ function FlourishWordsSheet({ sheet }: SheetProps) {
             >
               {word}
             </text>
-            {exitFlourish(left + 90 + wordWidth, ghostBase, "ghost")}
           </g>
         );
       })}
@@ -1859,7 +1723,7 @@ function FlourishWordsSheet({ sheet }: SheetProps) {
         fontFamily="'Noto Serif TC', serif"
         fontSize="8"
       >
-        整詞完成後退後審視：主花飾與留白是否平衡。
+        整詞完成後退後審視：字距、斜度與彈跳節奏是否一致。
       </text>
     </SheetFrame>
   );
