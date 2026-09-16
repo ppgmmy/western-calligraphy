@@ -14,6 +14,7 @@ const footerColumns = [
     title: "學習",
     links: [
       { href: "/resources", label: "西洋書法練習本" },
+      { href: "/lab", label: "超级實驗室" },
       { href: "/resources/italic-family-upper-straight", label: "斜體直筆家族" },
       { href: "/resources/copperplate-basic-strokes", label: "銅板基本筆畫" },
       { href: "/resources/spencerian-compound-curves", label: "斯賓塞複合曲線" },

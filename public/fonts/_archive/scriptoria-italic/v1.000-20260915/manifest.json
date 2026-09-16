@@ -1,0 +1,17 @@
+{
+  "family": "Scriptoria Italic",
+  "version": "1.000",
+  "status": "archived",
+  "archivedAt": "2026-09-16T05:45:01.692714+00:00",
+  "files": {
+    "ScriptoriaItalic-Regular.ttf": "public/fonts/_archive/scriptoria-italic/v1.000-20260915/ScriptoriaItalic-Regular.ttf",
+    "ScriptoriaItalic-Regular.woff2": "public/fonts/_archive/scriptoria-italic/v1.000-20260915/ScriptoriaItalic-Regular.woff2",
+    "OFL.txt": "public/fonts/_archive/scriptoria-italic/v1.000-20260915/OFL.txt",
+    "README.md": "public/fonts/_archive/scriptoria-italic/v1.000-20260915/README.md"
+  },
+  "checksums": {
+    "ttf": "570f2181338b98ad184536afcfaf09c052b55a1c86ce1278f3eac132a3c41347",
+    "woff2": "2fd3a1be390145cff52487a521465e9eca2674913fa020ced397635266d8ecf1"
+  },
+  "notesZh": "實驗室基線歸檔（與首發 current 相同）。"
+}

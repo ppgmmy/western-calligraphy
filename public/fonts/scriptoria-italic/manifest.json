@@ -1,0 +1,17 @@
+{
+  "family": "Scriptoria Italic",
+  "version": "1.000",
+  "status": "current",
+  "updatedAt": "2026-09-16T05:45:01.692931+00:00",
+  "source": "Cormorant Garamond Italic (OFL) subset",
+  "license": "SIL Open Font License 1.1",
+  "files": {
+    "ttf": "ScriptoriaItalic-Regular.ttf",
+    "woff2": "ScriptoriaItalic-Regular.woff2"
+  },
+  "checksums": {
+    "ttf": "570f2181338b98ad184536afcfaf09c052b55a1c86ce1278f3eac132a3c41347",
+    "woff2": "2fd3a1be390145cff52487a521465e9eca2674913fa020ced397635266d8ecf1"
+  },
+  "notesZh": "斜體細草示範用。改字體前會自動歸檔舊版到 public/fonts/_archive/。"
+}

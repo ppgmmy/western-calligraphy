@@ -1599,3 +1599,158 @@ a {
     height: 297mm;
   }
 }
+
+
+/* —— Super Lab —— */
+.lab-version-grid,
+.lab-compare-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  max-width: 72rem;
+}
+
+.lab-card {
+  padding: 1.2rem 1.15rem 1.35rem;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.5),
+    rgba(247, 245, 241, 0.28)
+  );
+}
+
+.lab-card--archived {
+  opacity: 0.85;
+}
+
+.lab-card__meta,
+.lab-card__badge,
+.lab-card__source {
+  margin: 0 0 0.45rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
+
+.lab-card__badge {
+  color: var(--teal);
+}
+
+.lab-card__title {
+  margin: 0 0 0.7rem;
+  font-size: 1.25rem;
+}
+
+.lab-card__sample {
+  margin: 0 0 0.85rem;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  line-height: 1.25;
+  color: var(--teal);
+}
+
+.lab-card__sample--italic-custom {
+  font-family: var(--font-italic-custom), "Scriptoria Italic", serif;
+  font-style: normal;
+}
+
+/* /lab 對比樣品：字體由 LabFontSample 內聯 @font-face 指定 */
+
+.lab-card__notes {
+  margin: 0 0 0.65rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.lab-card__files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.88rem;
+}
+
+.lab-card__files a {
+  color: var(--teal);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.lab-archive-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.75rem;
+  max-width: 52rem;
+}
+
+.lab-archive-list li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: baseline;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-soft);
+}
+
+.lab-archive-list a {
+  color: var(--teal);
+}
+
+.lab-log {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 1.25rem;
+  max-width: 52rem;
+}
+
+.lab-log__item {
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.lab-log__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.85rem;
+  margin-bottom: 0.35rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
+
+.lab-log__kind {
+  color: var(--teal);
+}
+
+.lab-log__title {
+  margin: 0 0 0.4rem;
+  font-size: 1.15rem;
+}
+
+.lab-log__summary {
+  margin: 0 0 0.55rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+
+.lab-log__paths {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--ink-soft);
+  font-size: 0.86rem;
+}
+
+@media (max-width: 800px) {
+  .lab-version-grid,
+  .lab-compare-grid {
+    grid-template-columns: 1fr;
+  }
+}
