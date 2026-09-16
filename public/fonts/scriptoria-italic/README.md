@@ -11,9 +11,11 @@
 
 ## 實驗室歸檔
 
-呢個站係超级實驗室：每次重建字體前，現行檔會自動搬去：
+呢個站係超级實驗室：每次重建字體前，若現行 woff2 checksum **與最近歸檔不同**，會拷貝去：
 
-`public/fonts/_archive/scriptoria-italic/v{版號}-{時間戳}/`
+`public/fonts/_archive/scriptoria-italic/v{舊版號}-{時間戳}/`
+
+有實質改動請升版號（例如 `1.001`），方便 /lab 用版號 + fingerprint 對比。
 
 機器 log：`public/fonts/_archive/lab-log.jsonl`  
 UI log／對比頁：`/lab`（資料喺 `src/data/lab/`）

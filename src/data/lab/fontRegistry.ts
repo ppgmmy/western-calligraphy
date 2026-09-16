@@ -2,11 +2,13 @@ import type { LabFontVersion } from "./types";
 
 /**
  * 字體版本登記冊：current + archived。
- * 建置腳本歸檔後，請同步追加一筆 archived（或跑 scripts/lab/sync-font-registry 若有）。
+ * 規則：每個 fontId 只應有一筆 current；archived 只追加、唔改寫。
+ * 建置腳本歸檔後，請同步追加 archived（含 checksums）。
  */
 export const labFontVersions: LabFontVersion[] = [
   {
     id: "scriptoria-italic-1.000",
+    fontId: "scriptoria-italic",
     family: "Scriptoria Italic",
     version: "1.000",
     status: "current",
@@ -20,16 +22,24 @@ export const labFontVersions: LabFontVersion[] = [
       ofl: "/fonts/scriptoria-italic/OFL.txt",
       manifest: "/fonts/scriptoria-italic/manifest.json",
     },
+    checksums: {
+      ttf: "570f2181338b98ad184536afcfaf09c052b55a1c86ce1278f3eac132a3c41347",
+      woff2:
+        "2fd3a1be390145cff52487a521465e9eca2674913fa020ced397635266d8ecf1",
+    },
     notesZh:
       "首發裁字版。字形本身已係 Italic master，網頁用 font-style:normal。專供斜體細草示範。",
     sample: "human scriptoria abcdefghijklmnopqrstuvwxyz",
   },
   {
-    id: "scriptoria-italic-1.000-archive",
+    id: "scriptoria-italic-1.000-baseline",
+    fontId: "scriptoria-italic",
     family: "Scriptoria Italic",
     version: "1.000",
     status: "archived",
     createdAt: "2026-09-15",
+    archivedAt: "2026-09-16T05:45:01.692714+00:00",
+    archiveKind: "baseline",
     source: "Cormorant Garamond Italic (OFL) subset",
     license: "SIL Open Font License 1.1",
     files: {
@@ -39,19 +49,13 @@ export const labFontVersions: LabFontVersion[] = [
       manifest:
         "/fonts/_archive/scriptoria-italic/v1.000-20260915/manifest.json",
     },
-    notesZh: "實驗室基線歸檔：同 current v1.000 對照用，之後每次改字體都另開新 archive 資料夾。",
+    checksums: {
+      ttf: "570f2181338b98ad184536afcfaf09c052b55a1c86ce1278f3eac132a3c41347",
+      woff2:
+        "2fd3a1be390145cff52487a521465e9eca2674913fa020ced397635266d8ecf1",
+    },
+    notesZh:
+      "實驗室基線：建立歸檔系統時嘅快照。與現行相同屬正常，直到下一次真正改字。",
     sample: "human scriptoria abcdefghijklmnopqrstuvwxyz",
   },
 ];
-
-export function getCurrentLabFonts(): LabFontVersion[] {
-  return labFontVersions.filter((item) => item.status === "current");
-}
-
-export function getArchivedLabFonts(): LabFontVersion[] {
-  return labFontVersions.filter((item) => item.status === "archived");
-}
-
-export function getLabFontsByFamily(family: string): LabFontVersion[] {
-  return labFontVersions.filter((item) => item.family === family);
-}

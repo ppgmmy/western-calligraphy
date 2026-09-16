@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Crop Cormorant Garamond Italic → Scriptoria Italic (OFL derivative).
 
-Lab behaviour:
-- Before overwrite, archive current TTF/WOFF2 into public/fonts/_archive/
-- Write/update manifest.json with version + checksums
-- Append a machine-readable line to public/fonts/_archive/lab-log.jsonl
+Lab rules (precise, still readable):
+1. Read previous version + checksums from current manifest.
+2. Before overwrite: archive only if glyph bytes are new vs latest archive.
+3. Prefer bumping the lab version when glyphs change (warn if same version).
+4. Always append machine log lines to public/fonts/_archive/lab-log.jsonl.
 """
 
 from __future__ import annotations
@@ -37,7 +38,9 @@ CHARS = (
 )
 
 FAMILY = "Scriptoria Italic"
+FONT_ID = "scriptoria-italic"
 VERSION = "1.000"
+ARCHIVE_ROOT_REL = Path("public/fonts/_archive/scriptoria-italic")
 
 
 def set_name(font: TTFont, name_id: int, string: str) -> None:
@@ -57,57 +60,153 @@ def sha256_file(path: Path) -> str:
     return h.hexdigest()
 
 
-def read_existing_version(out_dir: Path) -> str:
-    """讀現行 manifest 版號；歸檔資料夾要用舊版號，唔好用即將覆寫嘅新版號。"""
-    manifest = out_dir / "manifest.json"
-    if not manifest.exists():
-        return VERSION
+def utc_now() -> datetime:
+    return datetime.now(timezone.utc)
+
+
+def parse_version_parts(version: str) -> list[int]:
+    parts: list[int] = []
+    for piece in version.split("."):
+        try:
+            parts.append(int(piece))
+        except ValueError:
+            parts.append(0)
+    return parts
+
+
+def compare_versions(a: str, b: str) -> int:
+    left, right = parse_version_parts(a), parse_version_parts(b)
+    length = max(len(left), len(right))
+    for i in range(length):
+        diff = (left[i] if i < len(left) else 0) - (right[i] if i < len(right) else 0)
+        if diff:
+            return diff
+    return 0
+
+
+def read_manifest(path: Path) -> dict | None:
+    if not path.exists():
+        return None
     try:
-        data = json.loads(manifest.read_text(encoding="utf-8"))
-        found = data.get("version")
-        if found:
-            return str(found)
+        data = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError, TypeError):
-        pass
-    return VERSION
+        return None
+    return data if isinstance(data, dict) else None
 
 
-def archive_current(out_dir: Path, root: Path, previous_version: str) -> Path | None:
+def read_existing_state(out_dir: Path) -> tuple[str, dict[str, str]]:
+    """Return (previous_version, checksums) from current manifest."""
+    data = read_manifest(out_dir / "manifest.json")
+    if not data:
+        return VERSION, {}
+    version = str(data.get("version") or VERSION)
+    raw = data.get("checksums") or {}
+    checksums = {
+        str(k): str(v)
+        for k, v in raw.items()
+        if isinstance(k, str) and isinstance(v, str)
+    }
+    return version, checksums
+
+
+def latest_archive_woff2_checksum(root: Path) -> str | None:
+    archive_root = root / ARCHIVE_ROOT_REL
+    if not archive_root.exists():
+        return None
+
+    newest: tuple[str, Path] | None = None
+    for manifest_path in archive_root.glob("*/manifest.json"):
+        data = read_manifest(manifest_path)
+        if not data:
+            continue
+        stamp = str(data.get("archivedAt") or "")
+        if newest is None or stamp > newest[0]:
+            newest = (stamp, manifest_path)
+
+    if newest is None:
+        return None
+
+    data = read_manifest(newest[1]) or {}
+    checksums = data.get("checksums") or {}
+    if isinstance(checksums, dict):
+        # Prefer explicit woff2 key; fall back to filename key used by older manifests.
+        for key in ("woff2", "ScriptoriaItalic-Regular.woff2"):
+            value = checksums.get(key)
+            if isinstance(value, str) and value:
+                return value
+    return None
+
+
+def archive_current(
+    out_dir: Path,
+    root: Path,
+    previous_version: str,
+    previous_checksums: dict[str, str],
+) -> Path | None:
     ttf = out_dir / "ScriptoriaItalic-Regular.ttf"
     woff2 = out_dir / "ScriptoriaItalic-Regular.woff2"
     if not ttf.exists() and not woff2.exists():
         return None
 
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
-    archive_dir = (
-        root
-        / "public"
-        / "fonts"
-        / "_archive"
-        / "scriptoria-italic"
-        / f"v{previous_version}-{stamp}"
-    )
+    current_woff2 = previous_checksums.get("woff2")
+    if not current_woff2 and woff2.exists():
+        current_woff2 = sha256_file(woff2)
+
+    latest = latest_archive_woff2_checksum(root)
+    if current_woff2 and latest and current_woff2 == latest:
+        print("Skip archive: current woff2 already present in latest archive.")
+        append_lab_log(
+            root,
+            {
+                "ts": utc_now().isoformat(),
+                "kind": "font-archive-skip",
+                "fontId": FONT_ID,
+                "family": FAMILY,
+                "version": previous_version,
+                "reason": "duplicate-checksum",
+                "woff2Sha256": current_woff2,
+                "noteZh": "現行字形與最近歸檔相同，跳過重複拷貝。",
+            },
+        )
+        return None
+
+    stamp = utc_now().strftime("%Y%m%d-%H%M%S")
+    archive_dir = root / ARCHIVE_ROOT_REL / f"v{previous_version}-{stamp}"
     archive_dir.mkdir(parents=True, exist_ok=True)
 
     copied: dict[str, str] = {}
-    for src in (ttf, woff2, out_dir / "manifest.json", out_dir / "OFL.txt", out_dir / "README.md"):
+    for src in (
+        ttf,
+        woff2,
+        out_dir / "manifest.json",
+        out_dir / "OFL.txt",
+        out_dir / "README.md",
+    ):
         if src.exists():
             dest = archive_dir / src.name
             shutil.copy2(src, dest)
             copied[src.name] = str(dest.relative_to(root))
 
+    checksums = {
+        "ttf": sha256_file(archive_dir / "ScriptoriaItalic-Regular.ttf")
+        if (archive_dir / "ScriptoriaItalic-Regular.ttf").exists()
+        else None,
+        "woff2": sha256_file(archive_dir / "ScriptoriaItalic-Regular.woff2")
+        if (archive_dir / "ScriptoriaItalic-Regular.woff2").exists()
+        else None,
+    }
+    checksums = {k: v for k, v in checksums.items() if v}
+
     meta = {
         "family": FAMILY,
+        "fontId": FONT_ID,
         "version": previous_version,
-        "archivedAt": datetime.now(timezone.utc).isoformat(),
+        "archivedAt": utc_now().isoformat(),
         "status": "archived",
+        "archiveKind": "pre-overwrite",
         "files": copied,
-        "checksums": {
-            name: sha256_file(archive_dir / name)
-            for name in copied
-            if (archive_dir / name).is_file() and name.endswith((".ttf", ".woff2"))
-        },
-        "notesZh": "建置前自動歸檔；/lab 可對比查驗。",
+        "checksums": checksums,
+        "notesZh": "建置前自動歸檔；/lab 用 checksum 對比。",
     }
     (archive_dir / "manifest.json").write_text(
         json.dumps(meta, ensure_ascii=False, indent=2) + "\n",
@@ -124,28 +223,38 @@ def append_lab_log(root: Path, entry: dict) -> None:
         f.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
 
-def write_manifest(out_dir: Path, version: str, ttf: Path, woff2: Path) -> None:
+def write_manifest(
+    out_dir: Path,
+    version: str,
+    ttf: Path,
+    woff2: Path,
+    previous_version: str | None,
+) -> dict[str, str]:
+    checksums = {
+        "ttf": sha256_file(ttf),
+        "woff2": sha256_file(woff2),
+    }
     manifest = {
         "family": FAMILY,
+        "fontId": FONT_ID,
         "version": version,
+        "previousVersion": previous_version,
         "status": "current",
-        "updatedAt": datetime.now(timezone.utc).isoformat(),
+        "updatedAt": utc_now().isoformat(),
         "source": "Cormorant Garamond Italic (OFL) subset",
         "license": "SIL Open Font License 1.1",
         "files": {
             "ttf": ttf.name,
             "woff2": woff2.name,
         },
-        "checksums": {
-            "ttf": sha256_file(ttf),
-            "woff2": sha256_file(woff2),
-        },
+        "checksums": checksums,
         "notesZh": "斜體細草示範用。改字體前會自動歸檔舊版到 public/fonts/_archive/。",
     }
     (out_dir / "manifest.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
+    return checksums
 
 
 def main() -> int:
@@ -158,17 +267,34 @@ def main() -> int:
     if len(sys.argv) > 2:
         version = sys.argv[2]
 
-    previous_version = read_existing_version(out_dir)
-    archived = archive_current(out_dir, root, previous_version)
+    previous_version, previous_checksums = read_existing_state(out_dir)
+    had_current = (out_dir / "ScriptoriaItalic-Regular.woff2").exists() or (
+        out_dir / "ScriptoriaItalic-Regular.ttf"
+    ).exists()
+
+    if had_current and compare_versions(version, previous_version) == 0:
+        print(
+            f"Warning: rebuilding same lab version {version}. "
+            "Bump (e.g. 1.001) when glyphs actually change."
+        )
+    elif had_current and compare_versions(version, previous_version) < 0:
+        print(
+            f"Warning: new version {version} is older than current {previous_version}."
+        )
+
+    archived = archive_current(out_dir, root, previous_version, previous_checksums)
     if archived is not None:
         append_lab_log(
             root,
             {
-                "ts": datetime.now(timezone.utc).isoformat(),
+                "ts": utc_now().isoformat(),
                 "kind": "font-archive",
+                "fontId": FONT_ID,
                 "family": FAMILY,
                 "version": previous_version,
+                "archiveKind": "pre-overwrite",
                 "archivePath": str(archived.relative_to(root)),
+                "woff2Sha256": previous_checksums.get("woff2"),
                 "noteZh": "覆寫前自動歸檔舊版字體。",
             },
         )
@@ -241,7 +367,13 @@ def main() -> int:
     wfont.flavor = "woff2"
     wfont.save(str(woff2_path))
 
-    write_manifest(out_dir, version, ttf_path, woff2_path)
+    checksums = write_manifest(
+        out_dir,
+        version,
+        ttf_path,
+        woff2_path,
+        previous_version if had_current else None,
+    )
 
     check = TTFont(str(ttf_path))
     cmap = check.getBestCmap()
@@ -250,17 +382,28 @@ def main() -> int:
     print(f"Wrote {woff2_path} ({woff2_path.stat().st_size} bytes)")
     print(f"Glyphs: {len(check.getGlyphOrder())}; missing minuscules: {missing or 'none'}")
 
+    unchanged = (
+        had_current
+        and previous_checksums.get("woff2") == checksums["woff2"]
+    )
     append_lab_log(
         root,
         {
-            "ts": datetime.now(timezone.utc).isoformat(),
+            "ts": utc_now().isoformat(),
             "kind": "font-release",
+            "fontId": FONT_ID,
             "family": FAMILY,
             "version": version,
-            "archivedFrom": str(archived) if archived else None,
-            "ttfSha256": sha256_file(ttf_path),
-            "woff2Sha256": sha256_file(woff2_path),
-            "noteZh": "Scriptoria Italic 建置／覆寫；舊版已歸檔（如有）。",
+            "previousVersion": previous_version if had_current else None,
+            "archivedFrom": str(archived.relative_to(root)) if archived else None,
+            "glyphsUnchanged": unchanged,
+            "ttfSha256": checksums["ttf"],
+            "woff2Sha256": checksums["woff2"],
+            "noteZh": (
+                "字形 checksum 未變（可能只係重跑建置）。"
+                if unchanged
+                else "Scriptoria Italic 建置／覆寫完成。"
+            ),
         },
     )
     return 0

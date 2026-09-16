@@ -1634,6 +1634,9 @@ a {
 }
 
 .lab-card__badge {
+  margin: 0 0 0.55rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
   color: var(--teal);
 }
 

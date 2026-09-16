@@ -1,7 +1,9 @@
 {
   "family": "Scriptoria Italic",
+  "fontId": "scriptoria-italic",
   "version": "1.000",
   "status": "archived",
+  "archiveKind": "baseline",
   "archivedAt": "2026-09-16T05:45:01.692714+00:00",
   "files": {
     "ScriptoriaItalic-Regular.ttf": "public/fonts/_archive/scriptoria-italic/v1.000-20260915/ScriptoriaItalic-Regular.ttf",

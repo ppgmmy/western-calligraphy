@@ -4,11 +4,14 @@ import { LabFontSample } from "@/components/LabFontSample";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import {
+  formatLabVersion,
   getArchivedLabFonts,
   getCurrentLabFonts,
   getLabChangelogNewestFirst,
-  getLabFontsByFamily,
-  type LabChangeKind,
+  getLabCompareRows,
+  labArchiveKindLabel,
+  labChangeKindLabel,
+  labFontStatusLabel,
 } from "@/data/lab";
 
 export const metadata: Metadata = {
@@ -17,32 +20,11 @@ export const metadata: Metadata = {
     "Scriptoria 私人實驗室：字體版本歸檔、變更 log，方便查驗同對比。",
 };
 
-function kindLabel(kind: LabChangeKind): string {
-  switch (kind) {
-    case "font-release":
-      return "字體發行";
-    case "font-archive":
-      return "字體歸檔";
-    case "glyph-edit":
-      return "字形庫";
-    case "sheet-ui":
-      return "練習紙 UI";
-    case "policy":
-      return "實驗室規則";
-    case "note":
-      return "筆記";
-    default: {
-      const _exhaustive: never = kind;
-      return _exhaustive;
-    }
-  }
-}
-
 export default function LabPage() {
   const log = getLabChangelogNewestFirst();
   const current = getCurrentLabFonts();
   const archived = getArchivedLabFonts();
-  const italicVersions = getLabFontsByFamily("Scriptoria Italic");
+  const italicCompare = getLabCompareRows("scriptoria-italic");
 
   return (
     <main id="top" className="inner-page">
@@ -55,8 +37,8 @@ export default function LabPage() {
             超级實驗室
           </h1>
           <p className="section__text">
-            呢度係私人實驗場：每次改字體／字形會留 log，舊版字體搬入
-            archive，方便查驗同版本對比。唔對外公開當產品賣。
+            私人實驗場：改字體先歸檔再覆寫；用版號 + checksum
+            對照，唔靠肉眼估。基線同現行一樣係正常，直到下一次真正改字。
           </p>
         </div>
       </section>
@@ -72,12 +54,15 @@ export default function LabPage() {
           {current.map((font) => (
             <article className="lab-card" key={font.id}>
               <p className="lab-card__meta">
-                v{font.version} · {font.createdAt} · {font.license}
+                {formatLabVersion(font.version)} · {font.createdAt} ·{" "}
+                {font.license}
               </p>
               <h3 className="lab-card__title">{font.family}</h3>
               <LabFontSample font={font} />
               <p className="lab-card__notes">{font.notesZh}</p>
-              <p className="lab-card__source">來源：{font.source}</p>
+              <p className="lab-card__source">
+                來源：{font.source} · woff2 {font.checksums.woff2.slice(0, 8)}…
+              </p>
               <ul className="lab-card__files">
                 <li>
                   <a href={font.files.woff2}>WOFF2</a>
@@ -108,36 +93,45 @@ export default function LabPage() {
             Scriptoria Italic 版本對比
           </h2>
           <p className="section__text">
-            每版獨立載入字體檔並排睇 sample；亦可下載逐版核對 checksum（見各版
-            manifest）。
+            現行在前，歸檔按版號由新到舊。fingerprint
+            相同＝字形檔一致（唔係視覺錯覺）。
           </p>
         </div>
         <div className="lab-compare-grid">
-          {italicVersions.map((font) => (
-            <article
-              className={`lab-card${font.status === "archived" ? " lab-card--archived" : ""}`}
-              key={`compare-${font.id}`}
-            >
-              <p className="lab-card__badge">
-                {font.status === "current" ? "現行" : "歸檔"} · v{font.version}
-              </p>
-              <LabFontSample font={font} />
-              <p className="lab-card__notes">{font.notesZh}</p>
-              <ul className="lab-card__files">
-                <li>
-                  <a href={font.files.woff2}>WOFF2</a>
-                </li>
-                <li>
-                  <a href={font.files.ttf}>TTF</a>
-                </li>
-                {font.files.manifest ? (
+          {italicCompare.map(({ font, matchesCurrent, fingerprint }) => {
+            const archiveLabel = labArchiveKindLabel(font.archiveKind);
+            return (
+              <article
+                className={`lab-card${font.status === "archived" ? " lab-card--archived" : ""}`}
+                key={`compare-${font.id}`}
+              >
+                <p className="lab-card__badge">
+                  {labFontStatusLabel(font.status)}
+                  {archiveLabel ? ` · ${archiveLabel}` : ""} ·{" "}
+                  {formatLabVersion(font.version)}
+                  {font.status === "archived" && matchesCurrent
+                    ? " · 與現行相同"
+                    : ""}
+                </p>
+                <LabFontSample font={font} />
+                <p className="lab-card__notes">{font.notesZh}</p>
+                <p className="lab-card__source">fingerprint {fingerprint}</p>
+                <ul className="lab-card__files">
                   <li>
-                    <a href={font.files.manifest}>manifest</a>
+                    <a href={font.files.woff2}>WOFF2</a>
                   </li>
-                ) : null}
-              </ul>
-            </article>
-          ))}
+                  <li>
+                    <a href={font.files.ttf}>TTF</a>
+                  </li>
+                  {font.files.manifest ? (
+                    <li>
+                      <a href={font.files.manifest}>manifest</a>
+                    </li>
+                  ) : null}
+                </ul>
+              </article>
+            );
+          })}
         </div>
       </section>
 
@@ -148,25 +142,29 @@ export default function LabPage() {
             歸檔字體
           </h2>
           <p className="section__text">
-            實體檔喺 <code>public/fonts/_archive/</code>。每次{" "}
-            <code>npm run fonts:scriptoria-italic</code>{" "}
-            會先把現行版搬入呢度先覆寫。
+            實體檔喺 <code>public/fonts/_archive/</code>。建置時若現行
+            checksum 已存在於最近歸檔，會跳過重複拷貝。
           </p>
         </div>
         <ul className="lab-archive-list">
-          {archived.map((font) => (
-            <li key={font.id}>
-              <strong>
-                {font.family} v{font.version}
-              </strong>
-              <span>{font.createdAt}</span>
-              <a href={font.files.woff2}>woff2</a>
-              <a href={font.files.ttf}>ttf</a>
-              {font.files.manifest ? (
-                <a href={font.files.manifest}>manifest</a>
-              ) : null}
-            </li>
-          ))}
+          {archived.map((font) => {
+            const archiveLabel = labArchiveKindLabel(font.archiveKind);
+            return (
+              <li key={font.id}>
+                <strong>
+                  {font.family} {formatLabVersion(font.version)}
+                  {archiveLabel ? `（${archiveLabel}）` : ""}
+                </strong>
+                <span>{font.archivedAt?.slice(0, 10) ?? font.createdAt}</span>
+                <span>{font.checksums.woff2.slice(0, 8)}…</span>
+                <a href={font.files.woff2}>woff2</a>
+                <a href={font.files.ttf}>ttf</a>
+                {font.files.manifest ? (
+                  <a href={font.files.manifest}>manifest</a>
+                ) : null}
+              </li>
+            );
+          })}
         </ul>
       </section>
 
@@ -177,8 +175,8 @@ export default function LabPage() {
             實驗 log
           </h2>
           <p className="section__text">
-            UI 可讀 log 喺 <code>src/data/lab/changelog.ts</code>
-            （只追加）。機器 log 另見{" "}
+            UI log：<code>src/data/lab/changelog.ts</code>
+            （只追加）。機器 log：{" "}
             <code>public/fonts/_archive/lab-log.jsonl</code>。
           </p>
         </div>
@@ -187,9 +185,16 @@ export default function LabPage() {
             <li key={entry.id} className="lab-log__item">
               <div className="lab-log__head">
                 <time dateTime={entry.date}>{entry.date}</time>
-                <span className="lab-log__kind">{kindLabel(entry.kind)}</span>
+                <span className="lab-log__kind">
+                  {labChangeKindLabel(entry.kind)}
+                </span>
                 {entry.version ? (
-                  <span className="lab-log__ver">v{entry.version}</span>
+                  <span className="lab-log__ver">
+                    {formatLabVersion(entry.version)}
+                    {entry.previousVersion
+                      ? ` ← ${formatLabVersion(entry.previousVersion)}`
+                      : ""}
+                  </span>
                 ) : null}
               </div>
               <h3 className="lab-log__title">{entry.titleZh}</h3>
@@ -210,10 +215,9 @@ export default function LabPage() {
 
       <section className="section" aria-label="實驗室操作">
         <p className="section__text">
-          改字體後請：1){" "}
-          <code>npm run fonts:scriptoria-italic -- &lt;新版號&gt;</code> 2)
-          喺 <code>src/data/lab/changelog.ts</code> 追加一條 3) 如有新
-          archive，更新 <code>src/data/lab/fontRegistry.ts</code>。
+          有實質改動時請升版號：{" "}
+          <code>npm run fonts:scriptoria-italic -- 1.001</code>
+          ，再喺 changelog／fontRegistry 各追加一筆（含新 checksum）。
         </p>
         <p>
           <Link className="btn btn--ghost" href="/resources">

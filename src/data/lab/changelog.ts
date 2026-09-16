@@ -1,4 +1,4 @@
-import type { LabLogEntry } from "./types";
+import type { LabChangeKind, LabLogEntry } from "./types";
 
 /**
  * Scriptoria 超级實驗室變更紀錄。
@@ -65,9 +65,21 @@ export const labChangelog: LabLogEntry[] = [
   },
 ];
 
+/** Higher = more prominent when dates tie. */
+const KIND_RANK: Record<LabChangeKind, number> = {
+  "font-release": 60,
+  "font-archive": 50,
+  "glyph-edit": 40,
+  "sheet-ui": 30,
+  policy: 20,
+  note: 10,
+};
+
 export function getLabChangelogNewestFirst(): LabLogEntry[] {
   return [...labChangelog].sort((a, b) => {
-    if (a.date === b.date) return b.id.localeCompare(a.id);
-    return b.date.localeCompare(a.date);
+    if (a.date !== b.date) return b.date.localeCompare(a.date);
+    const rankDiff = KIND_RANK[b.kind] - KIND_RANK[a.kind];
+    if (rankDiff !== 0) return rankDiff;
+    return b.id.localeCompare(a.id);
   });
 }

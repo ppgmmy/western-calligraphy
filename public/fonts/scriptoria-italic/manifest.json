@@ -1,6 +1,8 @@
 {
   "family": "Scriptoria Italic",
+  "fontId": "scriptoria-italic",
   "version": "1.000",
+  "previousVersion": null,
   "status": "current",
   "updatedAt": "2026-09-16T05:45:01.692931+00:00",
   "source": "Cormorant Garamond Italic (OFL) subset",
