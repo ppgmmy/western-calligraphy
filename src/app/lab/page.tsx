@@ -164,11 +164,11 @@ export default function LabPage() {
             checksum 對照，唔靠感覺估。
           </p>
           <div className="lab-hero__actions">
-            <a className="btn" href="#lab-scripts">
-              打開草體標本庫
+            <a className="btn" href="/lab/generator">
+              打開字帖生成器
             </a>
-            <a className="btn btn--ghost" href="#lab-compare">
-              版本對照台
+            <a className="btn btn--ghost" href="#lab-scripts">
+              草體標本庫
             </a>
           </div>
           <dl className="lab-hero__readout" aria-label="儀器讀數">

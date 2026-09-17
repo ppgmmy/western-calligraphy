@@ -2,6 +2,7 @@ import {
   Alex_Brush,
   Arizonia,
   Birthstone,
+  Caveat,
   Clicker_Script,
   Cookie,
   Courgette,
@@ -11,6 +12,7 @@ import {
   Ephesis,
   Felipa,
   Great_Vibes,
+  Herr_Von_Muellerhoff,
   IBM_Plex_Mono,
   Imperial_Script,
   Inspiration,
@@ -83,6 +85,16 @@ const labMrDafoe = Mr_Dafoe({
   variable: "--font-lab-mr-dafoe",
   subsets: ["latin"],
   weight: "400",
+});
+const labHerr = Herr_Von_Muellerhoff({
+  variable: "--font-lab-herr",
+  subsets: ["latin"],
+  weight: "400",
+});
+const labCaveat = Caveat({
+  variable: "--font-lab-caveat",
+  subsets: ["latin"],
+  weight: ["500", "700"],
 });
 
 /** Three eye-inspection variants per primary specimen. */
@@ -261,6 +273,8 @@ const labFontVars = [
   labSacramento.variable,
   labRouge.variable,
   labMrDafoe.variable,
+  labHerr.variable,
+  labCaveat.variable,
   labParisienne.variable,
   labNorican.variable,
   labArizonia.variable,

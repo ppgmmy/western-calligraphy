@@ -90,6 +90,20 @@ export const labChangelog: LabLogEntry[] = [
       "src/app/lab/page.tsx",
     ],
   },
+  {
+    id: "2026-09-17-lab-worksheet-generator",
+    date: "2026-09-17",
+    kind: "sheet-ui",
+    titleZh: "接入多款式字帖生成器",
+    summaryZh:
+      "按提供嘅字帖機邏輯，喺 /lab/generator 加入可換草體、斜度、描紅同列印嘅練習紙鍛造台。",
+    paths: [
+      "src/app/lab/generator/page.tsx",
+      "src/components/LabWorksheetGenerator.tsx",
+      "src/lib/labWorksheet.ts",
+      "src/data/lab/worksheetFonts.ts",
+    ],
+  },
 ];
 
 /** Higher = more prominent when dates tie. */
