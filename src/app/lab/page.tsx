@@ -5,6 +5,7 @@ import { LabScriptSample } from "@/components/LabScriptSample";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import {
+  countLabScriptFaces,
   countLabScriptSpecimens,
   formatLabVersion,
   getArchivedLabFonts,
@@ -16,6 +17,7 @@ import {
   labChangeKindLabel,
   labFontStatusLabel,
   labScriptTierLabel,
+  specimenAsFace,
 } from "@/data/lab";
 
 export const metadata: Metadata = {
@@ -145,6 +147,7 @@ export default function LabPage() {
   const italicCompare = getLabCompareRows("scriptoria-italic");
   const scriptSpecimens = getLabScriptSpecimens();
   const scriptCount = countLabScriptSpecimens();
+  const scriptFaces = countLabScriptFaces();
   const activeFingerprint = italicCompare[0]?.fingerprint ?? "--------";
 
   return (
@@ -180,8 +183,8 @@ export default function LabPage() {
               <dd>{activeFingerprint}</dd>
             </div>
             <div>
-              <dt>SCRIPTS</dt>
-              <dd>{scriptCount}</dd>
+              <dt>FACES</dt>
+              <dd>{scriptFaces}</dd>
             </div>
           </dl>
         </div>
@@ -202,8 +205,8 @@ export default function LabPage() {
             草體標本庫
           </h2>
           <p className="lab-bay__text">
-            只收細草、撩草、花飾草——要有藝術氣息。全部 OFL
-            合法使用；哥德／印刷體唔入呢櫃。
+            每款主標本下面有三隻變體——先肉眼對照，之後再揀合用嘅。只收草階／撩草；全部
+            OFL。
           </p>
         </header>
         <div className="lab-script-gallery">
@@ -215,15 +218,34 @@ export default function LabPage() {
             >
               <div className="lab-specimen__ticks" aria-hidden="true" />
               <p className="lab-specimen__tag">
-                {labScriptTierLabel(specimen.tier)} · {specimen.license}
+                {labScriptTierLabel(specimen.tier)} · PRIMARY ·{" "}
+                {specimen.license}
               </p>
               <h3 className="lab-specimen__name">{specimen.family}</h3>
               <p className="lab-specimen__mood">{specimen.moodZh}</p>
               <div className="lab-specimen__glass lab-specimen__glass--script">
-                <LabScriptSample specimen={specimen} />
+                <LabScriptSample face={specimenAsFace(specimen)} />
               </div>
               <p className="lab-specimen__notes">{specimen.notesZh}</p>
               <p className="lab-specimen__meta">SRC {specimen.source}</p>
+
+              <div className="lab-variant-rail" aria-label={`${specimen.family} 三隻變體`}>
+                <p className="lab-variant-rail__label">VARIANTS · 肉眼檢視</p>
+                {specimen.variants.map((variant, variantIndex) => (
+                  <div className="lab-variant" key={variant.id}>
+                    <p className="lab-variant__tag">
+                      V{variantIndex + 1} · {variant.family}
+                    </p>
+                    <p className="lab-variant__mood">{variant.moodZh}</p>
+                    <div className="lab-specimen__glass lab-specimen__glass--variant">
+                      <LabScriptSample
+                        face={variant}
+                        className="lab-script-sample lab-script-sample--variant"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
             </article>
           ))}
         </div>

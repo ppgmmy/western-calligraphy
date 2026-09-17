@@ -9,7 +9,12 @@ export type {
   LabFontVersion,
   LabLogEntry,
 } from "./types";
-export type { LabScriptSpecimen, LabScriptTier } from "./scriptSpecimens";
+export type {
+  LabScriptFace,
+  LabScriptFaceRender,
+  LabScriptSpecimen,
+  LabScriptTier,
+} from "./scriptSpecimens";
 export {
   getLabChangelogNewestFirst,
   labChangelog,
@@ -31,10 +36,12 @@ export {
   getLabFontsByFamily,
 } from "./queries";
 export {
+  countLabScriptFaces,
   countLabScriptSpecimens,
   getLabScriptSpecimens,
   getLabScriptSpecimensByTier,
   labScriptSpecimens,
+  specimenAsFace,
 } from "./scriptGallery";
 export {
   compareLabVersions,

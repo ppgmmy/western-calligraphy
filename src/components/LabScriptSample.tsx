@@ -1,35 +1,35 @@
 import { LabFontSample } from "@/components/LabFontSample";
 import {
   getCurrentLabFont,
-  type LabScriptSpecimen,
+  type LabScriptFace,
 } from "@/data/lab";
 
 /** 草體標本示範：本地歸檔字 or CSS variable（Google OFL）。 */
 export function LabScriptSample({
-  specimen,
+  face,
   className = "lab-script-sample",
 }: {
-  specimen: LabScriptSpecimen;
+  face: LabScriptFace;
   className?: string;
 }) {
-  if (specimen.render.kind === "local") {
-    const font = getCurrentLabFont(specimen.render.fontId);
+  if (face.render.kind === "local") {
+    const font = getCurrentLabFont(face.render.fontId);
     if (!font) {
       return (
         <p className={className} lang="en">
-          {specimen.sample}
+          {face.sample}
         </p>
       );
     }
     return (
       <LabFontSample
-        font={{ ...font, sample: specimen.sample }}
+        font={{ ...font, sample: face.sample }}
         className={className}
       />
     );
   }
 
-  const cssVar = specimen.render.cssVar;
+  const cssVar = face.render.cssVar;
   return (
     <p
       className={className}
@@ -39,7 +39,7 @@ export function LabScriptSample({
         fontStyle: "normal",
       }}
     >
-      {specimen.sample}
+      {face.sample}
     </p>
   );
 }

@@ -1,8 +1,30 @@
-import type { LabScriptSpecimen, LabScriptTier } from "./scriptSpecimens";
+import type {
+  LabScriptFace,
+  LabScriptSpecimen,
+  LabScriptTier,
+} from "./scriptSpecimens";
+
+function face(
+  id: string,
+  family: string,
+  cssVar: string,
+  moodZh: string,
+  sample: string,
+  sourceName: string,
+): LabScriptFace {
+  return {
+    id,
+    family,
+    moodZh,
+    sample,
+    source: `Google Fonts · ${sourceName}`,
+    render: { kind: "css-var", cssVar },
+  };
+}
 
 /**
  * 技能實驗室 · 草體標本庫
- * 準則：草階／撩草、藝術氣息強；唔收哥德、印刷襯線、無襯線。
+ * 準則：草階／撩草、藝術氣息強；每款主標本 + 三隻變體供肉眼檢視。
  */
 export const labScriptSpecimens: LabScriptSpecimen[] = [
   {
@@ -13,8 +35,13 @@ export const labScriptSpecimens: LabScriptSpecimen[] = [
     sample: "human scriptoria",
     license: "SIL Open Font License 1.1",
     source: "Cormorant Garamond Italic subset（自製）",
-    notesZh: "實驗室自製細草。斜體 master 裁字，網頁用 font-style:normal。",
+    notesZh: "實驗室自製細草。下面三隻變體係相近氣口，肉眼對照後再決定合用邊款。",
     render: { kind: "local", fontId: "scriptoria-italic" },
+    variants: [
+      face("parisienne", "Parisienne", "--font-lab-parisienne", "法式細連筆", "human scriptoria", "Parisienne"),
+      face("norican", "Norican", "--font-lab-norican", "輕盈正式草", "human scriptoria", "Norican"),
+      face("arizonia", "Arizonia", "--font-lab-arizonia", "飄逸細草", "human scriptoria", "Arizonia"),
+    ],
   },
   {
     id: "italianno",
@@ -24,8 +51,13 @@ export const labScriptSpecimens: LabScriptSpecimen[] = [
     sample: "Beloved flourish",
     license: "SIL Open Font License 1.1",
     source: "Google Fonts · Italianno",
-    notesZh: "正式尖筆連筆；適合銅板／斯賓塞方向對照，唔好當花飾入門第一站。",
+    notesZh: "正式尖筆連筆。三隻變體偏銅板／儀式感，方便對照正式程度。",
     render: { kind: "css-var", cssVar: "--font-script" },
+    variants: [
+      face("niconne", "Niconne", "--font-lab-niconne", "圓潤正式草", "Beloved flourish", "Niconne"),
+      face("petit-formal", "Petit Formal Script", "--font-lab-petit-formal", "細緻正式", "Beloved flourish", "Petit Formal Script"),
+      face("clicker", "Clicker Script", "--font-lab-clicker", "尖筆跳動", "Beloved flourish", "Clicker Script"),
+    ],
   },
   {
     id: "great-vibes",
@@ -35,8 +67,13 @@ export const labScriptSpecimens: LabScriptSpecimen[] = [
     sample: "Amore Scriptoria",
     license: "SIL Open Font License 1.1",
     source: "Google Fonts · Great Vibes",
-    notesZh: "高對比撩草；入門可對照入筆角度同環形收尾。",
+    notesZh: "高對比撩草。變體偏婚禮／邀請函氣場。",
     render: { kind: "css-var", cssVar: "--font-lab-great-vibes" },
+    variants: [
+      face("ephesis", "Ephesis", "--font-lab-ephesis", "柔和上揚", "Amore Scriptoria", "Ephesis"),
+      face("playball", "Playball", "--font-lab-playball", "跳躍撩草", "Amore Scriptoria", "Playball"),
+      face("style-script", "Style Script", "--font-lab-style-script", "當代優雅", "Amore Scriptoria", "Style Script"),
+    ],
   },
   {
     id: "pinyon-script",
@@ -46,8 +83,13 @@ export const labScriptSpecimens: LabScriptSpecimen[] = [
     sample: "Quiet elegance",
     license: "SIL Open Font License 1.1",
     source: "Google Fonts · Pinyon Script",
-    notesZh: "纖細連筆；睇小寫連接同 x-height，適合練「輕壓」感覺。",
+    notesZh: "纖細連筆。變體同樣偏薄、輕壓感。",
     render: { kind: "css-var", cssVar: "--font-lab-pinyon" },
+    variants: [
+      face("windsong", "WindSong", "--font-lab-windsong", "風線細草", "Quiet elegance", "WindSong"),
+      face("birthstone", "Birthstone", "--font-lab-birthstone", "輕薄飾感", "Quiet elegance", "Birthstone"),
+      face("inspiration", "Inspiration", "--font-lab-inspiration", "空氣感連筆", "Quiet elegance", "Inspiration"),
+    ],
   },
   {
     id: "tangerine",
@@ -57,8 +99,13 @@ export const labScriptSpecimens: LabScriptSpecimen[] = [
     sample: "atelier night",
     license: "SIL Open Font License 1.1",
     source: "Google Fonts · Tangerine",
-    notesZh: "節奏偏柔；用來對照「藝術氣息」同正式銅板嘅分別。",
+    notesZh: "節奏偏柔。變體用來對照柔和藝術氣息。",
     render: { kind: "css-var", cssVar: "--font-lab-tangerine" },
+    variants: [
+      face("courgette", "Courgette", "--font-lab-courgette", "柔圓藝術草", "atelier night", "Courgette"),
+      face("satisfy", "Satisfy", "--font-lab-satisfy", "輕鬆連筆", "atelier night", "Satisfy"),
+      face("cookie", "Cookie", "--font-lab-cookie", "甜潤手寫草", "atelier night", "Cookie"),
+    ],
   },
   {
     id: "allura",
@@ -68,8 +115,13 @@ export const labScriptSpecimens: LabScriptSpecimen[] = [
     sample: "Flourish gently",
     license: "SIL Open Font License 1.1",
     source: "Google Fonts · Allura",
-    notesZh: "現代 calligraphy／花飾對照；練習紙 modern 範字同源。",
+    notesZh: "現代 calligraphy 對照。變體偏當代工作室風。",
     render: { kind: "css-var", cssVar: "--font-modern" },
+    variants: [
+      face("yellowtail", "Yellowtail", "--font-lab-yellowtail", "招牌撩草", "Flourish gently", "Yellowtail"),
+      face("kaushan", "Kaushan Script", "--font-lab-kaushan", "現代筆刷草", "Flourish gently", "Kaushan Script"),
+      face("marck", "Marck Script", "--font-lab-marck", "手感現代草", "Flourish gently", "Marck Script"),
+    ],
   },
   {
     id: "alex-brush",
@@ -79,8 +131,13 @@ export const labScriptSpecimens: LabScriptSpecimen[] = [
     sample: "Ink in motion",
     license: "SIL Open Font License 1.1",
     source: "Google Fonts · Alex Brush",
-    notesZh: "偏刷筆流動；睇入筆甩出同字間韻律。",
+    notesZh: "偏刷筆流動。變體同樣睇入筆甩出。",
     render: { kind: "css-var", cssVar: "--font-lab-alex-brush" },
+    variants: [
+      face("seaweed", "Seaweed Script", "--font-lab-seaweed", "流動刷草", "Ink in motion", "Seaweed Script"),
+      face("dynalight", "Dynalight", "--font-lab-dynalight", "閃電連筆", "Ink in motion", "Dynalight"),
+      face("qwigley", "Qwigley", "--font-lab-qwigley", "彈性刷感", "Ink in motion", "Qwigley"),
+    ],
   },
   {
     id: "sacramento",
@@ -90,8 +147,13 @@ export const labScriptSpecimens: LabScriptSpecimen[] = [
     sample: "dear reader",
     license: "SIL Open Font License 1.1",
     source: "Google Fonts · Sacramento",
-    notesZh: "軟質連筆；適合對照「親切手寫」同「正式尖筆」。",
+    notesZh: "軟質連筆。變體偏親密手寫。",
     render: { kind: "css-var", cssVar: "--font-lab-sacramento" },
+    variants: [
+      face("dancing", "Dancing Script", "--font-lab-dancing", "輕快手寫", "dear reader", "Dancing Script"),
+      face("stalemate", "Stalemate", "--font-lab-stalemate", "細軟連筆", "dear reader", "Stalemate"),
+      face("whispers", "Whisper", "--font-lab-whispers", "低語手寫", "dear reader", "Whisper"),
+    ],
   },
   {
     id: "rouge-script",
@@ -101,8 +163,13 @@ export const labScriptSpecimens: LabScriptSpecimen[] = [
     sample: "Velvet letter",
     license: "SIL Open Font License 1.1",
     source: "Google Fonts · Rouge Script",
-    notesZh: "飾感強；實驗用對照，唔建議初學摹寫結構。",
+    notesZh: "飾感強。變體同樣偏儀式／華麗。",
     render: { kind: "css-var", cssVar: "--font-lab-rouge" },
+    variants: [
+      face("luxurious", "Luxurious Script", "--font-lab-luxurious", "奢華飾草", "Velvet letter", "Luxurious Script"),
+      face("imperial", "Imperial Script", "--font-lab-imperial", "帝國飾線", "Velvet letter", "Imperial Script"),
+      face("updock", "Updock", "--font-lab-updock", "高對比飾草", "Velvet letter", "Updock"),
+    ],
   },
   {
     id: "mea-culpa",
@@ -112,8 +179,13 @@ export const labScriptSpecimens: LabScriptSpecimen[] = [
     sample: "Imperial night",
     license: "SIL Open Font License 1.1",
     source: "Google Fonts · Mea Culpa",
-    notesZh: "站內 Imperial Grandeur 對照；藝術實驗，唔作入門主線。",
+    notesZh: "極華麗實驗。變體同樣戲劇張力高。",
     render: { kind: "css-var", cssVar: "--font-grand" },
+    variants: [
+      face("monsieur", "Monsieur La Doulaise", "--font-lab-monsieur", "法式極華麗", "Imperial night", "Monsieur La Doulaise"),
+      face("mrs-saint", "Mrs Saint Delafield", "--font-lab-mrs-saint", "細密花飾", "Imperial night", "Mrs Saint Delafield"),
+      face("miss-fajardos", "Miss Fajardose", "--font-lab-miss-fajardos", "古典華麗", "Imperial night", "Miss Fajardose"),
+    ],
   },
   {
     id: "mr-dafoe",
@@ -123,8 +195,13 @@ export const labScriptSpecimens: LabScriptSpecimen[] = [
     sample: "Drama on paper",
     license: "SIL Open Font License 1.1",
     source: "Google Fonts · Mr Dafoe",
-    notesZh: "動作大、藝術氣息濃；用來研究節奏同誇張入筆。",
+    notesZh: "大動作藝術草。變體同樣張揚，方便肉眼揀「戲劇程度」。",
     render: { kind: "css-var", cssVar: "--font-lab-mr-dafoe" },
+    variants: [
+      face("eagle-lake", "Eagle Lake", "--font-lab-eagle-lake", "大開大合", "Drama on paper", "Eagle Lake"),
+      face("felipa", "Felipa", "--font-lab-felipa", "張揚連筆", "Drama on paper", "Felipa"),
+      face("jim-nightshade", "Jim Nightshade", "--font-lab-jim-nightshade", "暗夜戲劇草", "Drama on paper", "Jim Nightshade"),
+    ],
   },
 ];
 
@@ -150,4 +227,23 @@ export function getLabScriptSpecimensByTier(
 
 export function countLabScriptSpecimens(): number {
   return labScriptSpecimens.length;
+}
+
+/** Primary + three variants each — total faces for eye inspection. */
+export function countLabScriptFaces(): number {
+  return labScriptSpecimens.reduce(
+    (sum, item) => sum + 1 + item.variants.length,
+    0,
+  );
+}
+
+export function specimenAsFace(specimen: LabScriptSpecimen): LabScriptFace {
+  return {
+    id: specimen.id,
+    family: specimen.family,
+    moodZh: specimen.moodZh,
+    sample: specimen.sample,
+    source: specimen.source,
+    render: specimen.render,
+  };
 }

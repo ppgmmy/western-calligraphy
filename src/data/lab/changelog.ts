@@ -77,6 +77,19 @@ export const labChangelog: LabLogEntry[] = [
       "src/app/layout.tsx",
     ],
   },
+  {
+    id: "2026-09-17-lab-script-variants",
+    date: "2026-09-17",
+    kind: "note",
+    titleZh: "每款草體加三隻變體供肉眼揀選",
+    summaryZh:
+      "11 款主標本各附三隻 OFL 變體（共 44 面），方便肉眼對照後再揀合用字體；變體字體只喺 /lab 載入。",
+    paths: [
+      "src/data/lab/scriptGallery.ts",
+      "src/app/lab/layout.tsx",
+      "src/app/lab/page.tsx",
+    ],
+  },
 ];
 
 /** Higher = more prominent when dates tie. */
