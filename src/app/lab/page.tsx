@@ -6,7 +6,6 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import {
   countLabScriptFaces,
-  countLabScriptSpecimens,
   formatLabVersion,
   getArchivedLabFonts,
   getCurrentLabFonts,
@@ -146,7 +145,6 @@ export default function LabPage() {
   const archived = getArchivedLabFonts();
   const italicCompare = getLabCompareRows("scriptoria-italic");
   const scriptSpecimens = getLabScriptSpecimens();
-  const scriptCount = countLabScriptSpecimens();
   const scriptFaces = countLabScriptFaces();
   const activeFingerprint = italicCompare[0]?.fingerprint ?? "--------";
 
