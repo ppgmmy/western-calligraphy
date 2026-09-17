@@ -1836,6 +1836,51 @@ a {
   font-size: 0.84em;
 }
 
+.lab-bay--scripts {
+  background:
+    radial-gradient(ellipse 60% 50% at 90% 10%, rgba(154, 134, 88, 0.12), transparent 55%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.28), transparent 40%);
+}
+
+.lab-script-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.15rem;
+  max-width: 72rem;
+}
+
+.lab-specimen--script .lab-specimen__name {
+  margin-bottom: 0.35rem;
+}
+
+.lab-specimen__mood {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-zh), serif;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--lab-accent);
+}
+
+.lab-specimen__glass--script {
+  min-height: 5.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.lab-script-sample {
+  margin: 0;
+  width: 100%;
+  font-size: clamp(2.1rem, 4.5vw, 3.1rem);
+  line-height: 1.2;
+  color: var(--lab-ink);
+}
+
+@media (max-width: 900px) {
+  .lab-script-gallery {
+    grid-template-columns: 1fr;
+  }
+}
+
 .lab-specimen-rail,
 .lab-compare-bench {
   display: grid;

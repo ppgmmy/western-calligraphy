@@ -1,4 +1,5 @@
 import type { LabChangeKind } from "./types";
+import type { LabScriptTier } from "./scriptSpecimens";
 
 export function labChangeKindLabel(kind: LabChangeKind): string {
   switch (kind) {
@@ -46,6 +47,21 @@ export function labArchiveKindLabel(
       return "覆寫前";
     default: {
       const _exhaustive: never = kind;
+      return _exhaustive;
+    }
+  }
+}
+
+export function labScriptTierLabel(tier: LabScriptTier): string {
+  switch (tier) {
+    case "fine-script":
+      return "細草";
+    case "flourished-script":
+      return "撩草";
+    case "ornate-script":
+      return "花飾草";
+    default: {
+      const _exhaustive: never = tier;
       return _exhaustive;
     }
   }

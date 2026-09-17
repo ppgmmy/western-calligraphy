@@ -9,6 +9,7 @@ export type {
   LabFontVersion,
   LabLogEntry,
 } from "./types";
+export type { LabScriptSpecimen, LabScriptTier } from "./scriptSpecimens";
 export {
   getLabChangelogNewestFirst,
   labChangelog,
@@ -18,6 +19,7 @@ export {
   labArchiveKindLabel,
   labChangeKindLabel,
   labFontStatusLabel,
+  labScriptTierLabel,
 } from "./labels";
 export {
   fontsShareGlyphs,
@@ -28,6 +30,12 @@ export {
   getLabFontLineage,
   getLabFontsByFamily,
 } from "./queries";
+export {
+  countLabScriptSpecimens,
+  getLabScriptSpecimens,
+  getLabScriptSpecimensByTier,
+  labScriptSpecimens,
+} from "./scriptGallery";
 export {
   compareLabVersions,
   formatLabVersion,

@@ -1,17 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LabFontSample } from "@/components/LabFontSample";
+import { LabScriptSample } from "@/components/LabScriptSample";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import {
+  countLabScriptSpecimens,
   formatLabVersion,
   getArchivedLabFonts,
   getCurrentLabFonts,
   getLabChangelogNewestFirst,
   getLabCompareRows,
+  getLabScriptSpecimens,
   labArchiveKindLabel,
   labChangeKindLabel,
   labFontStatusLabel,
+  labScriptTierLabel,
 } from "@/data/lab";
 
 export const metadata: Metadata = {
@@ -139,6 +143,8 @@ export default function LabPage() {
   const current = getCurrentLabFonts();
   const archived = getArchivedLabFonts();
   const italicCompare = getLabCompareRows("scriptoria-italic");
+  const scriptSpecimens = getLabScriptSpecimens();
+  const scriptCount = countLabScriptSpecimens();
   const activeFingerprint = italicCompare[0]?.fingerprint ?? "--------";
 
   return (
@@ -153,15 +159,15 @@ export default function LabPage() {
             超级實驗室
           </h1>
           <p className="lab-hero__text">
-            字形樣本入台、版號歸檔、checksum
-            對照——私人實驗場，唔靠感覺估。
+            技能實驗室專收草階／撩草——藝術氣息要夠。字形歸檔同
+            checksum 對照，唔靠感覺估。
           </p>
           <div className="lab-hero__actions">
-            <a className="btn" href="#lab-compare">
-              打開對照台
+            <a className="btn" href="#lab-scripts">
+              打開草體標本庫
             </a>
-            <a className="btn btn--ghost" href="#lab-log">
-              翻實驗 log
+            <a className="btn btn--ghost" href="#lab-compare">
+              版本對照台
             </a>
           </div>
           <dl className="lab-hero__readout" aria-label="儀器讀數">
@@ -174,14 +180,52 @@ export default function LabPage() {
               <dd>{activeFingerprint}</dd>
             </div>
             <div>
-              <dt>SPECIMENS</dt>
-              <dd>{italicCompare.length}</dd>
+              <dt>SCRIPTS</dt>
+              <dd>{scriptCount}</dd>
             </div>
           </dl>
         </div>
         <div className="lab-hero__stage" aria-hidden="true">
           <LabReticle />
           <span className="lab-hero__scan" />
+        </div>
+      </section>
+
+      <section
+        className="lab-bay lab-bay--scripts"
+        id="lab-scripts"
+        aria-labelledby="lab-scripts-title"
+      >
+        <header className="lab-bay__head">
+          <p className="lab-bay__slot">BAY S · SCRIPT GALLERY</p>
+          <h2 className="lab-bay__title" id="lab-scripts-title">
+            草體標本庫
+          </h2>
+          <p className="lab-bay__text">
+            只收細草、撩草、花飾草——要有藝術氣息。全部 OFL
+            合法使用；哥德／印刷體唔入呢櫃。
+          </p>
+        </header>
+        <div className="lab-script-gallery">
+          {scriptSpecimens.map((specimen, index) => (
+            <article
+              className="lab-specimen lab-specimen--script"
+              key={specimen.id}
+              style={{ animationDelay: `${0.04 * index}s` }}
+            >
+              <div className="lab-specimen__ticks" aria-hidden="true" />
+              <p className="lab-specimen__tag">
+                {labScriptTierLabel(specimen.tier)} · {specimen.license}
+              </p>
+              <h3 className="lab-specimen__name">{specimen.family}</h3>
+              <p className="lab-specimen__mood">{specimen.moodZh}</p>
+              <div className="lab-specimen__glass lab-specimen__glass--script">
+                <LabScriptSample specimen={specimen} />
+              </div>
+              <p className="lab-specimen__notes">{specimen.notesZh}</p>
+              <p className="lab-specimen__meta">SRC {specimen.source}</p>
+            </article>
+          ))}
         </div>
       </section>
 

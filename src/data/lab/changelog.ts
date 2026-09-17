@@ -63,6 +63,20 @@ export const labChangelog: LabLogEntry[] = [
       "scripts/fonts/crop_scriptoria_italic.py",
     ],
   },
+  {
+    id: "2026-09-17-lab-script-gallery",
+    date: "2026-09-17",
+    kind: "note",
+    titleZh: "草體標本庫：細草／撩草／花飾草",
+    summaryZh:
+      "技能實驗室加入多款 OFL 藝術草體（Great Vibes、Pinyon、Tangerine、Alex Brush、Sacramento、Rouge、Mr Dafoe 等），只收有藝術氣息嘅草階，唔收哥德或印刷體。",
+    paths: [
+      "src/data/lab/scriptGallery.ts",
+      "src/components/LabScriptSample.tsx",
+      "src/app/lab/page.tsx",
+      "src/app/layout.tsx",
+    ],
+  },
 ];
 
 /** Higher = more prominent when dates tie. */
