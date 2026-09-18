@@ -8,7 +8,7 @@ const navItems = [
   { href: "/atelier", label: "工作室" },
   { href: "/#styles", label: "字體" },
   { href: "/studio", label: "服務" },
-  { href: "/resources", label: "練習本" },
+  { href: "/resources", label: "練習簿" },
   { href: "/lab", label: "實驗室" },
   { href: "/studio#contact", label: "聯絡" },
 ] as const;

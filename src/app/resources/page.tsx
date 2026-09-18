@@ -18,9 +18,9 @@ import {
 } from "@/data/resources";
 
 export const metadata: Metadata = {
-  title: "練習本",
+  title: "練習簿",
   description:
-    "初學先完成斜體（尤其小寫細草），再一款接一款。五級門檻：熱身 → 小寫 → 大寫 → 詞語 → 短句。",
+    "Scriptoria 西洋書法練習簿：斜體入門（熱身→小寫細草→大寫→詞語→短句）可下載 PDF；亦可下載完整全集。",
 };
 
 export default function ResourcesPage() {
@@ -34,10 +34,10 @@ export default function ResourcesPage() {
         <div className="section__head">
           <p className="section__eyebrow">Practice Book</p>
           <h1 className="section__title" id="resources-title">
-            西洋書法練習本
+            西洋書法練習簿
           </h1>
           <p className="section__text">
-            初學只跟「斜體字主線」：而家夠靚嘅主要係斜體小寫細草。請先把斜體整條學完，先開下一款；唔好幾款並行混練。斜體正做逐字辨認，穩妥前唔會打包自製字體檔。
+            初學先下載「斜體入門練習簿」：熱身 → 小寫細草 → 大寫 → 詞語 → 短句。夠靚嘅示範主要喺斜體小寫；整條斜體過關，先開下一款。
           </p>
         </div>
 
@@ -58,7 +58,7 @@ export default function ResourcesPage() {
 
       <PracticeProgressSummary slugs={allSlugs} />
 
-      <section className="section full-book-section" aria-label="完整練習本">
+      <section className="section full-book-section" aria-label="下載練習簿">
         <FullPracticeBookDownload />
       </section>
 

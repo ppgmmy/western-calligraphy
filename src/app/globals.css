@@ -1130,6 +1130,89 @@ a {
   letter-spacing: 0.03em;
 }
 
+.practice-books {
+  display: grid;
+  gap: 1.25rem;
+  max-width: 72rem;
+}
+
+.practice-books__head {
+  max-width: 40rem;
+}
+
+.practice-books__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.15rem;
+}
+
+.practice-book-card {
+  padding: 1.2rem 1.15rem 1.35rem;
+  border: 1px solid rgba(36, 92, 84, 0.22);
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.55),
+    rgba(232, 238, 243, 0.35)
+  );
+  display: grid;
+  gap: 0.45rem;
+  align-content: start;
+}
+
+.practice-book-card--primary {
+  border-color: rgba(36, 92, 84, 0.45);
+  box-shadow: inset 3px 0 0 var(--teal);
+}
+
+.practice-book-card__eyebrow {
+  margin: 0;
+  font-family: var(--font-display), serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  color: var(--teal);
+}
+
+.practice-book-card__title {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.practice-book-card__en {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+}
+
+.practice-book-card__summary,
+.practice-book-card__meta {
+  margin: 0;
+  line-height: 1.65;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.practice-book-card__meta {
+  font-size: 0.84rem;
+  letter-spacing: 0.02em;
+}
+
+.practice-book-card__status {
+  margin: 0.25rem 0 0;
+  color: var(--teal);
+  font-size: 0.9rem;
+}
+
+.practice-book-card .btn {
+  margin-top: 0.55rem;
+  justify-self: start;
+}
+
+@media (max-width: 800px) {
+  .practice-books__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .print-checklist {
   position: fixed;
   inset: 0;

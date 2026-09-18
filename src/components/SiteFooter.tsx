@@ -13,7 +13,7 @@ const footerColumns = [
   {
     title: "學習",
     links: [
-      { href: "/resources", label: "西洋書法練習本" },
+      { href: "/resources", label: "西洋書法練習簿" },
       { href: "/lab", label: "超级實驗室" },
       { href: "/lab/generator", label: "字帖生成器" },
       { href: "/resources/italic-family-upper-straight", label: "斜體直筆家族" },
