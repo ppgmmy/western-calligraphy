@@ -104,6 +104,21 @@ export const labChangelog: LabLogEntry[] = [
       "src/data/lab/worksheetFonts.ts",
     ],
   },
+  {
+    id: "2026-10-03-flourish-fonts",
+    date: "2026-10-03",
+    kind: "sheet-ui",
+    titleZh: "新增 6 隻 OFL 花體字體",
+    summaryZh:
+      "字帖生成器新增「花體／Flourish」組（Bilbo Swash Caps、Lovers Quarrel、Euphoria Script、Fleur De Leah、Bonheur Royale、Corinthia），草體標本庫新增 Bilbo Swash Caps 一組；google／local 兩套字體同步，現有字體不變。",
+    paths: [
+      "src/fonts/lab.google.ts",
+      "src/fonts/lab.local.ts",
+      "src/fonts/files/THIRD_PARTY_FONTS.md",
+      "src/data/lab/worksheetFonts.ts",
+      "src/data/lab/scriptGallery.ts",
+    ],
+  },
 ];
 
 /** Higher = more prominent when dates tie. */

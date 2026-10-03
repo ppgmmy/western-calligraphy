@@ -1,0 +1,24 @@
+# Dependabot version updates：npm，每週一次，覆蓋 package.json 全部依賴
+# （包括 jspdf、html2canvas、next、react）。
+# 註：Dependabot security updates（安全漏洞自動 PR）係 repo 設定，唔係呢個檔案控制，
+#     要喺 GitHub repo Settings → Advanced Security 開啟。
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      timezone: "Asia/Hong_Kong"
+    open-pull-requests-limit: 10
+    groups:
+      # next 與 react 系列、eslint-config-next 一齊升級（next 同 eslint-config-next 版本固定一致）
+      next-react:
+        patterns:
+          - "next"
+          - "eslint-config-next"
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+    # jspdf、html2canvas 唔放入 group，各自獨立 PR，方便單獨審核（PDF 匯出功能用）
