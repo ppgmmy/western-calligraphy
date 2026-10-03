@@ -21,6 +21,7 @@ const EXPORT_FONT_HINTS = [
   "italianno",
   "allura",
   "mea culpa",
+  "meaculpa", // 本地字體後備（src/fonts/local.ts）用 const 名做 family 名
   "unifraktur",
 ] as const;
 
