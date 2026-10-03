@@ -156,6 +156,22 @@ export const labScriptSpecimens: LabScriptSpecimen[] = [
     ],
   },
   {
+    id: "bilbo-swash-caps",
+    family: "Bilbo Swash Caps",
+    tier: "flourished-script",
+    moodZh: "Swash 大寫花體——起筆帶飾尾",
+    sample: "Flourish Beginnings",
+    license: "SIL Open Font License 1.1",
+    source: "Google Fonts · Bilbo Swash Caps",
+    notesZh: "大寫帶 swash 飾尾，適合做首字母花飾。變體係另外三隻飾線草，方便對照花飾程度。",
+    render: { kind: "css-var", cssVar: "--font-lab-bilbo-swash" },
+    variants: [
+      face("euphoria", "Euphoria Script", "--font-lab-euphoria", "圓潤飄逸", "Flourish Beginnings", "Euphoria Script"),
+      face("fleur-de-leah", "Fleur De Leah", "--font-lab-fleur-de-leah", "柔美飾線", "Flourish Beginnings", "Fleur De Leah"),
+      face("lovers-quarrel", "Lovers Quarrel", "--font-lab-lovers-quarrel", "細線飾草", "Flourish Beginnings", "Lovers Quarrel"),
+    ],
+  },
+  {
     id: "rouge-script",
     family: "Rouge Script",
     tier: "ornate-script",

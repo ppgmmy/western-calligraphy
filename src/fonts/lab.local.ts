@@ -350,6 +350,54 @@ export const labJimNightshade = localFont({
   display: "swap",
 });
 
+export const labBilboSwash = localFont({
+  src: [
+    { path: "./files/bilbo-swash-caps/zrf-0GXbz-H3Wb4XBsGrTgq2PVmdmATipw.woff2", weight: "400", style: "normal" },
+  ],
+  variable: "--font-lab-bilbo-swash",
+  display: "swap",
+});
+
+export const labLoversQuarrel = localFont({
+  src: [
+    { path: "./files/lovers-quarrel/Yq6N-LSKXTL-5bCy8ksBzpQ_-wArabs.woff2", weight: "400", style: "normal" },
+  ],
+  variable: "--font-lab-lovers-quarrel",
+  display: "swap",
+});
+
+export const labEuphoria = localFont({
+  src: [
+    { path: "./files/euphoria-script/mFTpWb0X2bLb_cx6To2B8GpKoD5qlPxS.woff2", weight: "400", style: "normal" },
+  ],
+  variable: "--font-lab-euphoria",
+  display: "swap",
+});
+
+export const labFleurDeLeah = localFont({
+  src: [
+    { path: "./files/fleur-de-leah/AYCNpXX7ftYZWLhv9UmPJTMC1vGn4Q.woff2", weight: "400", style: "normal" },
+  ],
+  variable: "--font-lab-fleur-de-leah",
+  display: "swap",
+});
+
+export const labBonheurRoyale = localFont({
+  src: [
+    { path: "./files/bonheur-royale/c4m51nt_GMTrtX-b9GcG4-YRmbK4eUY.woff2", weight: "400", style: "normal" },
+  ],
+  variable: "--font-lab-bonheur-royale",
+  display: "swap",
+});
+
+export const labCorinthia = localFont({
+  src: [
+    { path: "./files/corinthia/wEO_EBrAnchaJyPMHE01VvoK.woff2", weight: "400", style: "normal" },
+  ],
+  variable: "--font-lab-corinthia",
+  display: "swap",
+});
+
 export const labFontVars = [
   labMono.variable,
   labGreatVibes.variable,
@@ -394,4 +442,10 @@ export const labFontVars = [
   labEagleLake.variable,
   labFelipa.variable,
   labJimNightshade.variable,
+  labBilboSwash.variable,
+  labLoversQuarrel.variable,
+  labEuphoria.variable,
+  labFleurDeLeah.variable,
+  labBonheurRoyale.variable,
+  labCorinthia.variable,
 ].join(" ");

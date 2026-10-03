@@ -296,7 +296,7 @@ const md = [
   "備註：",
   "",
   "- 檔案係 Google Fonts 提供嘅 latin（及 Noto Serif TC 全部 unicode-range）woff2 子集，未經本 repo 修改。",
-  "- Source Serif 4、UnifrakturMaguntia 等字體帶有 Reserved Font Name，請勿用原名發佈修改版。",
+  "- Source Serif 4、UnifrakturMaguntia、Bilbo Swash Caps、Euphoria Script 等字體帶有 Reserved Font Name，請勿用原名發佈修改版。",
   "- `public/fonts/scriptoria-italic/` 係自製字體（見該目錄 OFL.txt），唔屬此目錄。",
   "",
 ];

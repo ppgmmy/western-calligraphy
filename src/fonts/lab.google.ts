@@ -6,16 +6,21 @@
 import {
   Alex_Brush,
   Arizonia,
+  Bilbo_Swash_Caps,
   Birthstone,
+  Bonheur_Royale,
   Caveat,
   Clicker_Script,
   Cookie,
+  Corinthia,
   Courgette,
   Dancing_Script,
   Dynalight,
   Eagle_Lake,
   Ephesis,
+  Euphoria_Script,
   Felipa,
+  Fleur_De_Leah,
   Great_Vibes,
   Herr_Von_Muellerhoff,
   IBM_Plex_Mono,
@@ -24,6 +29,7 @@ import {
   Jim_Nightshade,
   Kaushan_Script,
   Luxurious_Script,
+  Lovers_Quarrel,
   Marck_Script,
   Miss_Fajardose,
   Monsieur_La_Doulaise,
@@ -270,6 +276,38 @@ const labJimNightshade = Jim_Nightshade({
   weight: "400",
 });
 
+/** Flourish / swash additions（花體：Bilbo Swash Caps 帶 swash 大寫，其餘為 Leuschke／Mariela Lopez 飾線草）。 */
+const labBilboSwash = Bilbo_Swash_Caps({
+  variable: "--font-lab-bilbo-swash",
+  subsets: ["latin"],
+  weight: "400",
+});
+const labLoversQuarrel = Lovers_Quarrel({
+  variable: "--font-lab-lovers-quarrel",
+  subsets: ["latin"],
+  weight: "400",
+});
+const labEuphoria = Euphoria_Script({
+  variable: "--font-lab-euphoria",
+  subsets: ["latin"],
+  weight: "400",
+});
+const labFleurDeLeah = Fleur_De_Leah({
+  variable: "--font-lab-fleur-de-leah",
+  subsets: ["latin"],
+  weight: "400",
+});
+const labBonheurRoyale = Bonheur_Royale({
+  variable: "--font-lab-bonheur-royale",
+  subsets: ["latin"],
+  weight: "400",
+});
+const labCorinthia = Corinthia({
+  variable: "--font-lab-corinthia",
+  subsets: ["latin"],
+  weight: "400",
+});
+
 export const labFontVars = [
   labMono.variable,
   labGreatVibes.variable,
@@ -314,4 +352,10 @@ export const labFontVars = [
   labEagleLake.variable,
   labFelipa.variable,
   labJimNightshade.variable,
+  labBilboSwash.variable,
+  labLoversQuarrel.variable,
+  labEuphoria.variable,
+  labFleurDeLeah.variable,
+  labBonheurRoyale.variable,
+  labCorinthia.variable,
 ].join(" ");

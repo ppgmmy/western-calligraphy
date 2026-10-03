@@ -56,9 +56,15 @@
 | Eagle Lake | SIL OFL 1.1 | Copyright (c) 2012, Brian J. Bonislawsky DBA Astigmatic (AOETI) (astigma@astigmatic.com), with Reserved Font Names "Eagle Lake" | latin | [`eagle-lake/OFL.txt`](./eagle-lake/OFL.txt) |
 | Felipa | SIL OFL 1.1 | Copyright (c) 2011 Fontstage (info@fontstage.com), with Reserved Font Names, 'Felipa' | latin | [`felipa/OFL.txt`](./felipa/OFL.txt) |
 | Jim Nightshade | SIL OFL 1.1 | Copyright (c) 2011 by Brian J. Bonislawsky DBA Astigmatic (AOETI) | latin | [`jim-nightshade/OFL.txt`](./jim-nightshade/OFL.txt) |
+| Bilbo Swash Caps | SIL OFL 1.1 | Copyright (c) 2011 TypeSETit, LLC (typesetit@att.net), | latin | [`bilbo-swash-caps/OFL.txt`](./bilbo-swash-caps/OFL.txt) |
+| Lovers Quarrel | SIL OFL 1.1 | Copyright 2004 The Lovers Quarrel Project Authors (https://github.com/googlefonts/lovers-quarrel) | latin | [`lovers-quarrel/OFL.txt`](./lovers-quarrel/OFL.txt) |
+| Euphoria Script | SIL OFL 1.1 | Copyright (c), 2012 Typesenses (typesenses@live.com.ar), | latin | [`euphoria-script/OFL.txt`](./euphoria-script/OFL.txt) |
+| Fleur De Leah | SIL OFL 1.1 | Copyright 2008-2021 The Fleur De Leah Project Authors (https://github.com/googlefonts/fleurdeleah) | latin | [`fleur-de-leah/OFL.txt`](./fleur-de-leah/OFL.txt) |
+| Bonheur Royale | SIL OFL 1.1 | Copyright 2005-2021 The Bonheur Royale Project Authors (https://github.com/googlefonts/bonheur-royale) | latin | [`bonheur-royale/OFL.txt`](./bonheur-royale/OFL.txt) |
+| Corinthia | SIL OFL 1.1 | Copyright 2010 The Corinthia Project Authors (https://github.com/googlefonts/corinthia) | latin | [`corinthia/OFL.txt`](./corinthia/OFL.txt) |
 
 備註：
 
 - 檔案係 Google Fonts 提供嘅 latin（及 Noto Serif TC 全部 unicode-range）woff2 子集，未經本 repo 修改。
-- Source Serif 4、UnifrakturMaguntia 等字體帶有 Reserved Font Name，請勿用原名發佈修改版。
+- Source Serif 4、UnifrakturMaguntia、Bilbo Swash Caps、Euphoria Script 等字體帶有 Reserved Font Name，請勿用原名發佈修改版。
 - `public/fonts/scriptoria-italic/` 係自製字體（見該目錄 OFL.txt），唔屬此目錄。
